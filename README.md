@@ -33,3 +33,15 @@ Example:
       	]}
 	}
 ```
+
+IMPORTANT: A minor change will need to be made to your \client\stemapp\jimu.js\LayerInfos\LayerInfoForMapService.js file to make this tool operational.  Line 433 should be changed from:
+```
+var url = this.originOperLayer.url + '/' + subId;
+```
+
+To:
+```
+var url = this.originOperLayer.layerObject.url + '/' + subId;
+```
+
+The LayerList and AttributeTable widgets should continue to work with your local layers.  The current click-to-identify functionality in the Web App Builder is driven by ArcGIS Online and Portal, so it won't currently work with this tool, unfortunately.  Maybe an advanced identify widget can be created by some enterprising developers in the future!
