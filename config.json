@@ -1,0 +1,13 @@
+{
+	"LocalLayerWidget":{
+		"layerJson": [
+			{
+				"name": "BIAs",
+				"url":"http://maps.ottawa.ca/arcgis/rest/services/BIA/MapServer"
+			},{
+				"name": "Schools",
+				"url": "http://maps.ottawa.ca/arcgis/rest/services/Schools/MapServer"
+			}
+		]
+	}
+}
