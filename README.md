@@ -101,8 +101,8 @@ When you've created the JSON array for your application, you can paste it into t
 
 Please note that this is not an in-panel widget.  To add it to your ArcGIS Web AppBuilder, add the widget to your \client\stemapp\widgets directory, and add a reference to the widget in the standard default2Dapp configuration located at \client\builder\predefined-apps\default2DApp\config.json, under the widgetOnScreen section.
 
-Example:
 ```javascript
+Example:
 	"widgetOnScreen": {
 		"widgets": [
 			{
