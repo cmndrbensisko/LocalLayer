@@ -2,13 +2,47 @@
 	"LocalLayerWidget":{
 		"layerJson": [
 			{
+				"type": "Feature",
+				"name": "Fire Halls",
+				"url": "http://servername/ArcGIS/rest/services/EmergencyServices/MapServer/0",
+				"popup": {
+						"title": "Fire Hall Number {HALLNUM}",
+						"fieldInfos": [
+							{
+								"fieldName": "TRUCK_TYPE",
+								"visible": true,
+								"label": "Type"
+							}
+			            ],
+			            "showAttachments": true
+				}
+			},{
+				"type": "Dynamic",
 				"name": "Parks",
-				"url":"http://<serverName>/arcgis/rest/services/Parks/MapServer"
-			},
-			{
-				"name": "Public Libraries", 
-				"url": "http://<serverName>/arcgis/rest/services/Libraries/MapServer" 
-			} 
+				"url": "http://servername/arcgis/rest/services/Parks/MapServer"
+			},{
+				"type": "Dynamic",
+				"name": "Public Libraries",
+				"url": "http://servername/arcgis/rest/services/Libraries/MapServer",
+				"popup": {
+					"infoTemplates":[
+						{
+						"layerId": 0,
+						"title": "<b>Large Libraries</b>",
+						"content": "Staff Count: ${STAFFNUM}"
+						},
+						{
+						"layerId": 1,
+						"title": "<b>Small Libraries</b>",
+						"content": "Book Count: ${BOOKNUM}"
+						}
+					]
+				}
+			},{
+				"type": "Basemap",
+				"name": "2008 Aerial Imagery",
+				"url": "http://servername/ArcGIS/rest/services/Basemap_Imagery/MapServer"
+			}
 		]
 	}
 }
