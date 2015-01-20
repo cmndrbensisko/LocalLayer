@@ -9,6 +9,7 @@
 	"esri/dijit/PopupTemplate",
 	"esri/dijit/BasemapGallery",
 	"esri/dijit/BasemapLayer",
+	"esri/layers/ArcGISTiledMapServiceLayer",
 	"dojo/dom-construct",
 	"dojo/_base/window",
 	'dojo/domReady!'
@@ -24,6 +25,7 @@
 	PopupTemplate,
 	BasemapGallery,
 	BasemapLayer,
+	ArcGISTiledMapServiceLayer,
 	domConstruct,
 	win) {
 		var clazz = declare([BaseWidget], {
@@ -35,12 +37,12 @@
 					});
 				}
 				this.config.LocalLayerWidget.layerJson.forEach(function(layer) {
+					layerOptions = {"id": layer.name};
+					if(layer.opacity !== undefined) {layerOptions.opacity = layer.opacity;}
+					if(layer.visible !== undefined) {layerOptions.visible = layer.visible;}
+					
 					if (layer.type.toUpperCase() == "DYNAMIC"){
-						layerProperties = {"id": layer.name};
-						if(layer.opacity !== undefined) {
-						  layerProperties.opacity = layer.opacity;
-						}
-						var _dynamicLayer = new esri.layers.ArcGISDynamicMapServiceLayer(layer.url,layerProperties);
+						var _dynamicLayer = new esri.layers.ArcGISDynamicMapServiceLayer(layer.url,layerOptions)
 						if (layer.popup){
 							var finalInfoTemp = {}
 							array.forEach(layer.popup.infoTemplates, function(_infoTemp){
@@ -65,9 +67,14 @@
 					} else if (layer.type.toUpperCase() == "FEATURE"){
 						var _popupTemplate;
 						if (layer.popup){
-							_popupTemplate = new PopupTemplate(layer.popup)
+							_popupTemplate = new PopupTemplate(layer.popup);
+							layerOptions.infoTemplate = _popupTemplate;
 						}
-						this._viewerMap.addLayer(new esri.layers.FeatureLayer(layer.url,{"id":layer.name,"infoTemplate": _popupTemplate}))
+						var _featureLayer = new esri.layers.FeatureLayer(layer.url,layerOptions);
+						this._viewerMap.addLayer(_featureLayer);
+					} else if (layer.type.toUpperCase() =="TILED") {
+						var _tiledLayer = new esri.layers.ArcGISTiledMapServiceLayer(layer.url,layerOptions);
+						this._viewerMap.addLayer(_tiledLayer);
 					}
 				})
 			}
