@@ -36,7 +36,11 @@
 				}
 				this.config.LocalLayerWidget.layerJson.forEach(function(layer) {
 					if (layer.type.toUpperCase() == "DYNAMIC"){
-						var _dynamicLayer = new esri.layers.ArcGISDynamicMapServiceLayer(layer.url,{"id":layer.name})
+						layerProperties = {"id": layer.name};
+						if(layer.opacity !== undefined) {
+						  layerProperties.opacity = layer.opacity;
+						}
+						var _dynamicLayer = new esri.layers.ArcGISDynamicMapServiceLayer(layer.url,layerProperties);
 						if (layer.popup){
 							var finalInfoTemp = {}
 							array.forEach(layer.popup.infoTemplates, function(_infoTemp){
