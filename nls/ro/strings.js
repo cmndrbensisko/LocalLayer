@@ -1,5 +1,5 @@
-﻿define(
+define(
    ({
-    _widgetLabel: "Legendă"
+    _widgetLabel: "Local Layer Widget"
   })
 );

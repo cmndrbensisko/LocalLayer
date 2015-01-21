@@ -1,5 +1,5 @@
-﻿define(
+define(
    ({
-    _widgetLabel: "범례"
+    _widgetLabel: "지역 계층 위젯"
   })
 );

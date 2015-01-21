@@ -1,5 +1,5 @@
-﻿define(
+define(
    ({
-    _widgetLabel: "Legende"
+    _widgetLabel: "Lokale Ebene Widget"
   })
 );

@@ -1,5 +1,5 @@
-﻿define(
+define(
    ({
-    _widgetLabel: "凡例"
+    _widgetLabel: "ローカルなレイヤウィジェット"
   })
 );

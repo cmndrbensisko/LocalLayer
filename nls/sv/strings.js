@@ -1,5 +1,5 @@
-﻿define(
+define(
    ({
-    _widgetLabel: "Teckenförklaring"
+    _widgetLabel: "Lokal Layer Widget"
   })
 );
