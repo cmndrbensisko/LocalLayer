@@ -1,5 +1,5 @@
-﻿define(
+define(
    ({
-    _widgetLabel: "Tegnforklaring"
+    _widgetLabel: "Lokale lag Widget"
   })
 );

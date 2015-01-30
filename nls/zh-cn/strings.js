@@ -1,5 +1,5 @@
-﻿define(
+define(
    ({
-    _widgetLabel: "图例"
+    _widgetLabel: "當地層的Widget"
   })
 );

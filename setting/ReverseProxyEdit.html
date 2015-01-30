@@ -1,0 +1,24 @@
+<div style="width:100%;">
+  <table class="setting-table input-table" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="first">${nls.useProxyTitle}</td>
+        <td class="second">
+          <div data-dojo-type="jimu/dijit/CheckBox" data-dojo-attach-point="useProxy" data-dojo-attach-event="click: _onClick"/>
+        </td>
+      </tr>
+      <tr>
+        <td class="first">${nls.proxyPrefixTitle}</td>
+        <td class="second">
+          <input type="text" data-dojo-props='style:{width:"100%"}' data-dojo-attach-point="proxyPrefix" data-dojo-type="dijit/form/TextBox"/>
+        </td>
+      </tr>
+      <tr>
+        <td class="first">${nls.proxyAddressTitle}</td>
+        <td class="second">
+          <input type="text" data-dojo-props='style:{width:"100%"}' data-dojo-attach-point="proxyAddress" data-dojo-type="dijit/form/TextBox"/>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

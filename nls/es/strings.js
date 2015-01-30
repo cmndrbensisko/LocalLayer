@@ -1,5 +1,5 @@
-﻿define(
+define(
    ({
-    _widgetLabel: "Leyenda"
+    _widgetLabel: "Widget Capa Local"
   })
 );

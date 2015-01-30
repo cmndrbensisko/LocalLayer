@@ -1,5 +1,5 @@
-﻿define(
+define(
    ({
-    _widgetLabel: "Apzīmējumi"
+    _widgetLabel: "Vietējā Layer logrīku"
   })
 );
