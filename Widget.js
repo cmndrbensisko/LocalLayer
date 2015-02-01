@@ -100,6 +100,7 @@ define([
               }
               lOptions.mode = lmode;
             }
+            lOptions.outFields = ['*'];
             if(layer.hasOwnProperty('autorefresh')){
               lOptions.refreshInterval = layer.autorefresh;
             }
