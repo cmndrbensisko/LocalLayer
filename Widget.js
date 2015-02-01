@@ -39,10 +39,10 @@ define([
         this.config.layers.layer.forEach(function (layer) {
           var lLayer;
           var lOptions ={};
-          if(layer.hasOwnProperty("opacity")){
+          if(layer.hasOwnProperty('opacity')){
             lOptions.opacity = layer.opacity;
           }
-          if(layer.hasOwnProperty("visible") && !layer.visible){
+          if(layer.hasOwnProperty('visible') && !layer.visible){
             lOptions.visible = false;
           }else{
             lOptions.visible = true;
@@ -50,11 +50,11 @@ define([
           if(layer.name){
             lOptions.id = layer.name;
           }
-          if(layer.type.toUpperCase() === "DYNAMIC"){
+          if(layer.type.toUpperCase() === 'DYNAMIC'){
             if(layer.imageformat){
               var ip = new ImageParameters();
               ip.format = layer.imageformat;
-              if(layer.hasOwnProperty("imagedpi")){
+              if(layer.hasOwnProperty('imagedpi')){
                 ip.dpi = layer.imagedpi;
               }
               lOptions.imageParameters = ip;
@@ -63,9 +63,8 @@ define([
             if (layer.popup){
               var finalInfoTemp = {};
               array.forEach(layer.popup.infoTemplates, function(_infoTemp){
-                var popupInfo = {
-                  title: _infoTemp.title
-                };
+                var popupInfo = {};
+                popupInfo.title = _infoTemp.title;
                 if(_infoTemp.content){
                   popupInfo.description = _infoTemp.content;
                 }else{
@@ -84,46 +83,46 @@ define([
             }
             this._viewerMap.addLayer(lLayer);
             this._viewerMap.setInfoWindowOnClick(true);
-          }else if (layer.type.toUpperCase() === "FEATURE") {
+          }else if (layer.type.toUpperCase() === 'FEATURE') {
             var _popupTemplate;
             if (layer.popup){
               _popupTemplate = new PopupTemplate(layer.popup);
               lOptions.infoTemplate = _popupTemplate;
             }
-            if(layer.hasOwnProperty("mode")){
+            if(layer.hasOwnProperty('mode')){
               var lmode;
-              if(layer.mode === "ondemand"){
+              if(layer.mode === 'ondemand'){
                 lmode = 1;
-              }else if(layer.mode === "snapshot"){
+              }else if(layer.mode === 'snapshot'){
                 lmode = 0;
-              }else if(layer.mode === "selection"){
+              }else if(layer.mode === 'selection'){
                 lmode = 2;
               }
               lOptions.mode = lmode;
             }
-            if(layer.hasOwnProperty("autorefresh")){
+            if(layer.hasOwnProperty('autorefresh')){
               lOptions.refreshInterval = layer.autorefresh;
             }
             lLayer = new FeatureLayer(layer.url, lOptions);
             this._viewerMap.addLayer(lLayer);
-          }else if(layer.type.toUpperCase() === "BASEMAP"){
+          }else if(layer.type.toUpperCase() === 'BASEMAP'){
             var bmLayers = array.map(layer.layers.layer, function(bLayer){
               var bmLayerObj = {url:bLayer.url, isReference: false};
               if(bLayer.displayLevels){
                 bmLayerObj.displayLevels = bLayer.displayLevels;
               }
-              if(layer.hasOwnProperty("opacity")){
+              if(layer.hasOwnProperty('opacity')){
                 bmLayerObj.opacity = bLayer.opacity;
               }
               return new BasemapLayer(bmLayerObj);
             });
-            var _newBasemap = new Basemap({id:"defaultBasemap", title:layer.name, layers:bmLayers});
+            var _newBasemap = new Basemap({id:'defaultBasemap', title:layer.name, layers:bmLayers});
             var _basemapGallery = new BasemapGallery({
               showArcGISBasemaps: false,
               map: this._viewerMap
-            }, "_tmpBasemapGallery");
+            }, '_tmpBasemapGallery');
             _basemapGallery.add(_newBasemap);
-            _basemapGallery.select("defaultBasemap");
+            _basemapGallery.select('defaultBasemap');
             _basemapGallery.destroy();
           }
         });

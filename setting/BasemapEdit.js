@@ -1,20 +1,20 @@
 /*global define*/
 define(
-  ["dojo/_base/declare",
-    "dojo/_base/lang",
-    "dojo/_base/array",
-    "dojo/_base/html",
-    "dojo/on",
-    "dijit/_WidgetBase",
-    "dijit/_TemplatedMixin",
-    "dijit/_WidgetsInTemplateMixin",
-    "jimu/BaseWidgetSetting",
-    "jimu/dijit/Message",
-    "dojo/text!./BasemapEdit.html",
-    "jimu/dijit/ServiceURLInput",
-    "./BasemapLayerEdit",
-    "jimu/dijit/Popup",
-    "dojo/keys"
+  ['dojo/_base/declare',
+    'dojo/_base/lang',
+    'dojo/_base/array',
+    'dojo/_base/html',
+    'dojo/on',
+    'dijit/_WidgetBase',
+    'dijit/_TemplatedMixin',
+    'dijit/_WidgetsInTemplateMixin',
+    'jimu/BaseWidgetSetting',
+    'jimu/dijit/Message',
+    'dojo/text!./BasemapEdit.html',
+    'jimu/dijit/ServiceURLInput',
+    './BasemapLayerEdit',
+    'jimu/dijit/Popup',
+    'dojo/keys'
   ],
   function(
     declare,
@@ -33,7 +33,7 @@ define(
     Popup,
     keys) {
     return declare([BaseWidgetSetting, _WidgetsInTemplateMixin], {
-      baseClass: "basemap-edit",
+      baseClass: 'basemap-edit',
       templateString: template,
       config:null,
       popupbmlyredit: null,
@@ -76,7 +76,7 @@ define(
         var canProceed = true;
         html.setAttr(this.errorMessage, 'innerHTML', '');
         if (this.layerTitle.proceedValue) {
-          canProceed = canProceed && this.layerUrl.proceedValue;
+          canProceed = true;
         } else {
           canProceed = false;
         }
@@ -109,7 +109,7 @@ define(
         var args = {
           config:null
         };
-        this.popupState = "ADD";
+        this.popup2State = 'ADD';
         var tr = this._createSubLayer(args);
         if (tr) {
           this._openBLEdit(this.nls.editbasemaplayer, tr);
@@ -118,7 +118,7 @@ define(
 
       getConfig: function() {
         var basemap = {
-          type: "Basemap",
+          type: 'Basemap',
           name: this.layerTitle.get('value'),
           layers: {
             layer: this._getAllBasemapLayers()
@@ -144,29 +144,30 @@ define(
           return;
         }
         console.info(layerConfig);
-        if(this.popupState === "ADD"){
+        if(this.popup2State === 'ADD'){
           this.sublayersTable.editRow(layerConfig[1], {
             name: layerConfig[0].url
           });
           layerConfig[1].subLayer = layerConfig[0];
-          this.popupState = "";
+          this.popup2State = '';
         }else{
           this.sublayersTable.editRow(layerConfig[1], {
             name: layerConfig[0].url
           });
           layerConfig[1].subLayer = layerConfig[0];
         }
-        this.popup.close();
-        this.popupState = "";
+        this.popup2.close();
+        this.popup2State = '';
+        this._checkProceed();
       },
 
       _onBLEditClose: function() {
         var layerConfig = this.popupbmlyredit.getConfig();
-        if(this.popupState === "ADD"){
+        if(this.popup2State === 'ADD'){
           this.sublayersTable.deleteRow(layerConfig[1]);
         }
         this.popupbmlyredit = null;
-        this.popup = null;
+        this.popup2 = null;
       },
 
       _openBLEdit: function(title, tr) {
@@ -176,8 +177,7 @@ define(
           tr: tr,
           map: this.map
         });
-
-        this.popup = new Popup({
+        this.popup2 = new Popup({
           titleLabel: title,
           autoHeight: true,
           content: this.popupbmlyredit,
@@ -194,13 +194,13 @@ define(
           }],
           onClose: lang.hitch(this, '_onBLEditClose')
         });
-        html.addClass(this.popup.domNode, 'widget-setting-popup');
+        html.addClass(this.popup2.domNode, 'widget-setting-popup');
         this.popupbmlyredit.startup();
       },
 
       _bindEvents: function() {
         this.own(on(this.sublayersTable,'actions-edit',lang.hitch(this,function(tr){
-          this.popupState = "EDIT";
+          this.popup2State = 'EDIT';
           this._openBLEdit(this.nls.editbasemaplayer, tr);
         })));
         this.own(on(this.sublayersTable,'row-delete',lang.hitch(this,function(tr){

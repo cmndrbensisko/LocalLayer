@@ -1,27 +1,27 @@
 /*global define*/
 define(
-  ["dojo/_base/declare",
-    "dojo/_base/lang",
-    "dojo/_base/array",
-    "dojo/_base/html",
-    "dojo/on",
-    "dijit/_WidgetBase",
-    "dijit/_TemplatedMixin",
-    "dijit/_WidgetsInTemplateMixin",
-    "jimu/BaseWidgetSetting",
-    "jimu/dijit/Message",
-    "dojo/text!./PopupEdit.html",
-    "jimu/dijit/TabContainer3",
-    "widgets/LocalLayer/setting/CustomPopupBtns",
-    "jimu/dijit/Popup",
-    "dojo/keys",
-    "widgets/LocalLayer/setting/HyperlinkEdit",
-    "widgets/LocalLayer/setting/ImageEdit",
-    "esri/request",
-    "widgets/LocalLayer/setting/AddFieldBtn",
-    "dijit/form/TextBox",
-    "jimu/dijit/SimpleTable",
-    "jimu/dijit/CheckBox"
+  ['dojo/_base/declare',
+    'dojo/_base/lang',
+    'dojo/_base/array',
+    'dojo/_base/html',
+    'dojo/on',
+    'dijit/_WidgetBase',
+    'dijit/_TemplatedMixin',
+    'dijit/_WidgetsInTemplateMixin',
+    'jimu/BaseWidgetSetting',
+    'jimu/dijit/Message',
+    'dojo/text!./PopupEdit.html',
+    'jimu/dijit/TabContainer3',
+    'widgets/LocalLayer/setting/CustomPopupBtns',
+    'jimu/dijit/Popup',
+    'dojo/keys',
+    'widgets/LocalLayer/setting/HyperlinkEdit',
+    'widgets/LocalLayer/setting/ImageEdit',
+    'esri/request',
+    'widgets/LocalLayer/setting/AddFieldBtn',
+    'dijit/form/TextBox',
+    'jimu/dijit/SimpleTable',
+    'jimu/dijit/CheckBox'
   ],
   function(
     declare,
@@ -44,7 +44,7 @@ define(
     esriRequest
     ) {
     return declare([BaseWidgetSetting, _WidgetsInTemplateMixin], {
-      baseClass: "popup-edit",
+      baseClass: 'popup-edit',
       templateString: template,
       config:null,
       flinfo:null,
@@ -148,9 +148,9 @@ define(
         }
         this._def = esriRequest({
           url:url,
-          content:{f:"json"},
-          handleAs:"json",
-          callbackParamName:"callback"
+          content:{f:'json'},
+          handleAs:'json',
+          callbackParamName:'callback'
         });
         this._def.then(lang.hitch(this,function(response){
           if(response && response.fields){
@@ -158,7 +158,7 @@ define(
             this._initFieldsAdds(response.fields, (this.config.fieldInfos)?this.config.fieldInfos:{});
           }
         }),lang.hitch(this,function(error){
-          console.error("request layer info failed",error);
+          console.error('request layer info failed',error);
         }));
         return this._def;
       },
@@ -171,20 +171,20 @@ define(
 
       _bindEvents: function(){
         this.own(on(this.titleTextBox, 'Change', lang.hitch(this, '_onTitleChange')));
-        this.titleTextBox.on("blur", function() {
+        this.titleTextBox.on('blur', function() {
           var start = this.textbox.selectionStart,
               end = this.textbox.selectionEnd;
-          this.set("cursorPosition", [start, end]);
+          this.set('cursorPosition', [start, end]);
         });
-        this.titleTextBox.on("focus", function() {
-          var cursorPosition = this.get("cursorPosition");
+        this.titleTextBox.on('focus', function() {
+          var cursorPosition = this.get('cursorPosition');
           if(cursorPosition) {
             this.textbox.setSelectionRange(cursorPosition[1], cursorPosition[1]);
           }
         });
         this.own(on(this.titleAddButton, 'onMenuClick', lang.hitch(this,function(item){
-          var cur = this.titleTextBox.get("cursorPosition");
-          var val = this.titleTextBox.get("value");
+          var cur = this.titleTextBox.get('cursorPosition');
+          var val = this.titleTextBox.get('value');
           this._setFieldVisible(item.key);
           var str;
           if(!cur){
@@ -192,9 +192,14 @@ define(
           }else{
             str = val.substring(0, cur[0])+ item.key + val.substring(cur[1]);
           }
-          this.titleTextBox.set("value", str);
+          this.titleTextBox.set('value', str);
           this.titleTextBox.focus();
-          this.titleTextBox.textbox.setSelectionRange(cur[0]+item.key.length, cur[0]+item.key.length);
+
+          if(!cur){
+            this.titleTextBox.textbox.setSelectionRange(item.key.length, item.key.length);
+          }else{
+            this.titleTextBox.textbox.setSelectionRange(cur[0]+item.key.length, cur[0]+item.key.length);
+          }
         })));
         this.own(on(this.customContentAddButton, 'onMenuClick', lang.hitch(this, function(item){
           this._setFieldVisible(item.key);
@@ -208,7 +213,7 @@ define(
       },
 
       _setFieldVisible: function(value) {
-        var eVal = value.replace(/^\{|\}$/g,"");
+        var eVal = value.replace(/^\{|\}$/g,'');
         var trs = this.fieldsTable.getRows();
         array.forEach(trs, lang.hitch(this,function(tr){
           var rowData = this.fieldsTable.getRowData(tr);
@@ -258,8 +263,8 @@ define(
         var data = array.map(fields,lang.hitch(this,function(fieldInfo,index){
           var item = lang.mixin({},fieldInfo);
           item.id = index;
-          item.key = "{" + item.name + "}";
-          item.label = item.alias + " {" + item.name + "}";
+          item.key = '{' + item.name + '}';
+          item.label = item.alias + ' {' + item.name + '}';
           return item;
         }));
 
@@ -394,7 +399,7 @@ define(
           return;
         }
         this.popup.close();
-        this.popupState = "";
+        this.popupState = '';
         this._wrapAroundSelection(this.customContentTA,'<a href="' + hyperlinkConfig.url + '">','</a>');
         this.customContentTA.selectionStart = this.customContentTA.value.length;
       },
@@ -442,7 +447,7 @@ define(
           return;
         }
         this.popup.close();
-        this.popupState = "";
+        this.popupState = '';
         this._insertAtCursor(this.customContentTA,'<img src="' + imageConfig.url + '"/>');
         //this.customContentTA.selectionStart = this.customContentTA.value.length;
       },

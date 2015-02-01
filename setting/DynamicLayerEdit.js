@@ -1,25 +1,25 @@
 /*global define*/
 define(
-  ["dojo/_base/declare",
-    "dojo/_base/lang",
-    "dojo/_base/array",
-    "dojo/_base/html",
-    "dojo/on",
-    "dijit/_WidgetBase",
-    "dijit/_TemplatedMixin",
-    "dijit/_WidgetsInTemplateMixin",
-    "jimu/BaseWidgetSetting",
-    "jimu/dijit/Message",
-    "jimu/dijit/ServiceURLInput",
-    "jimu/dijit/_Transparency",
-    "dijit/form/TextBox",
-    "jimu/dijit/CheckBox",
-    "dijit/form/NumberTextBox",
-    "dijit/form/ValidationTextBox",
-    "dojo/text!./DynamicLayerEdit.html",
-    "jimu/dijit/Popup",
-    "dojo/keys",
-    "./PopupEdit"
+  ['dojo/_base/declare',
+    'dojo/_base/lang',
+    'dojo/_base/array',
+    'dojo/_base/html',
+    'dojo/on',
+    'dijit/_WidgetBase',
+    'dijit/_TemplatedMixin',
+    'dijit/_WidgetsInTemplateMixin',
+    'jimu/BaseWidgetSetting',
+    'jimu/dijit/Message',
+    'jimu/dijit/ServiceURLInput',
+    'jimu/dijit/_Transparency',
+    'dijit/form/TextBox',
+    'jimu/dijit/CheckBox',
+    'dijit/form/NumberTextBox',
+    'dijit/form/ValidationTextBox',
+    'dojo/text!./DynamicLayerEdit.html',
+    'jimu/dijit/Popup',
+    'dojo/keys',
+    './PopupEdit'
   ],
   function(
     declare,
@@ -43,7 +43,7 @@ define(
     keys,
     PopupEdit) {
     return declare([BaseWidgetSetting, _WidgetsInTemplateMixin], {
-      baseClass: "dynamic-layer-edit",
+      baseClass: 'dynamic-layer-edit',
       templateString: template,
       config:null,
       tr:null,
@@ -100,13 +100,13 @@ define(
              config: infoTemp,
              tr: tr
             };
-            this.popupState = "EDIT";
+            this.popupState = 'EDIT';
           }else{
             args = {
              config:{},
              tr: tr
             };
-            this.popupState = "ADD";
+            this.popupState = 'ADD';
           }
           this._openPUEdit(this.nls.configurepopup, args);
         })));
@@ -198,7 +198,7 @@ define(
 
       getConfig: function() {
         var dynamiclayer = {
-          type: "Dynamic",
+          type: 'Dynamic',
           name: this.layerTitle.get('value'),
           url: this.layerUrl.get('value'),
           opacity: this.layerAlpha.getAlpha(),
@@ -225,7 +225,7 @@ define(
         console.info(this.config.popup);
 
         this.popup.close();
-        this.popupState = "";
+        this.popupState = '';
       },
 
       addOrEditInfoTemplate: function(popupConfig) {
@@ -282,7 +282,7 @@ define(
           config: args.config || {},
           tr: args.tr,
           flinfo: null,
-          url: this.layerUrl.get('value') + "/" + args.tr.subLayer.id
+          url: this.layerUrl.get('value') + '/' + args.tr.subLayer.id
         });
 
         this.popup = new Popup({

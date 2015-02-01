@@ -1,19 +1,19 @@
 /*global define*/
 define(
-  ["dojo/_base/declare",
-    "dojo/_base/lang",
-    "dojo/_base/array",
-    "dojo/_base/html",
-    "dojo/on",
-    "dijit/_WidgetBase",
-    "dijit/_TemplatedMixin",
-    "dijit/_WidgetsInTemplateMixin",
-    "jimu/BaseWidgetSetting",
-    "jimu/dijit/Message",
-    "dojo/text!./BasemapLayerEdit.html",
-    "dijit/form/ValidationTextBox",
-    "jimu/dijit/ServiceURLInput",
-    "jimu/SpatialReference/wkidUtils"
+  ['dojo/_base/declare',
+    'dojo/_base/lang',
+    'dojo/_base/array',
+    'dojo/_base/html',
+    'dojo/on',
+    'dijit/_WidgetBase',
+    'dijit/_TemplatedMixin',
+    'dijit/_WidgetsInTemplateMixin',
+    'jimu/BaseWidgetSetting',
+    'jimu/dijit/Message',
+    'dojo/text!./BasemapLayerEdit.html',
+    'dijit/form/ValidationTextBox',
+    'jimu/dijit/ServiceURLInput',
+    'jimu/SpatialReference/wkidUtils'
   ],
   function(
     declare,
@@ -31,7 +31,7 @@ define(
     ServiceURLInput,
     SRUtils) {
     return declare([BaseWidgetSetting, _WidgetsInTemplateMixin], {
-      baseClass: "basemap-layer-edit",
+      baseClass: 'basemap-layer-edit',
       templateString: template,
       config:null,
       map:null,
@@ -122,7 +122,7 @@ define(
 
       getConfig: function() {
         var dls = [];
-        if(this.displayLevels.get('value') !== ""){
+        if(this.displayLevels.get('value') !== ''){
           dls = this.displayLevels.get('value').split();
         }
         var basemaplayer = {
