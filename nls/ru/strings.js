@@ -1,5 +1,5 @@
-﻿define(
+define(
    ({
-    _widgetLabel: "Легенда"
+    _widgetLabel: "Слой местного Виджет"
   })
 );

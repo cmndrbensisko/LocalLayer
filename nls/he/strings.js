@@ -1,5 +1,5 @@
-﻿define(
+define(
    ({
-    _widgetLabel: "מקרא"
+    _widgetLabel: "יישומון Layer המקומי"
   })
 );

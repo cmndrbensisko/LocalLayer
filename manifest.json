@@ -1,10 +1,11 @@
 {
-  "name": "LocalLayerWidget",
+  "name": "LocalLayer",
+  "label": "Local Layer Widget",
   "platform": "HTML",
-  "version": "1.1",
+  "version": "1.2",
   "wabVersion": "1.1",
-  "author": "Adam Drackley (adam.drackley@gmail.com)",
-  "description": "",
+  "author": "Adam Drackley (adam.drackley@gmail.com) & Robert Scheitlin",
+  "description": "This widget is for adding local layer to Web AppBuilder",
   "copyright": "",
   "license": "MIT License",
   "properties": {

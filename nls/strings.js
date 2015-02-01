@@ -1,6 +1,6 @@
 define({
   root: ({
-    _widgetLabel: "LocalLayerWidget"
+    _widgetLabel: "Local Layer Widget"
   }),
   "ar": 1,
   "cs": 1,

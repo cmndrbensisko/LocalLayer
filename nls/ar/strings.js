@@ -1,5 +1,5 @@
-﻿define(
+define(
    ({
-    _widgetLabel: "وسيلة إيضاح"
+    _widgetLabel: "القطعة طبقة المحلية"
   })
 );

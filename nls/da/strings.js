@@ -1,5 +1,5 @@
-﻿define(
+define(
    ({
-    _widgetLabel: "Signaturforklaring"
+    _widgetLabel: "Local Layer Widget"
   })
 );

@@ -1,5 +1,5 @@
-﻿define(
+define(
    ({
-    _widgetLabel: "Gösterim"
+    _widgetLabel: "Yerel Katman Widget"
   })
 );

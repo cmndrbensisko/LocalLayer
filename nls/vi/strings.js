@@ -1,5 +1,5 @@
-﻿define(
+define(
    ({
-    _widgetLabel: "Chú giải"
+    _widgetLabel: "Local lớp Widget"
   })
 );

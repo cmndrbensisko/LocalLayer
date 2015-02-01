@@ -1,5 +1,5 @@
-﻿define(
+define(
    ({
-    _widgetLabel: "Selite"
+    _widgetLabel: "Paikallinen Layer Widget"
   })
 );
