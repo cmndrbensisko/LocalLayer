@@ -2,8 +2,11 @@
 define([
  'dojo/_base/declare',
  'jimu/BaseWidget',
+ 'jimu/ConfigManager',
+ 'jimu/MapManager',
  'esri/urlUtils',
  'dojo/_base/array',
+ 'dojo/_base/query',
  'esri/layers/ArcGISDynamicMapServiceLayer',
  'esri/layers/FeatureLayer',
  'esri/layers/ImageParameters',
@@ -17,8 +20,11 @@ define([
   function (
     declare,
     BaseWidget,
+    ConfigManager,
+    MapManager,
     urlUtils,
     array,
+    query,
     ArcGISDynamicMapServiceLayer,
     FeatureLayer,
     ImageParameters,
@@ -28,7 +34,17 @@ define([
     esriBasemaps,
     PopupTemplate) {
     var clazz = declare([BaseWidget], {
+      constructor: function() {
+        this._originalWebMap = null;
+      },
+      onClose: function(){
+        if (query(".jimu-popup.widget-setting-popup",window.parent.document).length == 0){
+          var changedData = {itemId:this._originalWebMap}
+          MapManager.getInstance(ConfigManager.getConfig(),this._originalWebMap).onAppConfigChanged(ConfigManager.getConfig(),'mapChange', changedData);
+        }
+      },
       startup: function () {
+        this._originalWebMap = this.map.webMapResponse.itemInfo.item.id;
         if (this.config.useProxy) {
           urlUtils.addProxyRule({
             urlPrefix: this.config.proxyPrefix,
@@ -81,6 +97,17 @@ define([
             if(layer.disableclientcaching){
               lLayer.setDisableClientCaching(true);
             }
+            lLayer.on("load",function(evt){
+              removeLayers = []
+              array.forEach(evt.layer.visibleLayers,function(layer){
+                if (evt.layer.layerInfos[layer].parentLayerId>-1){
+                  removeLayers.push(layer)
+                }
+              })
+              array.forEach(removeLayers,function(layerId){
+                evt.layer.visibleLayers.splice(evt.layer.visibleLayers.indexOf(layerId),1)
+              })
+            })
             this._viewerMap.addLayer(lLayer);
             this._viewerMap.setInfoWindowOnClick(true);
           }else if (layer.type.toUpperCase() === 'FEATURE') {
