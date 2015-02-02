@@ -113,8 +113,8 @@ define(
         if(this.config.title){
           this.titleTextBox.set('value',this.config.title);
         }
-        if(this.config.content){
-          this.customContentTA.value = this.config.content;
+        if(this.config.custom){
+          this.customContentTA.value = this.config.custom;
           this.tabContainer.selectTab(this.wnls.custom);
         }
         if(this.flinfo){
@@ -291,7 +291,7 @@ define(
           }
         }));
         if(this.customContentTA.value && this.customContentTA.value.length > 0){
-          config.custom = this.customContentTA.value;
+          config.description = this.customContentTA.value;
         }
         config.showAttachments = this.showAttachmentsCbx.getValue();
         config.tr = this.tr;
@@ -400,7 +400,8 @@ define(
         }
         this.popup.close();
         this.popupState = '';
-        this._wrapAroundSelection(this.customContentTA,'<a href="' + hyperlinkConfig.url + '">','</a>');
+        this._insertAtCursor(this.customContentTA,'<a href="' + hyperlinkConfig.url + '">'+ hyperlinkConfig.description + '</a>');
+        //this._wrapAroundSelection(this.customContentTA,'<a href="' + hyperlinkConfig.url + '">','</a>');
         this.customContentTA.selectionStart = this.customContentTA.value.length;
       },
 
@@ -449,7 +450,6 @@ define(
         this.popup.close();
         this.popupState = '';
         this._insertAtCursor(this.customContentTA,'<img src="' + imageConfig.url + '"/>');
-        //this.customContentTA.selectionStart = this.customContentTA.value.length;
       },
 
       _onImgEditClose: function() {

@@ -8,6 +8,7 @@ define([
  'dojo/_base/array',
  'dojo/_base/query',
  'esri/layers/ArcGISDynamicMapServiceLayer',
+ 'esri/layers/ArcGISTiledMapServiceLayer',
  'esri/layers/FeatureLayer',
  'esri/layers/ImageParameters',
  'esri/dijit/BasemapGallery',
@@ -26,6 +27,7 @@ define([
     array,
     query,
     ArcGISDynamicMapServiceLayer,
+    ArcGISTiledMapServiceLayer,
     FeatureLayer,
     ImageParameters,
     BasemapGallery,
@@ -37,12 +39,14 @@ define([
       constructor: function() {
         this._originalWebMap = null;
       },
+
       onClose: function(){
-        if (query(".jimu-popup.widget-setting-popup",window.parent.document).length == 0){
-          var changedData = {itemId:this._originalWebMap}
+        if (query('.jimu-popup.widget-setting-popup', window.parent.document).length === 0){
+          var changedData = {itemId:this._originalWebMap};
           MapManager.getInstance(ConfigManager.getConfig(),this._originalWebMap).onAppConfigChanged(ConfigManager.getConfig(),'mapChange', changedData);
         }
       },
+
       startup: function () {
         this._originalWebMap = this.map.webMapResponse.itemInfo.item.id;
         if (this.config.useProxy) {
@@ -81,8 +85,8 @@ define([
               array.forEach(layer.popup.infoTemplates, function(_infoTemp){
                 var popupInfo = {};
                 popupInfo.title = _infoTemp.title;
-                if(_infoTemp.content){
-                  popupInfo.description = _infoTemp.content;
+                if(_infoTemp.description){
+                  popupInfo.description = _infoTemp.description;
                 }else{
                   popupInfo.description = null;
                 }
@@ -97,17 +101,17 @@ define([
             if(layer.disableclientcaching){
               lLayer.setDisableClientCaching(true);
             }
-            lLayer.on("load",function(evt){
-              removeLayers = []
+            lLayer.on('load',function(evt){
+              var removeLayers = [];
               array.forEach(evt.layer.visibleLayers,function(layer){
                 if (evt.layer.layerInfos[layer].parentLayerId>-1){
-                  removeLayers.push(layer)
+                  removeLayers.push(layer);
                 }
-              })
+              });
               array.forEach(removeLayers,function(layerId){
-                evt.layer.visibleLayers.splice(evt.layer.visibleLayers.indexOf(layerId),1)
-              })
-            })
+                evt.layer.visibleLayers.splice(evt.layer.visibleLayers.indexOf(layerId), 1);
+              });
+            });
             this._viewerMap.addLayer(lLayer);
             this._viewerMap.setInfoWindowOnClick(true);
           }else if (layer.type.toUpperCase() === 'FEATURE') {
@@ -132,6 +136,33 @@ define([
               lOptions.refreshInterval = layer.autorefresh;
             }
             lLayer = new FeatureLayer(layer.url, lOptions);
+            this._viewerMap.addLayer(lLayer);
+          }else if(layer.type.toUpperCase() === 'TILED'){
+            if(layer.displayLevels){
+              lOptions.displayLevels = layer.displayLevels;
+            }
+            if(layer.hasOwnProperty('autorefresh')){
+              lOptions.refreshInterval = layer.autorefresh;
+            }
+            lLayer = new ArcGISTiledMapServiceLayer(layer.url, lOptions);
+            if (layer.popup){
+              var finalInfoTemp2 = {};
+              array.forEach(layer.popup.infoTemplates, function(_infoTemp){
+                var popupInfo = {};
+                popupInfo.title = _infoTemp.title;
+                if(_infoTemp.content){
+                  popupInfo.description = _infoTemp.content;
+                }else{
+                  popupInfo.description = null;
+                }
+                if(_infoTemp.fieldInfos){
+                  popupInfo.fieldInfos = _infoTemp.fieldInfos;
+                }
+                var _popupTemplate2 = new PopupTemplate(popupInfo);
+                finalInfoTemp2[_infoTemp.layerId] = {infoTemplate: _popupTemplate2};
+              });
+              lLayer.setInfoTemplates(finalInfoTemp2);
+            }
             this._viewerMap.addLayer(lLayer);
           }else if(layer.type.toUpperCase() === 'BASEMAP'){
             var bmLayers = array.map(layer.layers.layer, function(bLayer){
