@@ -113,8 +113,8 @@ define(
         if(this.config.title){
           this.titleTextBox.set('value',this.config.title);
         }
-        if(this.config.custom){
-          this.customContentTA.value = this.config.custom;
+        if(this.config.description){
+          this.customContentTA.value = this.config.description;
           this.tabContainer.selectTab(this.wnls.custom);
         }
         if(this.flinfo){
