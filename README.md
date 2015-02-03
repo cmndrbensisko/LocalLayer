@@ -20,7 +20,9 @@ Example:
 	}
 ```
 
-IMPORTANT: A minor change will need to be made to your \client\stemapp\jimu.js\LayerInfos\LayerInfoForMapService.js file to make this tool operational.  Line 433 should be changed from:
+"visible":false will render the widget 'off' by default when building your applications, unless you wish to override the default WAB functionality and import your own layers directly from an ArcGIS Server instance.  Also, please note that the "/LocalLayer/" portion of the uri path above must match the folder name in which the widget resides on your local deployment.
+
+IMPORTANT: Two minor changes will need to be made to your \client\stemapp\jimu.js\LayerInfos\LayerInfoForMapService.js file to make this tool operational.  Line 433 should be changed from:
 ```
 var url = this.originOperLayer.url + '/' + subId;
 ```
@@ -28,4 +30,15 @@ var url = this.originOperLayer.url + '/' + subId;
 To:
 ```
 var url = this.originOperLayer.layerObject.url + '/' + subId;
+```
+
+And line 406 should be changed from:
+
+```
+var url = this.originOperLayer.url + '/layers';
+```
+
+To:
+```
+var url = this.originOperLayer.layerObject.url + '/layers';
 ```
