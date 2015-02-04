@@ -291,7 +291,7 @@ define(
           }
         }));
         if(this.customContentTA.value && this.customContentTA.value.length > 0){
-          config.description = this.customContentTA.value;
+          config.description = this.customContentTA.value.replace('\n', '<br>');
         }
         config.showAttachments = this.showAttachmentsCbx.getValue();
         config.tr = this.tr;
@@ -401,7 +401,6 @@ define(
         this.popup.close();
         this.popupState = '';
         this._insertAtCursor(this.customContentTA,'<a href="' + hyperlinkConfig.url + '">'+ hyperlinkConfig.description + '</a>');
-        //this._wrapAroundSelection(this.customContentTA,'<a href="' + hyperlinkConfig.url + '">','</a>');
         this.customContentTA.selectionStart = this.customContentTA.value.length;
       },
 
