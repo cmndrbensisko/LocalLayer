@@ -17,21 +17,21 @@ function(declare, _WidgetBase, lang, array, html, on, Evented) {
         'title': this.nls.insertbold
       }, this.domNode);
 
-      this.boldBtnNode.innerHTML = "B";
+      this.boldBtnNode.innerHTML = 'B';
 
       this.italicBtnNode = html.create('div', {
         'class': 'icon-btn italic-btn',
         'title': this.nls.insertitalic
       }, this.domNode);
 
-      this.italicBtnNode.innerHTML = "I";
+      this.italicBtnNode.innerHTML = 'I';
 
       this.underBtnNode = html.create('div', {
         'class': 'icon-btn under-btn',
         'title': this.nls.insertunderline
       }, this.domNode);
 
-      this.underBtnNode.innerHTML = "U";
+      this.underBtnNode.innerHTML = 'U';
 
       this.seperatorNode = html.create('div', {
         'class': 'seperator'

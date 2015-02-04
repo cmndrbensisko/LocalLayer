@@ -1,25 +1,25 @@
 /*global define*/
 define(
-  ["dojo/_base/declare",
-    "dojo/_base/lang",
-    "dojo/_base/array",
-    "dojo/_base/html",
-    "dojo/on",
-    "dijit/_WidgetBase",
-    "dijit/_TemplatedMixin",
-    "dijit/_WidgetsInTemplateMixin",
-    "jimu/BaseWidgetSetting",
-    "jimu/dijit/Message",
-    "jimu/dijit/ServiceURLInput",
-    "jimu/dijit/_Transparency",
-    "jimu/dijit/Popup",
-    "dojo/keys",
-    "./PopupEdit",
-    "dijit/form/TextBox",
-    "jimu/dijit/CheckBox",
-    "dijit/form/NumberTextBox",
-    "dijit/form/ValidationTextBox",
-    "dojo/text!./FeatureLayerEdit.html"
+  ['dojo/_base/declare',
+    'dojo/_base/lang',
+    'dojo/_base/array',
+    'dojo/_base/html',
+    'dojo/on',
+    'dijit/_WidgetBase',
+    'dijit/_TemplatedMixin',
+    'dijit/_WidgetsInTemplateMixin',
+    'jimu/BaseWidgetSetting',
+    'jimu/dijit/Message',
+    'jimu/dijit/ServiceURLInput',
+    'jimu/dijit/_Transparency',
+    'jimu/dijit/Popup',
+    'dojo/keys',
+    './PopupEdit',
+    'dijit/form/TextBox',
+    'jimu/dijit/CheckBox',
+    'dijit/form/NumberTextBox',
+    'dijit/form/ValidationTextBox',
+    'dojo/text!./FeatureLayerEdit.html'
   ],
   function(
     declare,
@@ -43,7 +43,7 @@ define(
     ValidationTextBox,
     template) {
     return declare([BaseWidgetSetting, _WidgetsInTemplateMixin], {
-      baseClass: "feature-layer-edit",
+      baseClass: 'feature-layer-edit',
       templateString: template,
       config:null,
       tr:null,
@@ -151,7 +151,7 @@ define(
 
       getConfig: function() {
         var featurelayer = {
-          type: "Feature",
+          type: 'Feature',
           url: this.layerUrl.get('value'),
           name: this.layerTitle.get('value'),
           opacity: this.layerAlpha.getAlpha(),
@@ -170,12 +170,12 @@ define(
           args = {
            config:this.config.popup
           };
-          this.popupState = "EDIT";
+          this.popupState = 'EDIT';
         }else{
           args = {
            config:{}
           };
-          this.popupState = "ADD";
+          this.popupState = 'ADD';
         }
         this._openPUEdit(this.nls.configurepopup, args);
       },
@@ -199,11 +199,11 @@ define(
         this.config.popup = popupConfig;
 
         this.popup.close();
-        this.popupState = "";
+        this.popupState = '';
       },
 
       _onPUEditClose: function() {
-        if(this.popupState === "ADD"){
+        if(this.popupState === 'ADD'){
           html.addClass(this.removePopupBtn, 'disabled');
         }
         this.popupbmedit = null;

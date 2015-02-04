@@ -16,7 +16,7 @@ define(
     'jimu/dijit/CheckBox',
     'dijit/form/NumberTextBox',
     'dijit/form/ValidationTextBox',
-    'dojo/text!./DynamicLayerEdit.html',
+    'dojo/text!./TiledLayerEdit.html',
     'jimu/dijit/Popup',
     'dojo/keys',
     './PopupEdit'
@@ -43,7 +43,7 @@ define(
     keys,
     PopupEdit) {
     return declare([BaseWidgetSetting, _WidgetsInTemplateMixin], {
-      baseClass: 'dynamic-layer-edit',
+      baseClass: 'tiled-layer-edit',
       templateString: template,
       config:null,
       tr:null,
@@ -82,12 +82,12 @@ define(
         }else{
           this.isVisible.setValue(true);
         }
-        if(config.disableclientcaching){
-          this.disableClientCachingCbx.setValue(true);
-        }
         this.layerAlpha.setAlpha(parseFloat(config.opacity||0.6));
-        if(config.imageformat){
-          this.imgFormat.set('value', config.imageformat);
+        if(config.displayLevels && config.displayLevels.length){
+          this.displayLevels.set('value', config.displayLevels.join());
+        }
+        if(config.hasOwnProperty('autorefresh')){
+          this.autoRefresh.set('value', config.autorefresh);
         }
       },
 
@@ -126,8 +126,9 @@ define(
       _onServiceFetch: function(urlDijit, evt){
         var result = false;
         var errormessage = null;
+        console.info(evt.data);
         var url = evt.url.replace(/\/*$/g, '');
-        if (this._isStringEndWith(url, '/MapServer')) {
+        if (this._isStringEndWith(url, '/MapServer') && evt.data.tileInfo) {
           urlDijit.proceedValue = true;
           result = true;
           this.sublayersTable.clear();
@@ -141,7 +142,7 @@ define(
         } else {
           urlDijit.proceedValue = false;
           result = false;
-          errormessage = this.nls.invaliddynamiclayer;
+          errormessage = this.nls.invalidtiledlayer;
         }
 
         this._checkProceed(errormessage);
@@ -197,18 +198,21 @@ define(
       },
 
       getConfig: function() {
-        var dynamiclayer = {
-          type: 'Dynamic',
+        var dls = [];
+        if(this.displayLevels.get('value') !== ''){
+          dls = this.displayLevels.get('value').split();
+        }
+        var tiledlayer = {
+          type: 'Tiled',
           name: this.layerTitle.get('value'),
           url: this.layerUrl.get('value'),
           opacity: this.layerAlpha.getAlpha(),
+          displayLevels: (dls.length > 0)?dls:null,
+          autorefresh: this.autoRefresh.get('value'),
           visible: this.isVisible.getValue(),
-          imageformat: this.imgFormat.get('value'),
-          popup: this.config.popup,
-          imagedpi: this.imgDPI.get('value'),
-          disableclientcaching: this.disableClientCachingCbx.getValue()
+          popup: this.config.popup
         };
-        return [dynamiclayer, this.tr];
+        return [tiledlayer, this.tr];
       },
 
       _onPUEditOk: function() {
@@ -238,7 +242,7 @@ define(
         var exists = array.some(this.config.popup.infoTemplates, lang.hitch(this, function(infoTemp) {
           if(infoTemp.layerId === popupConfig.tr.subLayer.id){
             infoTemp.title = popupConfig.title;
-            infoTemp.description = popupConfig.description;
+            infoTemp.content = popupConfig.custom;
             infoTemp.fieldInfos = popupConfig.fieldInfos;
             infoTemp.showAttachments = popupConfig.showAttachments;
             return true;
@@ -249,7 +253,7 @@ define(
           var it = {
             layerId: popupConfig.tr.subLayer.id,
             title: popupConfig.title,
-            description: popupConfig.description,
+            content: popupConfig.custom,
             fieldInfos: popupConfig.fieldInfos,
             showAttachments: popupConfig.showAttachments
           };
