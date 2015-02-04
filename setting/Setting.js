@@ -75,8 +75,25 @@ define([
         this._initLayersTable();
       },
 
+      _removeAllLayersExceptBasemap: function(){
+        for(var l = this.map.layerIds.length - 1; l>1; l--){
+          var lyr = this.map.getLayer(this.map.layerIds[l]);
+          if(lyr){
+            this.map.removeLayer(lyr);
+          }
+        }
+        var f = this.map.graphicsLayerIds.length;
+        while (f--){
+          var fl = this.map.getLayer(this.map.graphicsLayerIds[f]);
+            if(fl.declaredClass === 'esri.layers.FeatureLayer'){
+            this.map.removeLayer(fl);
+          }
+        }
+      },
+
       getConfig: function() {
         this.config.layers.layer =  this._getAllLayers();
+        this._removeAllLayersExceptBasemap();
         console.info(this.config);
         return this.config;
       },

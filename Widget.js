@@ -47,8 +47,25 @@ define([
         }
       },
 
+      _removeAllLayersExceptBasemap: function(){
+        for(var l = this.map.layerIds.length - 1; l>1; l--){
+          var lyr = this.map.getLayer(this.map.layerIds[l]);
+          if(lyr){
+            this.map.removeLayer(lyr);
+          }
+        }
+        var f = this.map.graphicsLayerIds.length;
+        while (f--){
+          var fl = this.map.getLayer(this.map.graphicsLayerIds[f]);
+            if(fl.declaredClass === 'esri.layers.FeatureLayer'){
+            this.map.removeLayer(fl);
+          }
+        }
+      },
+
       startup: function () {
         this._originalWebMap = this.map.webMapResponse.itemInfo.item.id;
+        this._removeAllLayersExceptBasemap();
         if (this.config.useProxy) {
           urlUtils.addProxyRule({
             urlPrefix: this.config.proxyPrefix,
