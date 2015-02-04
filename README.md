@@ -44,3 +44,21 @@ To:
 ```
 var url = this.originOperLayer.layerObject.url + '/layers';
 ```
+
+:bulb: The default theme in WAB is the foldable theme so adding the Local Layer widget to the Tab theme involves a few more steps.
+
+```
+Example:
+    "widgetOnScreen": {
+        "widgets": [
+            {
+                "uri": "widgets/LocalLayer/Widget",
+                "visible": false
+            },
+        ...
+        ]
+    }
+```
+1. open the client\stemapp\themes\TabTheme\layouts\layout1\config.json in a text editor and add the code block above. This will take care of adding the Local Layer widget to layout1
+2. open the client\stemapp\themes\TabTheme\layouts\default\config.json in a text editor and add the code block above. This will take care of adding the Local Layer widget to default
+
