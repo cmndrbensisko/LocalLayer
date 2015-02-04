@@ -1,14 +1,14 @@
 ///////////////////////////////////////////////////////////////////////////
 // Copyright © 2014 Esri. All Rights Reserved.
 //
-// Licensed under the Apache License Version 2.0 (the "License");
+// Licensed under the Apache License Version 2.0 (the 'License');
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
 //    http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
+// distributed under the License is distributed on an 'AS IS' BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
@@ -59,7 +59,7 @@ define([
       popupbmedit: null,
       reverseproxyedit: null,
       popup: null,
-      popupState: "", // ADD or EDIT
+      popupState: '', // ADD or EDIT
 
       startup: function() {
         this.inherited(arguments);
@@ -72,9 +72,27 @@ define([
         this._initLayersTable();
       },
 
+      _removeAllLayersExceptBasemap: function(){
+        for(var l = this.map.layerIds.length - 1; l>1; l--){
+          var lyr = this.map.getLayer(this.map.layerIds[l]);
+          if(lyr){
+            this.map.removeLayer(lyr);
+          }
+        }
+        var f = this.map.graphicsLayerIds.length;
+        while (f--){
+          var fl = this.map.getLayer(this.map.graphicsLayerIds[f]);
+          if(fl.declaredClass === 'esri.layers.FeatureLayer'){
+            this.map.removeLayer(fl);
+          }
+        }
+      },
+
       getConfig: function() {
         this.config.layers.layer =  this._getAllLayers();
-        console.info(this.config);
+//        console.info(this.config);
+        this._removeAllLayersExceptBasemap();
+//        console.info(this.map.layerIds);
         return this.config;
       },
 
@@ -115,11 +133,11 @@ define([
       },
 
       getNLSLayerType: function(type) {
-        if(type === "DYNAMIC"){
+        if(type === 'DYNAMIC'){
           return this.nls.dynamiclayer;
-        }else if(type === "FEATURE"){
+        }else if(type === 'FEATURE'){
           return this.nls.featurelayer;
-        }else if(type === "BASEMAP"){
+        }else if(type === 'BASEMAP'){
           return this.nls.basemaplayer;
         }
       },
@@ -133,18 +151,18 @@ define([
               proxyAddress: this.config.proxyAddress
             }
           };
-          this.popupState = "EDIT";
+          this.popupState = 'EDIT';
           this._openRevProxyEdit(this.nls.reverseproxysettings, args);
         })));
         this.own(on(this.LayersTable,'actions-edit',lang.hitch(this,function(tr){
           var editLayer = tr.singleLayer;
-          this.popupState = "EDIT";
-          if(editLayer.type.toUpperCase() === "DYNAMIC"){
-            this._openDLEdit(this.nls.editdynamiclayer + ": " + editLayer.name , tr);
-          }else if(editLayer.type.toUpperCase() === "FEATURE"){
-            this._openFLEdit(this.nls.editfeaturelayer + ": " + editLayer.name , tr);
-          }else if(editLayer.type.toUpperCase() === "BASEMAP"){
-            this._openBEdit(this.nls.editbasemap + ": " + editLayer.name , tr);
+          this.popupState = 'EDIT';
+          if(editLayer.type.toUpperCase() === 'DYNAMIC'){
+            this._openDLEdit(this.nls.editdynamiclayer + ': ' + editLayer.name , tr);
+          }else if(editLayer.type.toUpperCase() === 'FEATURE'){
+            this._openFLEdit(this.nls.editfeaturelayer + ': ' + editLayer.name , tr);
+          }else if(editLayer.type.toUpperCase() === 'BASEMAP'){
+            this._openBEdit(this.nls.editbasemap + ': ' + editLayer.name , tr);
           }
         })));
         this.own(on(this.LayersTable,'row-delete',lang.hitch(this,function(tr){
@@ -152,9 +170,9 @@ define([
         })));
         this.own(on(this.btnAddDynLayer,'click',lang.hitch(this,function(){
           var args = {
-            config:{type:"Dynamic"}
+            config:{type:'Dynamic'}
           };
-          this.popupState = "ADD";
+          this.popupState = 'ADD';
           var tr = this._createLayer(args);
           if (tr) {
             this._openDLEdit(this.nls.adddynamiclayer, tr);
@@ -162,9 +180,9 @@ define([
         })));
         this.own(on(this.btnAddFeatLayer,'click',lang.hitch(this,function(){
           var args = {
-             config:{type:"Feature"}
+             config:{type:'Feature'}
           };
-          this.popupState = "ADD";
+          this.popupState = 'ADD';
           var tr = this._createLayer(args);
           if (tr) {
             this._openFLEdit(this.nls.addfeaturelayer, tr);
@@ -172,9 +190,9 @@ define([
         })));
         this.own(on(this.btnAddBMLayer,'click',lang.hitch(this,function(){
           var args = {
-             config:{type:"Basemap"}
+             config:{type:'Basemap'}
           };
-          this.popupState = "ADD";
+          this.popupState = 'ADD';
           var tr = this._createLayer(args);
           if (tr) {
             this._openBEdit(this.nls.addbasemap, tr);
@@ -191,12 +209,12 @@ define([
           });
           return;
         }
-        if(this.popupState === "ADD"){
+        if(this.popupState === 'ADD'){
           this.LayersTable.editRow(layerConfig[1], {
             name: layerConfig[0].name
           });
           layerConfig[1].singleLayer = layerConfig[0];
-          this.popupState = "";
+          this.popupState = '';
         }else{
           this.LayersTable.editRow(layerConfig[1], {
             name: layerConfig[0].name
@@ -204,12 +222,12 @@ define([
           layerConfig[1].singleLayer = layerConfig[0];
         }
         this.popup.close();
-        this.popupState = "";
+        this.popupState = '';
       },
 
       _onDLEditClose: function() {
         var layerConfig = this.popupdynlyredit.getConfig();
-        if(this.popupState === "ADD"){
+        if(this.popupState === 'ADD'){
           this.LayersTable.deleteRow(layerConfig[1]);
         }
         this.popupdynlyredit = null;
@@ -253,12 +271,12 @@ define([
           });
           return;
         }
-        if(this.popupState === "ADD"){
+        if(this.popupState === 'ADD'){
           this.LayersTable.editRow(layerConfig[1], {
             name: layerConfig[0].name
           });
           layerConfig[1].singleLayer = layerConfig[0];
-          this.popupState = "";
+          this.popupState = '';
         }else{
           this.LayersTable.editRow(layerConfig[1], {
             name: layerConfig[0].name
@@ -267,12 +285,12 @@ define([
         }
 
         this.popup.close();
-        this.popupState = "";
+        this.popupState = '';
       },
 
       _onFLEditClose: function() {
         var layerConfig = this.popupfeatlyredit.getConfig();
-        if(this.popupState === "ADD"){
+        if(this.popupState === 'ADD'){
           this.LayersTable.deleteRow(layerConfig[1]);
         }
         this.popupfeatlyredit = null;
@@ -317,12 +335,12 @@ define([
           });
           return;
         }
-        if(this.popupState === "ADD"){
+        if(this.popupState === 'ADD'){
           this.LayersTable.editRow(layerConfig[1], {
             name: layerConfig[0].name
           });
           layerConfig[1].singleLayer = layerConfig[0];
-          this.popupState = "";
+          this.popupState = '';
         }else{
           this.LayersTable.editRow(layerConfig[1], {
             name: layerConfig[0].name
@@ -331,12 +349,12 @@ define([
         }
 
         this.popup.close();
-        this.popupState = "";
+        this.popupState = '';
       },
 
       _onBEditClose: function() {
         var layerConfig = this.popupbmedit.getConfig();
-        if(this.popupState === "ADD"){
+        if(this.popupState === 'ADD'){
           this.LayersTable.deleteRow(layerConfig[1]);
         }
         this.popupbmedit = null;
@@ -384,7 +402,7 @@ define([
           delete this.config.proxyAddress;
         }
         this.popup.close();
-        this.popupState = "";
+        this.popupState = '';
       },
 
       _onRevProxyEditClose: function() {

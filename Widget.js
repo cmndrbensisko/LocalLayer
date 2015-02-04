@@ -37,14 +37,33 @@ define([
       constructor: function() {
         this._originalWebMap = null;
       },
+
       onClose: function(){
-        if (query(".jimu-popup.widget-setting-popup",window.parent.document).length == 0){
-          var changedData = {itemId:this._originalWebMap}
+        if (query('.jimu-popup.widget-setting-popup', window.parent.document).length === 0){
+          var changedData = {itemId:this._originalWebMap};
           MapManager.getInstance(ConfigManager.getConfig(),this._originalWebMap).onAppConfigChanged(ConfigManager.getConfig(),'mapChange', changedData);
         }
       },
+
+      _removeAllLayersExceptBasemap: function(){
+        for(var l = this.map.layerIds.length - 1; l>1; l--){
+          var lyr = this.map.getLayer(this.map.layerIds[l]);
+          if(lyr){
+            this.map.removeLayer(lyr);
+          }
+        }
+        var f = this.map.graphicsLayerIds.length;
+        while (f--){
+          var fl = this.map.getLayer(this.map.graphicsLayerIds[f]);
+          if(fl.declaredClass === 'esri.layers.FeatureLayer'){
+            this.map.removeLayer(fl);
+          }
+        }
+      },
+
       startup: function () {
         this._originalWebMap = this.map.webMapResponse.itemInfo.item.id;
+        this._removeAllLayersExceptBasemap();
         if (this.config.useProxy) {
           urlUtils.addProxyRule({
             urlPrefix: this.config.proxyPrefix,
@@ -97,17 +116,17 @@ define([
             if(layer.disableclientcaching){
               lLayer.setDisableClientCaching(true);
             }
-            lLayer.on("load",function(evt){
-              removeLayers = []
+            lLayer.on('load',function(evt){
+              var removeLayers = [];
               array.forEach(evt.layer.visibleLayers,function(layer){
                 if (evt.layer.layerInfos[layer].parentLayerId>-1){
-                  removeLayers.push(layer)
+                  removeLayers.push(layer);
                 }
-              })
+              });
               array.forEach(removeLayers,function(layerId){
-                evt.layer.visibleLayers.splice(evt.layer.visibleLayers.indexOf(layerId),1)
-              })
-            })
+                evt.layer.visibleLayers.splice(evt.layer.visibleLayers.indexOf(layerId),1);
+              });
+            });
             this._viewerMap.addLayer(lLayer);
             this._viewerMap.setInfoWindowOnClick(true);
           }else if (layer.type.toUpperCase() === 'FEATURE') {
