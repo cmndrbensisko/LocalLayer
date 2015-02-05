@@ -114,7 +114,8 @@ define(
           this.titleTextBox.set('value',this.config.title);
         }
         if(this.config.description){
-          this.customContentTA.value = this.config.description;
+          this.customContentTA.value = this.config.description.replace( /<br.*?>/g, '\n');
+            //this.config.description;
           this.tabContainer.selectTab(this.wnls.custom);
         }
         if(this.flinfo){
@@ -153,6 +154,9 @@ define(
           callbackParamName:'callback'
         });
         this._def.then(lang.hitch(this,function(response){
+          var obj = {};
+          obj.data = response;
+          this.flinfo = obj;
           if(response && response.fields){
             this._setFields(response.fields);
             this._initFieldsAdds(response.fields, (this.config.fieldInfos)?this.config.fieldInfos:{});
@@ -291,7 +295,7 @@ define(
           }
         }));
         if(this.customContentTA.value && this.customContentTA.value.length > 0){
-          config.description = this.customContentTA.value.replace('\n', '<br>');
+          config.description = this.customContentTA.value.replace( new RegExp('\r?\n','g'), '<br>');
         }
         config.showAttachments = this.showAttachmentsCbx.getValue();
         config.tr = this.tr;

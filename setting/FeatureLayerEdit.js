@@ -59,6 +59,8 @@ define(
         this.inherited(arguments);
         if(!this.config.url){
           this.popup.disableButton(0);
+        }else{
+          html.removeClass(this.addPopupBtn, 'disabled');
         }
       },
 
@@ -126,6 +128,7 @@ define(
         }
         if (canProceed) {
           this.popup.enableButton(0);
+          html.removeClass(this.addPopupBtn, 'disabled');
         } else {
           this.popup.disableButton(0);
           if (errormessage) {
@@ -164,6 +167,9 @@ define(
       },
 
       onAddPopup: function(){
+        if(html.hasClass(this.addPopupBtn, 'disabled')){
+          return false;
+        }
         html.removeClass(this.removePopupBtn, 'disabled');
         var args;
         if(this.config.popup){
