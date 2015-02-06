@@ -17,10 +17,11 @@ define(
     'dojo/keys',
     'widgets/LocalLayer/setting/HyperlinkEdit',
     'widgets/LocalLayer/setting/ImageEdit',
+    'widgets/LocalLayer/setting/FieldFormatEdit',
     'esri/request',
     'widgets/LocalLayer/setting/AddFieldBtn',
     'dijit/form/TextBox',
-    'jimu/dijit/SimpleTable',
+    'widgets/LocalLayer/setting/SimpleTable',
     'jimu/dijit/CheckBox'
   ],
   function(
@@ -41,6 +42,7 @@ define(
     keys,
     HyperlinkEdit,
     ImageEdit,
+    FieldFormatEdit,
     esriRequest
     ) {
     return declare([BaseWidgetSetting, _WidgetsInTemplateMixin], {
@@ -52,6 +54,7 @@ define(
       wnls:null,
       hyperlinkpuedit: null,
       imagepuedit: null,
+      fieldformatedit: null,
       url:null,
       tabContainer:null,
       addedFields:null,
@@ -175,6 +178,11 @@ define(
 
       _bindEvents: function(){
         this.own(on(this.titleTextBox, 'Change', lang.hitch(this, '_onTitleChange')));
+        this.own(on(this.fieldsTable, 'actions-edit', lang.hitch(this, function (tr) {
+          if (tr.fieldInfo) {
+            this._openFieldEdit(this.wnls.edit + ': ' + tr.fieldInfo.name, tr);
+          }
+        })));
         this.titleTextBox.on('blur', function() {
           var start = this.textbox.selectionStart,
               end = this.textbox.selectionEnd;
@@ -287,11 +295,15 @@ define(
         array.forEach(trs, lang.hitch(this,function(tr){
           var rowData = this.fieldsTable.getRowData(tr);
           if (rowData.visibility) {
-            config.fieldInfos.push({
+            var obj = {
               fieldName: rowData.name,
               label: rowData.alias,
               visible: true
-            });
+            };
+            if(tr.fieldInfo.format){
+              obj.format = tr.fieldInfo.format;
+            }
+            config.fieldInfos.push(obj);
           }
         }));
         if(this.customContentTA.value && this.customContentTA.value.length > 0){
@@ -329,6 +341,8 @@ define(
         }
         var added = array.some(this.config.fieldInfos, lang.hitch(this, function(fldInfo) {
           if(fldInfo.fieldName.toLowerCase() === fieldInfo.name.toLowerCase()){
+            fldInfo.type = fieldInfo.type;
+            fldInfo.name = fieldInfo.name;
             this._addRow(fieldInfo, fldInfo);
             return true;
           }
@@ -381,15 +395,28 @@ define(
       },
 
       _addRow:function(fieldInfo, cfi){
+        var isNumeric = (this._isNumberType(fieldInfo.type) || fieldInfo.isnumber);
         var rowData = {
           visibility:(cfi)?cfi.visible:false,
           name:fieldInfo.name,
-          alias:(cfi)?cfi.label:(fieldInfo.alias||fieldInfo.name)
+          alias:(cfi)?cfi.label:(fieldInfo.alias||fieldInfo.name),
+          isnumber: isNumeric,
+          isdate: (fieldInfo.type === 'esriFieldTypeDate' || fieldInfo.isdate)
         };
         var result = this.fieldsTable.addRow(rowData);
         if(result.success){
           result.tr.fieldType = fieldInfo.type;
+          result.tr.fieldInfo = cfi||fieldInfo;
         }
+      },
+
+      _isNumberType: function (type) {
+        var numberTypes = ['esriFieldTypeOID',
+                           'esriFieldTypeSmallInteger',
+                           'esriFieldTypeInteger',
+                           'esriFieldTypeSingle',
+                           'esriFieldTypeDouble'];
+        return array.indexOf(numberTypes, type) >= 0;
       },
 
       _onHLEditOk: function() {
@@ -402,7 +429,7 @@ define(
           });
           return;
         }
-        this.popup.close();
+        this.popup2.close();
         this.popupState = '';
         this._insertAtCursor(this.customContentTA,'<a href="' + hyperlinkConfig.url + '">'+ hyperlinkConfig.description + '</a>');
         this.customContentTA.selectionStart = this.customContentTA.value.length;
@@ -410,7 +437,7 @@ define(
 
       _onHLEditClose: function() {
         this.hyperlinkpuedit = null;
-        this.popup = null;
+        this.popup2 = null;
       },
 
       _openHLEdit: function(title, args) {
@@ -420,7 +447,7 @@ define(
           flinfo: this.flinfo
         });
 
-        this.popup = new Popup({
+        this.popup2 = new Popup({
           titleLabel: title,
           autoHeight: true,
           content: this.hyperlinkpuedit,
@@ -450,14 +477,14 @@ define(
           });
           return;
         }
-        this.popup.close();
+        this.popup3.close();
         this.popupState = '';
         this._insertAtCursor(this.customContentTA,'<img src="' + imageConfig.url + '"/>');
       },
 
       _onImgEditClose: function() {
         this.imagepuedit = null;
-        this.popup = null;
+        this.popup3 = null;
       },
 
       _openImgEdit: function(title, args) {
@@ -467,7 +494,7 @@ define(
           flinfo: this.flinfo
         });
 
-        this.popup = new Popup({
+        this.popup3 = new Popup({
           titleLabel: title,
           autoHeight: true,
           content: this.imagepuedit,
@@ -485,6 +512,46 @@ define(
         });
         html.addClass(this.popup.domNode, 'widget-setting-popup');
         this.imagepuedit.startup();
+      },
+
+      _openFieldEdit: function (name, tr) {
+        this.fieldformatedit = new FieldFormatEdit({
+          nls: this.wnls,
+          tr: tr
+        });
+        this.fieldformatedit.setConfig(tr.fieldInfo || {});
+        this.popup4 = new Popup({
+          titleLabel: name,
+          autoHeight: true,
+          content: this.fieldformatedit,
+          container: 'main-page',
+          width: 460,
+          buttons: [
+            {
+              label: this.wnls.ok,
+              key: keys.ENTER,
+              onClick: lang.hitch(this, '_onFieldEditOk')
+            }, {
+              label: this.wnls.cancel,
+              key: keys.ESCAPE
+            }
+          ],
+          onClose: lang.hitch(this, '_onFieldEditClose')
+        });
+        html.addClass(this.popup.domNode, 'widget-setting-popup');
+        this.fieldformatedit.startup();
+      },
+
+      _onFieldEditOk: function () {
+        var fieldInfo = this.fieldformatedit.getConfig();
+        //console.info(fieldInfo);
+        this.fieldsTable.editRow(this.fieldformatedit.tr, fieldInfo);
+        this.popup4.close();
+      },
+
+      _onFieldEditClose: function () {
+        this.fieldformatedit = null;
+        this.popup4 = null;
       }
     });
   });

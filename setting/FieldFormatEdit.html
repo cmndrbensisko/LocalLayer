@@ -1,0 +1,55 @@
+<div style="width: 100%">
+  <table class="setting-table input-table" cellspacing="10" data-dojo-attach-point="inputTable">
+      <tbody>
+        <tr class="date">
+          <td class="first">${nls.format}</td>
+          <td class="second">
+            <div>
+              <select data-dojo-attach-point="selectDateFormat" data-dojo-type="dijit/form/FilteringSelect"
+                      data-dojo-props='style:{width:"200px"}'>
+                <option value="shortDate" selected="selected">${nls.shortDate}</option>
+                <option value="shortDateLE">${nls.shortDateLE}</option>
+                <option value="longMonthDayYear">${nls.longMonthDayYear}</option>
+                <option value="dayShortMonthYear">${nls.dayShortMonthYear}</option>
+                <option value="longDate">${nls.longDate}</option>
+                <option value="shortDateLongTime">${nls.shortDateLongTime}</option>
+                <option value="shortDateLELongTime">${nls.shortDateLELongTime}</option>
+                <option value="shortDateShortTime">${nls.shortDateShortTime}</option>
+                <option value="shortDateLEShortTime">${nls.shortDateLEShortTime}</option>
+                <option value="shortDateShortTime24">${nls.shortDateShortTime24}</option>
+                <option value="shortDateLEShortTime24">${nls.shortDateLEShortTime24}</option>
+                <option value="longMonthYear">${nls.longMonthYear}</option>
+                <option value="shortMonthYear">${nls.shortMonthYear}</option>
+                <option value="year">${nls.year}</option>
+              </select>
+            </div>
+          </td>
+        </tr>
+        <tr class="numeric decimal">
+          <td class="first">${nls.format}</td>
+          <td class="second">
+            <div>
+              <select data-dojo-attach-point="selectDecimals" data-dojo-type="dijit/form/FilteringSelect"
+                      data-dojo-props='style:{width:"200px"}'>
+                <option value="0" selected="selected">${nls.decimalplaces0}</option>
+                <option value="1">${nls.decimalplaces1}</option>
+                <option value="2">${nls.decimalplaces2}</option>
+                <option value="3">${nls.decimalplaces3}</option>
+                <option value="4">${nls.decimalplaces4}</option>
+                <option value="5">${nls.decimalplaces5}</option>
+                <option value="6">${nls.decimalplaces6}</option>
+              </select>
+            </div>
+          </td>
+        </tr>
+        <tr class="numeric">
+          <td class="first">${nls.usethousandssep}</td>
+          <td class="second">
+            <div>
+              <div data-dojo-type="jimu/dijit/CheckBox" data-dojo-attach-point="useThousandsCbx"/>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+</div>
