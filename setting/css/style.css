@@ -176,8 +176,13 @@
   cursor:pointer;
 }
 
-.feature-layer-edit .disabled{
+.feature-layer-edit .delete-popup-icon.disabled{
   background-image: url(images/delete_disabled.png);
+  cursor: default;
+}
+
+.feature-layer-edit .add-popup-icon.disabled{
+  background-image: url(images/edit_disabled.png);
   cursor: default;
 }
 

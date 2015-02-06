@@ -242,7 +242,7 @@ define(
         var exists = array.some(this.config.popup.infoTemplates, lang.hitch(this, function(infoTemp) {
           if(infoTemp.layerId === popupConfig.tr.subLayer.id){
             infoTemp.title = popupConfig.title;
-            infoTemp.content = popupConfig.custom;
+            infoTemp.description = popupConfig.description;
             infoTemp.fieldInfos = popupConfig.fieldInfos;
             infoTemp.showAttachments = popupConfig.showAttachments;
             return true;
@@ -253,7 +253,7 @@ define(
           var it = {
             layerId: popupConfig.tr.subLayer.id,
             title: popupConfig.title,
-            content: popupConfig.custom,
+            description: popupConfig.description,
             fieldInfos: popupConfig.fieldInfos,
             showAttachments: popupConfig.showAttachments
           };
