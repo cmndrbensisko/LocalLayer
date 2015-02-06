@@ -19,7 +19,14 @@
         <td colspan="2" style="width:Auto;">
           <div data-dojo-attach-point="detailSection">
             <div data-dojo-attach-point="keyValueTabNode" style="margin-top:10px;" class="keyValues">
-              <div data-dojo-attach-point="fieldsTable" data-dojo-type="jimu/dijit/SimpleTable" data-dojo-props='fields:[{name:"visibility",title:"${nls.visibility}",type:"checkbox",width:"80px"},{name:"name",title:"${nls.name}",type:"text",editable:false},{name:"alias",title:"${nls.alias}",type:"text",editable:true},{name:"actions",title:"${nls.actions}",type:"actions",actions:["up","down"],width:"120px"}]'></div>
+              <div data-dojo-attach-point="fieldsTable" data-dojo-type="widgets/LocalLayer/setting/SimpleTable"
+                   data-dojo-props='fields:[
+                                    {name:"visibility",title:"${nls.visibility}",type:"checkbox",width:"80px"},
+                                    {name:"name",title:"${nls.name}",type:"text",editable:false},
+                                    {name:"alias",title:"${nls.alias}",type:"text",editable:true},
+                                    {name:"actions",width:"120px",title:"${nls.actions}",type:"actions",actions:["up","down","edit"]},
+                                    {name:"isdate",type:"text",hidden:true},
+                                    {name:"isnumber",type:"text",hidden:true}]'></div>
             </div>
             <div data-dojo-attach-point="customTabNode" style="margin-top:10px;">
               <table style="width:100%;" cellspacing="0">
