@@ -85,7 +85,8 @@ define({
     longMonthYear: "December 1997",
     shortMonthYear: "Dec 1997",
     year: "1997",
-    usethousandssep: "Use 1000 separator"
+    usethousandssep: "Use 1000 separator",
+    showLabels: "Show Labels?"
   }),
   "ar": 0,
   "cs": 0,

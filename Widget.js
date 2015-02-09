@@ -7,6 +7,7 @@ define([
  'esri/urlUtils',
  'dojo/_base/array',
  'dojo/_base/query',
+ "dojo/_base/connect",
  'esri/layers/ArcGISDynamicMapServiceLayer',
  'esri/layers/ArcGISTiledMapServiceLayer',
  'esri/layers/FeatureLayer',
@@ -26,6 +27,7 @@ define([
     urlUtils,
     array,
     query,
+    connect,
     ArcGISDynamicMapServiceLayer,
     ArcGISTiledMapServiceLayer,
     FeatureLayer,
@@ -42,8 +44,13 @@ define([
 
       onClose: function(){
         if (query('.jimu-popup.widget-setting-popup', window.parent.document).length === 0){
-          var changedData = {itemId:this._originalWebMap};
-          MapManager.getInstance(ConfigManager.getConfig(),this._originalWebMap).onAppConfigChanged(ConfigManager.getConfig(),'mapChange', changedData);
+          var _currentExtent = dojo.clone(this.map.extent);
+          var _changedData = {itemId:this._originalWebMap};
+          var _newBasemap = connect.subscribe("mapChanged", function(_map){
+            _newBasemap.remove();
+            _map.setExtent(_currentExtent)
+          })
+          MapManager.getInstance().onAppConfigChanged(ConfigManager.getConfig(),'mapChange', _changedData);
         }
       },
 
@@ -121,8 +128,18 @@ define([
             lLayer.on('load',function(evt){
               var removeLayers = [];
               array.forEach(evt.layer.visibleLayers,function(layer){
-                if (evt.layer.layerInfos[layer].parentLayerId>-1){
+                //remove any grouplayers
+                if (evt.layer.layerInfos[layer].subLayerIds){
                   removeLayers.push(layer);
+                }else{
+                  var isParentInvisible = false;
+                  var _layerCheck = dojo.clone(layer)
+                  while (evt.layer.layerInfos[_layerCheck].parentLayerId > -1){
+                    if (evt.layer.visibleLayers.indexOf(evt.layer.layerInfos[_layerCheck].parentLayerId) == -1){
+                      removeLayers.push(layer);
+                    }
+                    _layerCheck = dojo.clone(evt.layer.layerInfos[_layerCheck].parentLayerId)
+                  }
                 }
               });
               array.forEach(removeLayers,function(layerId){
@@ -151,6 +168,9 @@ define([
             lOptions.outFields = ['*'];
             if(layer.hasOwnProperty('autorefresh')){
               lOptions.refreshInterval = layer.autorefresh;
+            }
+            if(layer.hasOwnProperty('showLabels')){
+              lOptions.showLabels = true;
             }
             lLayer = new FeatureLayer(layer.url, lOptions);
             this._viewerMap.addLayer(lLayer);

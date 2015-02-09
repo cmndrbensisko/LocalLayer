@@ -93,6 +93,11 @@ define(
         if(config.hasOwnProperty('autorefresh')){
           this.autoRefresh.set('value', config.autorefresh);
         }
+        if(config.showLabels === false){
+          this.showLabelsCbx.setValue(false)
+        }else{
+          this.showLabelsCbx.setValue(true)
+        }
         if(config.popup){
           html.removeClass(this.removePopupBtn, 'disabled');
         }
@@ -159,6 +164,7 @@ define(
           name: this.layerTitle.get('value'),
           opacity: this.layerAlpha.getAlpha(),
           visible: this.isVisible.getValue(),
+          showLabels: this.showLabelsCbx.getValue(),
           popup: this.config.popup,
           autorefresh: this.autoRefresh.get('value'),
           mode: this.flMode.get('value')
