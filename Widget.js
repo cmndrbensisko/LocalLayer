@@ -173,6 +173,9 @@ define([
               lOptions.showLabels = true;
             }
             lLayer = new FeatureLayer(layer.url, lOptions);
+            lLayer.on('load',function(evt){
+              evt.layer.name = lOptions.id;
+            });
             this._viewerMap.addLayer(lLayer);
           }else if(layer.type.toUpperCase() === 'TILED'){
             if(layer.displayLevels){
