@@ -28,6 +28,7 @@ Example:
 
 :exclamation: IMPORTANT: Two minor changes will need to be made to your \client\stemapp\jimu.js\LayerInfos\LayerInfoForMapService.js file to make this tool operational.  
 For version 1.0 Line 433 should be changed from:
+
 For version 1.1 Line 450 should be changed from:
 ```
 var url = this.originOperLayer.url + '/' + subId;
@@ -39,6 +40,7 @@ var url = this.originOperLayer.layerObject.url + '/' + subId;
 ```
 
 for v1.0 And line 406 should be changed from:
+
 for v1.1 And line 423 should be changed from:
 
 ```
