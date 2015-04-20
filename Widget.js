@@ -11,6 +11,7 @@ define([
  'esri/layers/ArcGISDynamicMapServiceLayer',
  'esri/layers/ArcGISTiledMapServiceLayer',
  'esri/layers/FeatureLayer',
+ 'esri/layers/WebTiledLayer',
  'esri/layers/ImageParameters',
  'esri/dijit/BasemapGallery',
  'esri/dijit/BasemapLayer',
@@ -31,6 +32,7 @@ define([
     ArcGISDynamicMapServiceLayer,
     ArcGISTiledMapServiceLayer,
     FeatureLayer,
+    WebTiledLayer,
     ImageParameters,
     BasemapGallery,
     BasemapLayer,
@@ -203,6 +205,25 @@ define([
               });
               lLayer.setInfoTemplates(finalInfoTemp2);
             }
+            this._viewerMap.addLayer(lLayer);
+          }else if(layer.type.toUpperCase() === 'WEBTILED'){
+		  
+            if(layer.displayLevels){
+              lOptions.displayLevels = layer.displayLevels;
+            }
+            if(layer.hasOwnProperty('autorefresh')){
+              lOptions.refreshInterval = layer.autorefresh;
+            }
+	    if(layer.hasOwnProperty('subDomains')){
+		lOptions.subDomains = layer.subDomains;
+	    }
+	    if(layer.hasOwnProperty('spatialReference')){
+		lOptions.spatialReference = layer.spatialReference;
+	    }
+	    if(layer.hasOwnProperty('opacity')){
+                lOptions.opacity = layer.opacity;
+	    }
+            lLayer = new WebTiledLayer(layer.url, lOptions);
             this._viewerMap.addLayer(lLayer);
           }else if(layer.type.toUpperCase() === 'BASEMAP'){
             var bmLayers = array.map(layer.layers.layer, function(bLayer){
