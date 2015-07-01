@@ -17,6 +17,7 @@ define({
     editbasemap: "Edit Basemap",
     addbasemap: "Add Basemap",
     cancel: "Cancel",
+    visible: "Visible",
     ok: "OK",
     featurelayer: "Feature",
     dynamiclayer: "Dynamic",

@@ -173,8 +173,22 @@ define(
         }
         args.layerSetting = this;
         args.nls = this.nls;
+
+        var hiddenLayer;
+        var isVisible = args.config.defaultVisibility;
+        if(this.config.hasOwnProperty('hidelayers')){
+          hiddenLayer = this.config.hidelayers.split(',');
+          if(array.indexOf(hiddenLayer, args.config.id) >= 0){
+            isVisible = false;
+          }else{
+            isVisible = true;
+          }
+        }
+
         var rowData = {
-          name: (args.config && args.config.name) || ''
+          name: (args.config && args.config.name) || '',
+          visible: isVisible,
+          layerindex: args.config.id
         };
 
         var result = this.sublayersTable.addRow(rowData);
@@ -197,6 +211,13 @@ define(
       },
 
       getConfig: function() {
+        var rowsData = this.sublayersTable.getData();
+        var allHiddenLayers = [];
+        array.map(rowsData, lang.hitch(this, function (item) {
+          if(!item.visible){
+            allHiddenLayers.push(item.layerindex);
+          }
+        }));
         var dynamiclayer = {
           type: 'Dynamic',
           name: this.layerTitle.get('value'),
@@ -206,7 +227,8 @@ define(
           imageformat: this.imgFormat.get('value'),
           popup: this.config.popup,
           imagedpi: this.imgDPI.get('value'),
-          disableclientcaching: this.disableClientCachingCbx.getValue()
+          disableclientcaching: this.disableClientCachingCbx.getValue(),
+          hidelayers: allHiddenLayers.join()
         };
         return [dynamiclayer, this.tr];
       },

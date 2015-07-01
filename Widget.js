@@ -1,4 +1,4 @@
-/*global define*/
+/*global define, window, dojo*/
 define([
  'dojo/_base/declare',
  'jimu/BaseWidget',
@@ -48,8 +48,8 @@ define([
           var _changedData = {itemId:this._originalWebMap};
           var _newBasemap = connect.subscribe("mapChanged", function(_map){
             _newBasemap.remove();
-            _map.setExtent(_currentExtent)
-          })
+            _map.setExtent(_currentExtent);
+          });
           MapManager.getInstance().onAppConfigChanged(ConfigManager.getConfig(),'mapChange', _changedData);
         }
       },
@@ -98,6 +98,10 @@ define([
             if(layer.imageformat){
               var ip = new ImageParameters();
               ip.format = layer.imageformat;
+              if(layer.hasOwnProperty('hidelayers')){
+                ip.layerIds = layer.hidelayers.split(',');
+                ip.layerOption = ImageParameters.LAYER_OPTION_HIDE;
+              }
               if(layer.hasOwnProperty('imagedpi')){
                 ip.dpi = layer.imagedpi;
               }
@@ -132,13 +136,12 @@ define([
                 if (evt.layer.layerInfos[layer].subLayerIds){
                   removeLayers.push(layer);
                 }else{
-                  var isParentInvisible = false;
-                  var _layerCheck = dojo.clone(layer)
+                  var _layerCheck = dojo.clone(layer);
                   while (evt.layer.layerInfos[_layerCheck].parentLayerId > -1){
                     if (evt.layer.visibleLayers.indexOf(evt.layer.layerInfos[_layerCheck].parentLayerId) == -1){
                       removeLayers.push(layer);
                     }
-                    _layerCheck = dojo.clone(evt.layer.layerInfos[_layerCheck].parentLayerId)
+                    _layerCheck = dojo.clone(evt.layer.layerInfos[_layerCheck].parentLayerId);
                   }
                 }
               });
