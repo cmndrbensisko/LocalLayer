@@ -3,7 +3,7 @@
   "label": "Local Layer Widget",
   "platform": "HTML",
   "version": "1.6",
-  "wabVersion": "1.1",
+  "wabVersion": "1.2",
   "author": "Adam Drackley (adam.drackley@gmail.com) & Robert Scheitlin",
   "description": "This widget is for adding local layer to Web AppBuilder",
   "copyright": "",
