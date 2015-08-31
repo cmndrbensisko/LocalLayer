@@ -27,7 +27,7 @@ Example:
 
 :bulb: Also, please note that the "/LocalLayer/" portion of the uri path above must match the folder name in which the widget resides on your local deployment.
 
-:exclamation::exclamation: IMPORTANT: The changes that need t be make for WAB 1.2 have changed file to make this tool operational. For new apps you only need to make this one change in the \client\stemapp\jimu.js\LayerInfos\LayerInfos.js. For existing/upgraded apps you only need to make this one change in the \server\apps\[App Number]\jimu.js\LayerInfos\LayerInfos.js 
+:exclamation::exclamation: IMPORTANT: The changes that need t be make for WAB 1.2 have changed to make this tool operational. For new apps you only need to make this one change in the \client\stemapp\jimu.js\LayerInfos\LayerInfos.js. For existing/upgraded apps you only need to make this one change in the \server\apps\[App Number]\jimu.js\LayerInfos\LayerInfos.js 
 Change Line 439 from:
 ```
 if (layer.url) {
