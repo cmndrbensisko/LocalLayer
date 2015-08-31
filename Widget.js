@@ -7,7 +7,7 @@ define([
  'esri/urlUtils',
  'dojo/_base/array',
  'dojo/_base/query',
- "dojo/_base/connect",
+ 'dojo/topic',
  'esri/layers/ArcGISDynamicMapServiceLayer',
  'esri/layers/ArcGISTiledMapServiceLayer',
  'esri/layers/FeatureLayer',
@@ -27,7 +27,7 @@ define([
     urlUtils,
     array,
     query,
-    connect,
+    topic,
     ArcGISDynamicMapServiceLayer,
     ArcGISTiledMapServiceLayer,
     FeatureLayer,
@@ -38,6 +38,7 @@ define([
     esriBasemaps,
     PopupTemplate) {
     var clazz = declare([BaseWidget], {
+
       constructor: function() {
         this._originalWebMap = null;
       },
@@ -46,11 +47,11 @@ define([
         if (query('.jimu-popup.widget-setting-popup', window.parent.document).length === 0){
           var _currentExtent = dojo.clone(this.map.extent);
           var _changedData = {itemId:this._originalWebMap};
-          var _newBasemap = connect.subscribe("mapChanged", function(_map){
+          var _newBasemap = topic.subscribe("mapChanged", function(_map){
             _newBasemap.remove();
             _map.setExtent(_currentExtent);
           });
-          MapManager.getInstance().onAppConfigChanged(ConfigManager.getConfig(),'mapChange', _changedData);
+          MapManager.getInstance().onAppConfigChanged(this.appConfig,'mapChange', _changedData);
         }
       },
 
@@ -98,16 +99,17 @@ define([
             if(layer.imageformat){
               var ip = new ImageParameters();
               ip.format = layer.imageformat;
-              if(layer.hasOwnProperty('hidelayers')){
-                ip.layerIds = layer.hidelayers.split(',');
-                ip.layerOption = ImageParameters.LAYER_OPTION_HIDE;
-              }
               if(layer.hasOwnProperty('imagedpi')){
                 ip.dpi = layer.imagedpi;
               }
               lOptions.imageParameters = ip;
             }
             lLayer = new ArcGISDynamicMapServiceLayer(layer.url, lOptions);
+            if(layer.name){
+              lLayer._titleForLegend = layer.name;
+              lLayer.title = layer.name;
+              lLayer.noservicename = true;
+            }
             if (layer.popup){
               var finalInfoTemp = {};
               array.forEach(layer.popup.infoTemplates, function(_infoTemp){
@@ -176,6 +178,11 @@ define([
               lOptions.showLabels = true;
             }
             lLayer = new FeatureLayer(layer.url, lOptions);
+            if(layer.name){
+              lLayer._titleForLegend = layer.name;
+              lLayer.title = layer.name;
+              lLayer.noservicename = true;
+            }
             lLayer.on('load',function(evt){
               evt.layer.name = lOptions.id;
             });
@@ -188,6 +195,11 @@ define([
               lOptions.refreshInterval = layer.autorefresh;
             }
             lLayer = new ArcGISTiledMapServiceLayer(layer.url, lOptions);
+            if(layer.name){
+              lLayer._titleForLegend = layer.name;
+              lLayer.title = layer.name;
+              lLayer.noservicename = true;
+            }
             if (layer.popup){
               var finalInfoTemp2 = {};
               array.forEach(layer.popup.infoTemplates, function(_infoTemp){

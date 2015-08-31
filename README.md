@@ -1,4 +1,4 @@
-LocalLayerWidget 1.6
+LocalLayerWidget 1.2
 ==
 
 The LocalLayer Widget for ArcGIS Web AppBuilder is intended to allow the direct addition of ArcGIS for Server Mapservices to an ArcGIS Web AppBuilder application, without needing to wrap the desired services in an ArcGIS Online/Portal Web Map.  The Legend, LayerList, and AttributeTable widgets should continue to work with your local layers.
@@ -7,7 +7,8 @@ The LocalLayer Widget for ArcGIS Web AppBuilder is intended to allow the direct 
 
 ###Setting up the Widget
 
-Please note that this is not an in-panel widget.  To add it to your ArcGIS Web AppBuilder, add the widget to your \client\stemapp\widgets directory, and add a reference to the widget in the standard default2Dapp configuration located at \client\builder\predefined-apps\default2DApp\config.json for v1.0 and \client\stemapp\predefined-apps\default\config.json for v1.1, under the widgetOnScreen section.
+Please note that this is not an in-panel widget.  To add it to your ArcGIS Web AppBuilder, add the widget to your \client\stemapp\widgets directory, and add a reference to the widget in the standard default2Dapp configuration located at \client\stemapp\predefined-apps\default\config.json for v1.2, under the widgetOnScreen section.
+If you plan to use the Local Layer widget with the other predfined apps like basic_viewer, editor, or simple_map_viewer then just repeat the above step in those folders.
 
 ```javascript
 Example:
@@ -26,31 +27,18 @@ Example:
 
 :bulb: Also, please note that the "/LocalLayer/" portion of the uri path above must match the folder name in which the widget resides on your local deployment.
 
-:exclamation: IMPORTANT: Two minor changes will need to be made to your \client\stemapp\jimu.js\LayerInfos\LayerInfoForMapService.js file to make this tool operational.  
-For version 1.0 Line 433 should be changed from:
-For version 1.1 Line 450 should be changed from:
+:exclamation::exclamation: IMPORTANT: The changes that need t be make for WAB 1.2 have changed file to make this tool operational. For new apps you only need to make this one change in the \client\stemapp\jimu.js\LayerInfos\LayerInfos.js. For existing/upgraded apps you only need to make this one change in the \server\apps\[App Number]\jimu.js\LayerInfos\LayerInfos.js 
+Change Line 439 from:
 ```
-var url = this.originOperLayer.url + '/' + subId;
-```
-
-To:
-```
-var url = this.originOperLayer.layerObject.url + '/' + subId;
-```
-
-for v1.0 And line 406 should be changed from:
-for v1.1 And line 423 should be changed from:
-
-```
-var url = this.originOperLayer.url + '/layers';
+if (layer.url) {
 ```
 
 To:
 ```
-var url = this.originOperLayer.layerObject.url + '/layers';
+if (layer.url && !layer.noservicename) {
 ```
 
-:bulb: The default theme in WAB is the foldable theme so adding the Local Layer widget to the Tab theme involves another step.
+:bulb: The default theme in WAB is the foldable theme so adding the Local Layer widget to the any of the other themes theme involves another step.
 
 ```
 Example:
@@ -64,7 +52,7 @@ Example:
         ]
     }
 ```
-1. open the client\stemapp\themes\TabTheme\layouts\default\config.json in a text editor and add the code block above. This will take care of adding the Local Layer widget to default
+1. open the client\stemapp\themes\[theme name]\layouts\default\config.json in a text editor and add the code block above. This will take care of adding the Local Layer widget to default
 
 :bulb: If you would like labels to display on your Feature Services by default, make sure to add "showLabels":true under the mapOptions setting of your config.json file located under \client\stemapp\ (or at the root of your current app), in addition to checking the "Show Labels?" checkbox under the Feature Layer Settings Menu.  Please note that there is currently an ESRI API bug preventing complex labelling expressions from being displayed on Feature Layers, such as expressions containing the CONCAT operator, and hopefully this will be addressed by esri in future releases.
 
