@@ -31,6 +31,8 @@ define([
     './TiledLayerEdit',
     './FeatureLayerEdit',
     './BasemapEdit',
+    './geoJSONEdit',
+    './WebTiledLayerEdit',
     './ReverseProxyEdit',
     'dojo/keys'
   ],
@@ -51,6 +53,8 @@ define([
     TiledLayerEdit,
     FeatureLayerEdit,
     BasemapEdit,
+    GeoJsonEdit,
+    WebTiledLayerEdit,
     ReverseProxyEdit,
     keys) {
     return declare([BaseWidgetSetting, _WidgetsInTemplateMixin], {
@@ -59,7 +63,9 @@ define([
       popupdynlyredit: null,
       popupfeatlyredit: null,
       popuptiledlyredit: null,
+      popupwebtiledlyredit: null,
       popupbmedit: null,
+      popupgjedit: null,
       reverseproxyedit: null,
       popup: null,
       popupState: '', // ADD or EDIT
@@ -143,6 +149,12 @@ define([
           return this.nls.featurelayer;
         }else if(type === 'BASEMAP'){
           return this.nls.basemaplayer;
+        }else if(type === 'GEOJSON'){
+          return this.nls.geojsonlayer;
+        }else if(type === 'WEBTILEDBASEMAP'){
+          return this.nls.webtiledbasemap;
+        }else if(type === 'WEBTILEDLAYER'){
+          return this.nls.webtiledlayer;
         }
       },
 
@@ -169,6 +181,10 @@ define([
             this._openFLEdit(this.nls.editfeaturelayer + ': ' + editLayer.name , tr);
           }else if(editLayer.type.toUpperCase() === 'BASEMAP'){
             this._openBEdit(this.nls.editbasemap + ': ' + editLayer.name , tr);
+          }else if(editLayer.type.toUpperCase() === 'GEOJSON'){
+            this._openGJEdit(this.nls.editgeojson + ': ' + editLayer.name , tr);
+          }else if(editLayer.type.toUpperCase() === 'WEBTILEDBASEMAP'||editLayer.type.toUpperCase() === 'WEBTILEDLAYER'){
+            this._openWebTileEdit(this.nls.editwebtile + ': ' + editLayer.name , tr);
           }
         })));
         this.own(on(this.LayersTable,'row-delete',lang.hitch(this,function(tr){
@@ -212,6 +228,26 @@ define([
           var tr = this._createLayer(args);
           if (tr) {
             this._openBEdit(this.nls.addbasemap, tr);
+          }
+        })));
+        this.own(on(this.btnAddGeoJSONLayer,'click',lang.hitch(this,function(){
+          var args = {
+             config:{type:'geoJSON'}
+          };
+          this.popupState = 'ADD';
+          var tr = this._createLayer(args);
+          if (tr) {
+            this._openGJEdit(this.nls.addgeojson, tr);
+          }
+        })));
+        this.own(on(this.btnAddWebTileLayer,'click',lang.hitch(this,function(){
+          var args = {
+             config:{type:'webTile'}
+          };
+          this.popupState = 'ADD';
+          var tr = this._createLayer(args);
+          if (tr) {
+            this._openWebTileEdit(this.nls.addwebtile, tr);
           }
         })));
       },
@@ -340,6 +376,68 @@ define([
         this.popuptiledlyredit.startup();
       },
 
+      _onWebTileEditOk: function() {
+        var layerConfig = this.popupwebtiledlyredit.getConfig();
+
+        if (layerConfig.length < 0) {
+          new Message({
+            message: this.nls.warning
+          });
+          return;
+        }
+        if(this.popupState === 'ADD'){
+          this.LayersTable.editRow(layerConfig[1], {
+            name: layerConfig[0].name
+          });
+          layerConfig[1].singleLayer = layerConfig[0];
+          this.popupState = '';
+        }else{
+          this.LayersTable.editRow(layerConfig[1], {
+            name: layerConfig[0].name
+          });
+          layerConfig[1].singleLayer = layerConfig[0];
+        }
+        this.popup.close();
+        this.popupState = '';
+      },
+
+      _onWebTileEditClose: function() {
+        var layerConfig = this.popupwebtiledlyredit.getConfig();
+        if(this.popupState === 'ADD'){
+          this.LayersTable.deleteRow(layerConfig[1]);
+        }
+        this.popupwebtiledlyredit = null;
+        this.popup = null;
+      },
+
+      _openWebTileEdit: function(title, tr) {
+        this.popupwebtiledlyredit = new WebTiledLayerEdit({
+          nls: this.nls,
+          config: tr.singleLayer || {},
+          tr: tr
+        });
+
+        this.popup = new Popup({
+          titleLabel: title,
+          autoHeight: true,
+          content: this.popupwebtiledlyredit,
+          container: 'main-page',
+          width: 840,
+          height: 420,
+          buttons: [{
+            label: this.nls.ok,
+            key: keys.ENTER,
+            onClick: lang.hitch(this, '_onWebTileEditOk')
+          }, {
+            label: this.nls.cancel,
+            key: keys.ESCAPE
+          }],
+          onClose: lang.hitch(this, '_onWebTileEditClose')
+        });
+        html.addClass(this.popup.domNode, 'widget-setting-popup');
+        this.popupwebtiledlyredit.startup();
+      },
+
       _onFLEditOk: function() {
         var layerConfig = this.popupfeatlyredit.getConfig();
 
@@ -466,6 +564,71 @@ define([
         });
         html.addClass(this.popup.domNode, 'widget-setting-popup');
         this.popupbmedit.startup();
+      },
+
+      _onGJEditOk: function() {
+        var layerConfig = this.popupgjedit.getConfig();
+        console.info(layerConfig);
+
+        if (layerConfig.length < 0) {
+          new Message({
+            message: this.nls.warning
+          });
+          return;
+        }
+        if(this.popupState === 'ADD'){
+          this.LayersTable.editRow(layerConfig[1], {
+            name: layerConfig[0].name
+          });
+          layerConfig[1].singleLayer = layerConfig[0];
+          this.popupState = '';
+        }else{
+          this.LayersTable.editRow(layerConfig[1], {
+            name: layerConfig[0].name
+          });
+          layerConfig[1].singleLayer = layerConfig[0];
+        }
+
+        this.popup.close();
+        this.popupState = '';
+      },
+
+      _onGJEditClose: function() {
+        var layerConfig = this.popupgjedit.getConfig();
+        if(this.popupState === 'ADD'){
+          this.LayersTable.deleteRow(layerConfig[1]);
+        }
+        this.popupbmedit = null;
+        this.popup = null;
+      },
+      
+      _openGJEdit: function(title, tr) {
+        this.popupgjedit = new GeoJsonEdit({
+          nls: this.nls,
+          config: tr.singleLayer || {},
+          tr: tr,
+          map: this.map
+        });
+
+        this.popup = new Popup({
+          titleLabel: title,
+          autoHeight: true,
+          content: this.popupgjedit,
+          container: 'main-page',
+          width: 840,
+          height: 420,
+          buttons: [{
+            label: this.nls.ok,
+            key: keys.ENTER,
+            onClick: lang.hitch(this, '_onGJEditOk')
+          }, {
+            label: this.nls.cancel,
+            key: keys.ESCAPE
+          }],
+          onClose: lang.hitch(this, '_onGJEditClose')
+        });
+        html.addClass(this.popup.domNode, 'widget-setting-popup');
+        this.popupgjedit.startup();
       },
 
       _onRevProxyEditOk: function() {

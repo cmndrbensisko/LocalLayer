@@ -42,7 +42,8 @@
 .jimu-widget-local-layer-setting .btn-tiled-section,
 .jimu-widget-local-layer-setting .btn-feature-section,
 .jimu-widget-local-layer-setting .btn-rev-proxy-section,
-.jimu-widget-local-layer-setting .btn-basemap-section{
+.jimu-widget-local-layer-setting .btn-basemap-section,
+.jimu-widget-local-layer-setting .btn-geojson-section{
   display:inline-block;
   overflow:hidden;
   height:24px;
@@ -57,7 +58,8 @@
 .jimu-widget-local-layer-setting .btn-tiled-section .btn-add-icon,
 .jimu-widget-local-layer-setting .btn-feature-section .btn-add-icon,
 .jimu-widget-local-layer-setting .btn-rev-proxy-section .btn-edit-icon,
-.jimu-widget-local-layer-setting .btn-basemap-section .btn-add-icon{
+.jimu-widget-local-layer-setting .btn-basemap-section .btn-add-icon,
+.jimu-widget-local-layer-setting .btn-geojson-section .btn-add-icon{
   float:left;
   height:100%;
   width:14px;
@@ -70,7 +72,8 @@
 .jimu-widget-local-layer-setting .btn-tiled-section .btn-add-label,
 .jimu-widget-local-layer-setting .btn-feature-section .btn-add-label,
 .jimu-widget-local-layer-setting .btn-rev-proxy-section .btn-edit-label,
-.jimu-widget-local-layer-setting .btn-basemap-section .btn-add-label {
+.jimu-widget-local-layer-setting .btn-basemap-section .btn-add-label,
+.jimu-widget-local-layer-setting .btn-geojson-section .btn-add-label  {
   float:left;
   height:100%;
   line-height:24px;
@@ -93,6 +96,7 @@
 .tiled-layer-edit .input-table,
 .feature-layer-edit .input-table,
 .basemap-layer-edit .input-table,
+.geojson-layer-edit .input-table,
 .basemap-edit .input-table{
   width: 100%;
   overflow-y: auto;
@@ -104,6 +108,7 @@
 .tiled-layer-edit .input-table > tbody > tr > td,
 .feature-layer-edit .input-table > tbody > tr > td,
 .basemap-layer-edit .input-table > tbody > tr > td,
+.geojson-layer-edit .input-table > tbody > tr > td,
 .basemap-edit .input-table > tbody > tr > td{
   height:30px;
   line-height: 30px;
@@ -115,6 +120,7 @@
 .tiled-layer-edit .error-message-div,
 .feature-layer-edit .error-message-div,
 .basemap-layer-edit .error-message-div,
+.geojson-layer-edit .error-message-div,
 .basemap-edit .error-message-div{
   border: 0px solid;
   font-size: 11px;
@@ -126,7 +132,8 @@
 .tiled-layer-edit .jimu-serviceurl-input .dijitInputInner,
 .feature-layer-edit .jimu-serviceurl-input .dijitInputInner,
 .basemap-layer-edit .jimu-serviceurl-input .dijitInputInner,
-.basemap-layer-edit .jimu-serviceurl-input .dijitInputInner {
+.basemap-layer-edit .jimu-serviceurl-input .dijitInputInner,
+.geojson-layer-edit .jimu-serviceurl-input .dijitInputInner  {
   padding-right: 18px !important;
 }
 

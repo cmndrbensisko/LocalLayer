@@ -4,13 +4,17 @@ define([
  'jimu/BaseWidget',
  'jimu/ConfigManager',
  'jimu/MapManager',
+ 'jimu/utils',
  'esri/urlUtils',
+ 'dojo/_base/lang',
  'dojo/_base/array',
  'dojo/_base/query',
  'dojo/topic',
+ 'esri/geometry/webMercatorUtils',
  'esri/layers/ArcGISDynamicMapServiceLayer',
  'esri/layers/ArcGISTiledMapServiceLayer',
  'esri/layers/FeatureLayer',
+ 'esri/layers/WebTiledLayer',
  'esri/layers/ImageParameters',
  'esri/dijit/BasemapGallery',
  'esri/dijit/BasemapLayer',
@@ -24,13 +28,17 @@ define([
     BaseWidget,
     ConfigManager,
     MapManager,
+    utils,
     urlUtils,
+    lang,
     array,
     query,
     topic,
+    webMercatorUtils,
     ArcGISDynamicMapServiceLayer,
     ArcGISTiledMapServiceLayer,
     FeatureLayer,
+    WebTiledLayer,
     ImageParameters,
     BasemapGallery,
     BasemapLayer,
@@ -95,6 +103,10 @@ define([
           if(layer.name){
             lOptions.id = layer.name;
           }
+          lOptions.hidelayers = []
+          if(layer.hasOwnProperty('hidelayers')){
+            lOptions.hidelayers = layer.hidelayers.split(',');
+          }
           if(layer.type.toUpperCase() === 'DYNAMIC'){
             if(layer.imageformat){
               var ip = new ImageParameters();
@@ -133,6 +145,7 @@ define([
             }
             lLayer.on('load',function(evt){
               var removeLayers = [];
+              /*
               array.forEach(evt.layer.visibleLayers,function(layer){
                 //remove any grouplayers
                 if (evt.layer.layerInfos[layer].subLayerIds){
@@ -147,12 +160,108 @@ define([
                   }
                 }
               });
-              array.forEach(removeLayers,function(layerId){
-                evt.layer.visibleLayers.splice(evt.layer.visibleLayers.indexOf(layerId), 1);
+              array.forEach(lOptions.hidelayers,function(layerId){
+                if (evt.layer.visibleLayers.indexOf(parseInt(layerId)) > -1){
+                  evt.layer.visibleLayers.splice(evt.layer.visibleLayers.indexOf(parseInt(layerId)), 1);
+                }
               });
+              array.forEach(evt.layer.layerInfos,function(layerInfo){
+                if (lOptions.hidelayers.indexOf(layerInfo.id.toString()) < 0){
+                  if (evt.layer.visibleLayers.indexOf(layerInfo.id) < 0){
+                    evt.layer.visibleLayers.push(layerInfo.id)
+                  }
+                  layerInfo.defaultVisibility = true;
+                }
+                if (evt.layer.visibleLayers.indexOf(layerInfo.id) < 0){
+                  layerInfo.defaultVisibility = false;
+                }
+              })
+              array.forEach(removeLayers,function(layerId){
+                if (evt.layer.visibleLayers.indexOf(parseInt(layerId)) > -1){
+                  evt.layer.visibleLayers.splice(evt.layer.visibleLayers.indexOf(layerId), 1);
+                }
+              });
+              */
+              //evt.layer.setVisibleLayers(evt.layer.visibleLayers);
+              var removeLayers = []
+              //set defaultvisibility for everything off by default
+              array.forEach(evt.layer.layerInfos,function(layer){
+                evt.layer.layerInfos[layer.id].defaultVisibility = false
+              })
+              //except for whats set in the config
+              for(var i=0;i<lOptions.hidelayers.length;i++){
+                evt.layer.layerInfos[lOptions.hidelayers[i]].defaultVisibility = true
+              }
+              //remove all grouplayers
+              array.forEach(evt.layer.layerInfos,function(layer){
+                if (layer.subLayerIds){
+                   if (removeLayers.indexOf(layer.id) == -1){removeLayers.push(layer.id)};
+                }
+              })
+              for(var i=0;i<lOptions.hidelayers.length;i++){
+                lOptions.hidelayers[i] = parseInt(lOptions.hidelayers[i])
+              }
+              for(var i=0;i<lOptions.hidelayers.length;i++){
+                var j=evt.layer.layerInfos[lOptions.hidelayers[i]].parentLayerId
+                while(j > -1){
+                  //has the parentlayer been turned on?
+                  if (lOptions.hidelayers.indexOf(j) == -1){
+                    //if the parent isnt in the visiblelayers, the child shouldn't be either.
+                    if (removeLayers.indexOf(lOptions.hidelayers[i]) == -1){removeLayers.push(lOptions.hidelayers[i])}
+                  }
+                  j=evt.layer.layerInfos[j].parentLayerId
+                }
+              }
+              //splice out the removelayers
+              array.forEach(removeLayers,function(layerId){
+                //take out removed ones, they mess up the layerlist
+                if (lOptions.hidelayers.indexOf(layerId) > -1){lOptions.hidelayers.splice(lOptions.hidelayers.indexOf(layerId),1)};
+              })
+              if(lOptions.hidelayers.length == 0){
+                lOptions.hidelayers.push(-1);
+              }
+              evt.layer.setVisibleLayers(lOptions.hidelayers);
             });
             this._viewerMap.addLayer(lLayer);
             this._viewerMap.setInfoWindowOnClick(true);
+          }else if (layer.type.toUpperCase() === 'WEBTILEDLAYER') {
+            if(layer.hasOwnProperty('subdomains')){
+              lOptions.subDomains = layer.subdomains;
+            }
+            if(layer.hasOwnProperty('autorefresh')){
+              lOptions.refreshInterval = layer.autorefresh;
+            }
+            if(layer.hasOwnProperty('opacity')){
+              lOptions.opacity = layer.opacity;
+            }
+            lLayer = new WebTiledLayer(layer.url,lOptions)
+            lLayer.on('load',function(evt){
+              evt.layer.name = lOptions.id;
+            });
+            this._viewerMap.addLayer(lLayer);
+          }else if (layer.type.toUpperCase() === 'WEBTILEDBASEMAP') {
+            lOptions.type = "WebTiledLayer"
+            lOptions.url = layer.url
+            if(layer.hasOwnProperty('subdomains')){
+              lOptions.subDomains = layer.subdomains;
+            }
+            if(layer.hasOwnProperty('autorefresh')){
+              lOptions.refreshInterval = layer.autorefresh;
+            }
+            if(layer.hasOwnProperty('opacity')){
+              lOptions.opacity = layer.opacity;
+            }
+            if(layer.hasOwnProperty('copyright')){
+              lOptions.copyright = layer.copyright;
+            }
+            var _newBasemap = new Basemap({id:'defaultBasemap', title:layer.name, layers:[new BasemapLayer(lOptions)]});
+            var _basemapGallery = new BasemapGallery({
+              showArcGISBasemaps: false,
+              map: this._viewerMap
+            }, '_tmpBasemapGallery');
+            _basemapGallery.add(_newBasemap);
+            _basemapGallery.select('defaultBasemap');
+            _basemapGallery.destroy();
           }else if (layer.type.toUpperCase() === 'FEATURE') {
             var _popupTemplate;
             if (layer.popup){
@@ -238,6 +347,115 @@ define([
             _basemapGallery.add(_newBasemap);
             _basemapGallery.select('defaultBasemap');
             _basemapGallery.destroy();
+          }else if(layer.type.toUpperCase() === 'GEOJSON'){
+            dojo.xhrGet({
+              url: lang.trim(layer.url || ""),
+              handleAs: 'json',
+              headers:{"X-Requested-With": ""}
+            }).then(lang.hitch(this, function(restData) {
+              if (layer.isValidGeoJson){
+                restData = restData.features
+              }
+              var featureArray = []
+              if (layer.popup){
+                var _popupTemplate;
+                if (layer.popup){
+                  _popupTemplate = new PopupTemplate(layer.popup);
+                  lOptions.infoTemplate = _popupTemplate;
+                }
+              }
+              if(layer.hasOwnProperty('mode')){
+                var lmode;
+                if(layer.mode === 'ondemand'){
+                  lmode = 1;
+                }else if(layer.mode === 'snapshot'){
+                  lmode = 0;
+                }else if(layer.mode === 'selection'){
+                  lmode = 2;
+                }
+                lOptions.mode = lmode;
+              }
+              lOptions.outFields = ['*'];
+              if(layer.hasOwnProperty('autorefresh')){
+                lOptions.refreshInterval = layer.autorefresh;
+              }
+              if(layer.hasOwnProperty('showLabels')){
+                lOptions.showLabels = true;
+              }
+              if (layer.symbol){
+                var sym
+                switch (layer.symbol.type){
+                  case "esriSMS":
+                    sym = new esri.symbol.SimpleMarkerSymbol(layer.symbol)
+                    break;
+                  case "esriSLS":
+                    sym = new esri.symbol.SimpleLineSymbol(layer.symbol)
+                    break;
+                  case "esriSFS":
+                    sym = new esri.symbol.SimpleFillSymbol(layer.symbol)
+                    break;
+                  case "esriPMS":
+                    sym = new esri.symbol.PictureMarkerSymbol(layer.symbol)
+                    break;
+                  case "esriPFS":
+                    sym = new esri.symbol.PictureFillSymbol(layer.symbol)
+                    break;                    
+                }
+                var renderer = new esri.renderer.SimpleRenderer(sym)
+              }
+                var oidField = 0
+              array.forEach(restData,function(geojsonpoint){
+                if (!layer.isValidGeoJson){
+                  geojsonpoint['OID'] = oidField
+                  var wmPoint = webMercatorUtils.lngLatToXY(geojsonpoint[layer.longitude],geojsonpoint[layer.latitude]);
+                }else{
+                  geojsonpoint.properties['OID'] = oidField
+                  var wmPoint = webMercatorUtils.lngLatToXY(geojsonpoint.geometry.coordinates[0],geojsonpoint.geometry.coordinates[1]);
+                  geojsonpoint = geojsonpoint.properties;
+                }
+                oidField+=1;
+                var point = new esri.geometry.Point(wmPoint[0], wmPoint[1], this._viewerMap.spatialReference)
+                featureArray.push(new esri.Graphic(point,null,geojsonpoint));
+              })
+              var defFields = [{
+                    "name": "OID",
+                    "type": "esriFieldTypeOID",
+                    "alias": "OID"
+                  }
+              ]
+              if (layer.popup){
+                array.forEach(layer.popup.fieldInfos, function(FI){
+                  FI['name'] = FI.fieldName
+                  FI['alias'] = FI.fieldName
+                  FI['type'] = "esriFieldTypeString"
+                  defFields.push(FI)
+                })
+              }
+              var featureJson = {
+                "fields": defFields,
+                "geometryType": "esriGeometryPoint",
+                "spatialReference": featureArray[0].geometry.spatialReference,
+                "features": featureArray
+              }
+              var featureSet = new esri.tasks.FeatureSet(featureJson);
+              var lLayer = new esri.layers.FeatureLayer({
+                "layerDefinition": {
+                  "geometryType": "esriGeometryPoint",
+                  "fields": defFields
+                },
+                "featureSet": featureSet
+              },lOptions);
+              lLayer.setRenderer(renderer)
+              if(layer.name){
+                lLayer._titleForLegend = layer.name;
+                lLayer.title = layer.name;
+                lLayer.noservicename = true;
+                lLayer.name = lOptions.id;
+              }
+              this._viewerMap.addLayer(lLayer);
+            }), lang.hitch(this, function(err){
+              console.log('error')
+            }));
           }
         });
       }

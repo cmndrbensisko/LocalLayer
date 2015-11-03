@@ -169,8 +169,9 @@ define(
 
       _createSubLayer: function(args) {
         if(args.config.subLayerIds){
-          return null;
+          //return null;
         }
+
         args.layerSetting = this;
         args.nls = this.nls;
 
@@ -179,9 +180,12 @@ define(
         if(this.config.hasOwnProperty('hidelayers')){
           hiddenLayer = this.config.hidelayers.split(',');
           if(array.indexOf(hiddenLayer, args.config.id) >= 0){
-            isVisible = false;
-          }else{
+            //hidelayers now shows what layers to SHOW, not to HIDE (I'd change the name, but I don't want to invalidate anyones existing configs)
+            //isVisible = false;
             isVisible = true;
+          }else{
+            //isVisible = true;
+            isVisible = false;
           }
         }
 
@@ -212,10 +216,17 @@ define(
 
       getConfig: function() {
         var rowsData = this.sublayersTable.getData();
-        var allHiddenLayers = [];
+        //var allHiddenLayers = [];
+        //array.map(rowsData, lang.hitch(this, function (item) {
+        //  if(!item.visible){
+        //    if (item.layerindex == ""){item.layerindex = "0"}
+        //    allHiddenLayers.push(item.layerindex);
+        //  }
+        var visibleLayers = [];
         array.map(rowsData, lang.hitch(this, function (item) {
-          if(!item.visible){
-            allHiddenLayers.push(item.layerindex);
+          if(item.visible){
+            if (item.layerindex == ""){item.layerindex = "0"}
+            visibleLayers.push(parseInt(item.layerindex))
           }
         }));
         var dynamiclayer = {
@@ -228,7 +239,8 @@ define(
           popup: this.config.popup,
           imagedpi: this.imgDPI.get('value'),
           disableclientcaching: this.disableClientCachingCbx.getValue(),
-          hidelayers: allHiddenLayers.join()
+          //hidelayers: allHiddenLayers.join()
+          hidelayers: visibleLayers.join()
         };
         return [dynamiclayer, this.tr];
       },
@@ -299,33 +311,35 @@ define(
       },
 
       _openPUEdit: function(title, args) {
-        this.popuppuedit = new PopupEdit({
-          wnls: this.nls,
-          config: args.config || {},
-          tr: args.tr,
-          flinfo: null,
-          url: this.layerUrl.get('value') + '/' + args.tr.subLayer.id
-        });
+        if(!args.tr.subLayer.subLayerIds){
+          this.popuppuedit = new PopupEdit({
+            wnls: this.nls,
+            config: args.config || {},
+            tr: args.tr,
+            flinfo: null,
+            url: this.layerUrl.get('value') + '/' + args.tr.subLayer.id
+          });
 
-        this.popup = new Popup({
-          titleLabel: title,
-          autoHeight: true,
-          content: this.popuppuedit,
-          container: 'main-page',
-          width: 840,
-          height: 460,
-          buttons: [{
-            label: this.nls.ok,
-            key: keys.ENTER,
-            onClick: lang.hitch(this, '_onPUEditOk')
-          }, {
-            label: this.nls.cancel,
-            key: keys.ESCAPE
-          }],
-          onClose: lang.hitch(this, '_onPUEditClose')
-        });
-        html.addClass(this.popup.domNode, 'widget-setting-popup');
-        this.popuppuedit.startup();
+          this.popup = new Popup({
+            titleLabel: title,
+            autoHeight: true,
+            content: this.popuppuedit,
+            container: 'main-page',
+            width: 840,
+            height: 460,
+            buttons: [{
+              label: this.nls.ok,
+              key: keys.ENTER,
+              onClick: lang.hitch(this, '_onPUEditOk')
+            }, {
+              label: this.nls.cancel,
+              key: keys.ESCAPE
+            }],
+            onClose: lang.hitch(this, '_onPUEditClose')
+          });
+          html.addClass(this.popup.domNode, 'widget-setting-popup');
+          this.popuppuedit.startup();
+        }
       }
     });
   });
