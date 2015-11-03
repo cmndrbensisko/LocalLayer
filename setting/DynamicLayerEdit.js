@@ -216,12 +216,7 @@ define(
 
       getConfig: function() {
         var rowsData = this.sublayersTable.getData();
-        //var allHiddenLayers = [];
-        //array.map(rowsData, lang.hitch(this, function (item) {
-        //  if(!item.visible){
-        //    if (item.layerindex == ""){item.layerindex = "0"}
-        //    allHiddenLayers.push(item.layerindex);
-        //  }
+
         var visibleLayers = [];
         array.map(rowsData, lang.hitch(this, function (item) {
           if(item.visible){

@@ -144,45 +144,6 @@ define([
               lLayer.setDisableClientCaching(true);
             }
             lLayer.on('load',function(evt){
-              var removeLayers = [];
-              /*
-              array.forEach(evt.layer.visibleLayers,function(layer){
-                //remove any grouplayers
-                if (evt.layer.layerInfos[layer].subLayerIds){
-                  removeLayers.push(layer);
-                }else{
-                  var _layerCheck = dojo.clone(layer);
-                  while (evt.layer.layerInfos[_layerCheck].parentLayerId > -1){
-                    if (evt.layer.visibleLayers.indexOf(evt.layer.layerInfos[_layerCheck].parentLayerId) == -1){
-                      removeLayers.push(layer);
-                    }
-                    _layerCheck = dojo.clone(evt.layer.layerInfos[_layerCheck].parentLayerId);
-                  }
-                }
-              });
-              array.forEach(lOptions.hidelayers,function(layerId){
-                if (evt.layer.visibleLayers.indexOf(parseInt(layerId)) > -1){
-                  evt.layer.visibleLayers.splice(evt.layer.visibleLayers.indexOf(parseInt(layerId)), 1);
-                }
-              });
-              array.forEach(evt.layer.layerInfos,function(layerInfo){
-                if (lOptions.hidelayers.indexOf(layerInfo.id.toString()) < 0){
-                  if (evt.layer.visibleLayers.indexOf(layerInfo.id) < 0){
-                    evt.layer.visibleLayers.push(layerInfo.id)
-                  }
-                  layerInfo.defaultVisibility = true;
-                }
-                if (evt.layer.visibleLayers.indexOf(layerInfo.id) < 0){
-                  layerInfo.defaultVisibility = false;
-                }
-              })
-              array.forEach(removeLayers,function(layerId){
-                if (evt.layer.visibleLayers.indexOf(parseInt(layerId)) > -1){
-                  evt.layer.visibleLayers.splice(evt.layer.visibleLayers.indexOf(layerId), 1);
-                }
-              });
-              */
-              //evt.layer.setVisibleLayers(evt.layer.visibleLayers);
               var removeLayers = []
               //set defaultvisibility for everything off by default
               array.forEach(evt.layer.layerInfos,function(layer){
