@@ -5,7 +5,7 @@
       <tr>
         <td style="width:115px;text-align:left;">${nls.layerUrl}</td>
         <td style="width:auto;">
-          <input type="text" data-dojo-type="jimu/dijit/webtileURLInput" data-dojo-attach-point="layerUrl" data-dojo-props='style:{width:"100%"}' required="true"/>
+          <input type="text" data-dojo-type="jimu/dijit/webtileURLInput" data-dojo-attach-point="layerUrl" data-dojo-props='style:{width:"100%"},placeholder:"${nls.tilePlaceHolder}"' required="true"/>
         </td>
       </tr>
       <tr>
@@ -95,12 +95,50 @@
                 <table style="width:100%;" cellspacing="0">
                   <tbody>
                     <tr>
+                      <td style="width:200px;text-align:left;">
+                        <span>${nls.minScale}</span>
+                      </td>
+                      <td style="width:auto;">
+                        <input type="text" data-dojo-type="dijit/form/ValidationTextBox" data-dojo-attach-point="minScale"
+                               required="false" data-dojo-props='style:{width:"100%"}'/></input>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+              <td style="width:50%;">
+                <table style="width:100%;" cellspacing="0">
+                  <tbody>
+                    <tr>
+                      <td style="width:200px;text-align:left;">
+                        <span>${nls.maxScale}</span>
+                      </td>
+                      <td style="width:auto;">
+                        <input type="text" data-dojo-type="dijit/form/ValidationTextBox" data-dojo-attach-point="maxScale"
+                               required="false" data-dojo-props='style:{width:"100%"}'/></input>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <table style="width:100%;" cellspacing="0">
+            <tr>
+              <td style="width:50%;">
+                <table style="width:100%;" cellspacing="0">
+                  <tbody>
+                    <tr>
                       <td style="width:140px;text-align:left;">
                         <span>${nls.subdomains}</span>
                       </td>
                       <td style="width:auto;padding-right:10px;">
                         <input type="text" data-dojo-type="dijit/form/TextBox" data-dojo-attach-point="subDomains"
-                               data-dojo-props='required:true,style:{width:"100%"}'/></input>
+                               data-dojo-props='required:true,style:{width:"100%"},placeholder:"${nls.subDomainPlaceHolder}"'/></input>
                       </td>
                     </tr>
                   </tbody>

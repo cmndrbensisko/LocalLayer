@@ -77,7 +77,7 @@
                       </td>
                       <td style="width:auto;padding-right:10px;">
                         <input type="text" data-dojo-type="dijit/form/TextBox" data-dojo-attach-point="displayLevels"
-                               data-dojo-props='style:{width:"100%"}'/></input>
+                               data-dojo-props='style:{width:"100%"},placeholder:"${nls.displayLevelsPlaceHolder}"'/></input>
                       </td>
                     </tr>
                   </tbody>
@@ -93,6 +93,44 @@
                       <td style="width:auto;">
                         <input type="text" data-dojo-attach-point="autoRefresh" data-dojo-type="dijit/form/NumberTextBox"
               data-dojo-props='style:{width:"150px"},required:true,value:0,constraints:{min:0,places:0,max:2880}' />
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <table style="width:100%;" cellspacing="0">
+            <tr>
+              <td style="width:50%;">
+                <table style="width:100%;" cellspacing="0">
+                  <tbody>
+                    <tr>
+                      <td style="width:200px;text-align:left;">
+                        <span>${nls.minScale}</span>
+                      </td>
+                      <td style="width:auto;">
+                        <input type="text" data-dojo-type="dijit/form/ValidationTextBox" data-dojo-attach-point="minScale"
+                               required="false" data-dojo-props='style:{width:"100%"}'/></input>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+              <td style="width:50%;">
+                <table style="width:100%;" cellspacing="0">
+                  <tbody>
+                    <tr>
+                      <td style="width:200px;text-align:left;">
+                        <span>${nls.maxScale}</span>
+                      </td>
+                      <td style="width:auto;">
+                        <input type="text" data-dojo-type="dijit/form/ValidationTextBox" data-dojo-attach-point="maxScale"
+                               required="false" data-dojo-props='style:{width:"100%"}'/></input>
                       </td>
                     </tr>
                   </tbody>

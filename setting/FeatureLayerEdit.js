@@ -93,6 +93,12 @@ define(
         if(config.hasOwnProperty('autorefresh')){
           this.autoRefresh.set('value', config.autorefresh);
         }
+        if(config.hasOwnProperty('maxScale')){
+          this.maxScale.set('value', config.maxScale);
+        }
+        if(config.hasOwnProperty('minScale')){
+          this.minScale.set('value', config.minScale);
+        }
         if(config.showLabels === false){
           this.showLabelsCbx.setValue(false)
         }else{
@@ -167,6 +173,8 @@ define(
           showLabels: this.showLabelsCbx.getValue(),
           popup: this.config.popup,
           autorefresh: this.autoRefresh.get('value'),
+          minScale: this.minScale.get('value'),
+          maxScale: this.maxScale.get('value'),
           mode: this.flMode.get('value')
         };
         return [featurelayer, this.tr];

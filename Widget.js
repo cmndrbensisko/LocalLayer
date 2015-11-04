@@ -107,6 +107,12 @@ define([
           if(layer.hasOwnProperty('hidelayers')){
             lOptions.hidelayers = layer.hidelayers.split(',');
           }
+          if(layer.hasOwnProperty('minScale')){
+            lOptions.minScale = layer.minScale
+          }
+          if(layer.hasOwnProperty('maxScale')){
+            lOptions.maxScale = layer.maxScale
+          }
           if(layer.type.toUpperCase() === 'DYNAMIC'){
             if(layer.imageformat){
               var ip = new ImageParameters();
@@ -144,6 +150,13 @@ define([
               lLayer.setDisableClientCaching(true);
             }
             lLayer.on('load',function(evt){
+              //set min/max scales if present
+              if(lOptions.minScale){
+                evt.layer.setMinScale(lOptions.minScale)
+              }
+              if(lOptions.maxScale){
+                evt.layer.setMaxScale(lOptions.maxScale)
+              }
               var removeLayers = []
               //set defaultvisibility for everything off by default
               array.forEach(evt.layer.layerInfos,function(layer){
@@ -197,6 +210,13 @@ define([
             }
             lLayer = new WebTiledLayer(layer.url,lOptions)
             lLayer.on('load',function(evt){
+              //set min/max scales if present
+              if(lOptions.minScale){
+                evt.layer.setMinScale(lOptions.minScale)
+              }
+              if(lOptions.maxScale){
+                evt.layer.setMaxScale(lOptions.maxScale)
+              }
               evt.layer.name = lOptions.id;
             });
             this._viewerMap.addLayer(lLayer);
@@ -254,17 +274,33 @@ define([
               lLayer.noservicename = true;
             }
             lLayer.on('load',function(evt){
+              //set min/max scales if present
+              if(lOptions.minScale){
+                evt.layer.setMinScale(lOptions.minScale)
+              }
+              if(lOptions.maxScale){
+                evt.layer.setMaxScale(lOptions.maxScale)
+              }
               evt.layer.name = lOptions.id;
             });
             this._viewerMap.addLayer(lLayer);
           }else if(layer.type.toUpperCase() === 'TILED'){
             if(layer.displayLevels){
-              lOptions.displayLevels = layer.displayLevels;
+              lOptions.displayLevels = layer.displayLevels.split(',');
             }
             if(layer.hasOwnProperty('autorefresh')){
               lOptions.refreshInterval = layer.autorefresh;
             }
             lLayer = new ArcGISTiledMapServiceLayer(layer.url, lOptions);
+            lLayer.on('load', function(evt){
+              //set min/max scales if present
+              if(lOptions.minScale){
+                evt.layer.setMinScale(lOptions.minScale)
+              }
+              if(lOptions.maxScale){
+                evt.layer.setMaxScale(lOptions.maxScale)
+              }
+            })
             if(layer.name){
               lLayer._titleForLegend = layer.name;
               lLayer.title = layer.name;
@@ -413,6 +449,15 @@ define([
                 lLayer.noservicename = true;
                 lLayer.name = lOptions.id;
               }
+              lLayer.on('load', function(evt){
+                //set min/max scales if present
+                if(lOptions.minScale){
+                  evt.layer.setMinScale(lOptions.minScale)
+                }
+                if(lOptions.maxScale){
+                  evt.layer.setMaxScale(lOptions.maxScale)
+                }
+              })
               this._viewerMap.addLayer(lLayer);
             }), lang.hitch(this, function(err){
               console.log('error')

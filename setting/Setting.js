@@ -107,7 +107,7 @@ define([
       _initLayersTable: function() {
         this.LayersTable.clear();
         var layers = this.config && this.config.layers.layer;
-        array.forEach(layers, lang.hitch(this, function(layerConfig, index) {
+        array.forEach(layers.reverse(), lang.hitch(this, function(layerConfig, index) {
           var args = {
             config: layerConfig,
             layerindex: index
@@ -137,7 +137,7 @@ define([
         var allLayers = array.map(trs, lang.hitch(this, function (item) {
           return item.singleLayer;
         }));
-        return allLayers;
+        return allLayers.reverse();
       },
 
       getNLSLayerType: function(type) {

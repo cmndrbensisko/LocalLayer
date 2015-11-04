@@ -98,6 +98,12 @@ define(
         if(config.hasOwnProperty('autorefresh')){
           this.autoRefresh.set('value', config.autorefresh);
         }
+        if(config.hasOwnProperty('maxScale')){
+          this.maxScale.set('value', config.maxScale);
+        }
+        if(config.hasOwnProperty('minScale')){
+          this.minScale.set('value', config.minScale);
+        }
       },
 
       _bindEvents: function() {
@@ -150,6 +156,8 @@ define(
           opacity: this.layerAlpha.getAlpha(),
           subdomains: (dls.length > 0)?dls:null,
           autorefresh: this.autoRefresh.get('value'),
+          minScale: this.minScale.get('value'),
+          maxScale: this.maxScale.get('value'),
           visible: this.isVisible.getValue()
         };
         return [webtiledlayer, this.tr];

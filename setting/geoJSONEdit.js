@@ -103,6 +103,12 @@ define(
         if(config.hasOwnProperty('autorefresh')){
           this.autoRefresh.set('value', config.autorefresh);
         }
+        if(config.hasOwnProperty('maxScale')){
+          this.maxScale.set('value', config.maxScale);
+        }
+        if(config.hasOwnProperty('minScale')){
+          this.minScale.set('value', config.minScale);
+        }
         if(config.showLabels === false){
           this.showLabelsCbx.setValue(false)
         }else{
@@ -259,6 +265,8 @@ define(
           symbol: this.config.symbol,
           latitude: this.config.latitude,
           longitude: this.config.longitude,
+          minScale: this.minScale.get('value'),
+          maxScale: this.maxScale.get('value'),
           isValidGeoJson: this.isValidGeoJson
         };
         return [featurelayer, this.tr];

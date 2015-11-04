@@ -89,6 +89,12 @@ define(
         if(config.hasOwnProperty('autorefresh')){
           this.autoRefresh.set('value', config.autorefresh);
         }
+        if(config.hasOwnProperty('maxScale')){
+          this.maxScale.set('value', config.maxScale);
+        }
+        if(config.hasOwnProperty('minScale')){
+          this.minScale.set('value', config.minScale);
+        }
       },
 
       _bindEvents: function() {
@@ -198,18 +204,22 @@ define(
       },
 
       getConfig: function() {
-        var dls = [];
-        if(this.displayLevels.get('value') !== ''){
-          dls = this.displayLevels.get('value').split();
-        }
+        //var dls = [];
+        //if(this.displayLevels.get('value') !== ''){
+          //dls = this.displayLevels.get('value').split(',');
+
+        //}
         var tiledlayer = {
           type: 'Tiled',
           name: this.layerTitle.get('value'),
           url: this.layerUrl.get('value'),
           opacity: this.layerAlpha.getAlpha(),
-          displayLevels: (dls.length > 0)?dls:null,
+          //displayLevels: (dls.length > 0)?dls:null,
+          displayLevels: this.displayLevels.get('value'),
           autorefresh: this.autoRefresh.get('value'),
           visible: this.isVisible.getValue(),
+          minScale: this.minScale.get('value'),
+          maxScale: this.maxScale.get('value'),
           popup: this.config.popup
         };
         return [tiledlayer, this.tr];

@@ -89,6 +89,12 @@ define(
         if(config.imageformat){
           this.imgFormat.set('value', config.imageformat);
         }
+        if(config.hasOwnProperty('maxScale')){
+          this.maxScale.set('value', config.maxScale);
+        }
+        if(config.hasOwnProperty('minScale')){
+          this.minScale.set('value', config.minScale);
+        }
       },
 
       _bindEvents: function() {
@@ -234,6 +240,8 @@ define(
           popup: this.config.popup,
           imagedpi: this.imgDPI.get('value'),
           disableclientcaching: this.disableClientCachingCbx.getValue(),
+          minScale: this.minScale.get('value'),
+          maxScale: this.maxScale.get('value'),
           //hidelayers: allHiddenLayers.join()
           hidelayers: visibleLayers.join()
         };
