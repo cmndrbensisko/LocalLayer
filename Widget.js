@@ -103,8 +103,8 @@ define([
           if(layer.name){
             lOptions.id = layer.name;
           }
-          lOptions.hidelayers = []
           if(layer.hasOwnProperty('hidelayers')){
+            lOptions.hidelayers = []
             lOptions.hidelayers = layer.hidelayers.split(',');
           }
           if(layer.hasOwnProperty('minScale')){
@@ -157,6 +157,16 @@ define([
               if(lOptions.maxScale){
                 evt.layer.setMaxScale(lOptions.maxScale)
               }
+
+              if (!lOptions.hasOwnProperty('hidelayers')){
+                //This is wierd; esri's layerlist widget doesn't actually seem to follow the visibilities set in the mapservice.
+
+                //make our own hidelayers object out of the default visibilities defined in the service
+                lOptions.hidelayers = []
+                array.forEach(evt.layer.layerInfos,function(layer){
+                  if (layer.defaultVisibility == false){lOptions.hidelayers.push(layer.id)}
+                })
+              }
               var removeLayers = []
               //convert from a list of layers to hide to a list of layers to show
               for(var i=0;i<lOptions.hidelayers.length;i++){lOptions.hidelayers[i] = parseInt(lOptions.hidelayers[i])}
@@ -199,9 +209,12 @@ define([
                 //take out removed ones, they mess up the layerlist
                 if (lOptions.hidelayers.indexOf(layerId) > -1){lOptions.hidelayers.splice(lOptions.hidelayers.indexOf(layerId),1)};
               })
+
+              //if hidelayers has been defined in the config AND it says no layers should be visible, pass the -1
               if(lOptions.hidelayers.length == 0){
                 lOptions.hidelayers.push(-1);
               }
+
               evt.layer.setVisibleLayers(lOptions.hidelayers);
             });
             this._viewerMap.addLayer(lLayer);
