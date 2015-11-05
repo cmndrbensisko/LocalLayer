@@ -186,12 +186,11 @@ define(
         if(this.config.hasOwnProperty('hidelayers')){
           hiddenLayer = this.config.hidelayers.split(',');
           if(array.indexOf(hiddenLayer, args.config.id) >= 0){
-            //hidelayers now shows what layers to SHOW, not to HIDE (I'd change the name, but I don't want to invalidate anyones existing configs)
-            //isVisible = false;
-            isVisible = true;
-          }else{
-            //isVisible = true;
             isVisible = false;
+            //isVisible = true;
+          }else{
+            isVisible = true;
+            //isVisible = false;
           }
         }
 
@@ -225,7 +224,7 @@ define(
 
         var visibleLayers = [];
         array.map(rowsData, lang.hitch(this, function (item) {
-          if(item.visible){
+          if(!item.visible){
             if (item.layerindex == ""){item.layerindex = "0"}
             visibleLayers.push(parseInt(item.layerindex))
           }

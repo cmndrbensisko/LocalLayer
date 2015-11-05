@@ -158,6 +158,17 @@ define([
                 evt.layer.setMaxScale(lOptions.maxScale)
               }
               var removeLayers = []
+              //convert from a list of layers to hide to a list of layers to show
+              for(var i=0;i<lOptions.hidelayers.length;i++){lOptions.hidelayers[i] = parseInt(lOptions.hidelayers[i])}
+              var showLayers = []
+              //get an array of all the layers
+              array.forEach(evt.layer.layerInfos,function(layer){showLayers.push(layer.id)})
+              //replace the hidelayers array with an inverse (shown layers only)
+              array.forEach(lOptions.hidelayers,function(id){
+                showLayers.splice(showLayers.indexOf(id),1)
+              })
+              lOptions.hidelayers = showLayers
+
               //set defaultvisibility for everything off by default
               array.forEach(evt.layer.layerInfos,function(layer){
                 evt.layer.layerInfos[layer.id].defaultVisibility = false
@@ -172,9 +183,6 @@ define([
                    if (removeLayers.indexOf(layer.id) == -1){removeLayers.push(layer.id)};
                 }
               })
-              for(var i=0;i<lOptions.hidelayers.length;i++){
-                lOptions.hidelayers[i] = parseInt(lOptions.hidelayers[i])
-              }
               for(var i=0;i<lOptions.hidelayers.length;i++){
                 var j=evt.layer.layerInfos[lOptions.hidelayers[i]].parentLayerId
                 while(j > -1){
