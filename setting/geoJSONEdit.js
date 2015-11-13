@@ -219,8 +219,10 @@ define(
       _checkForGeoJSON: function(evt){
         //perform an check to see if the response is a valid json array
         if (dijit.byId('selectLatitude')){
-          if (dijit.byId('featureArrayField').attr('value')){
-            evt.data = evt.data[dijit.byId('featureArrayField').attr('value')]
+          if (dijit.byId('featureArrayField')){
+            if (evt.data.hasOwnProperty(dijit.byId('featureArrayField').attr('value'))){
+              evt.data = evt.data[dijit.byId('featureArrayField').attr('value')]
+            }
           }
         }
         if ( Object.prototype.toString.call( evt.data ) === '[object Array]' ) {
@@ -242,7 +244,7 @@ define(
           this.featureArrayFieldSelect.on("change", lang.hitch(this, '_onArrayChange'))
           this.featureArrayFieldSelect.attr('value',dropDownMemory.data[0].id)
           on.emit(this.layerUrl, "Change", this.layerUrl.get('value'), this.featureArrayFieldSelect.get('value'))
-          dojo.setStyle(dojo.query("#featureArrayField"),"display","inline");
+          dojo.setStyle(dojo.query("#featureArrayFieldOuter")[0],"display","");
           return false;
         }
       },

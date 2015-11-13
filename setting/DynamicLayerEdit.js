@@ -174,8 +174,10 @@ define(
       },
 
       _createSubLayer: function(args) {
+        var isGroupLayer = false
         if(args.config.subLayerIds){
           //return null;
+          isGroupLayer = true;
         }
 
         args.layerSetting = this;
@@ -197,12 +199,16 @@ define(
         var rowData = {
           name: (args.config && args.config.name) || '',
           visible: isVisible,
-          layerindex: args.config.id
+          layerindex: args.config.id,
         };
 
         var result = this.sublayersTable.addRow(rowData);
         if(!result.success){
           return null;
+        }
+
+        if (isGroupLayer){
+          dojo.style(result.tr, "font-weight", "bold")
         }
         result.tr.subLayer = args.config;
         return result.tr;
