@@ -12,6 +12,7 @@
     "inPanel": false,
     "hasConfig": true,
     "hasStyle": false,
-    "hasUIFile": false
+    "hasUIFile": false,
+	"supportMultiInstance": false
   }
 }
