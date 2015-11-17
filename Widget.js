@@ -104,8 +104,10 @@ define([
             lOptions.id = layer.name;
           }
           if(layer.hasOwnProperty('hidelayers')){
-            lOptions.hidelayers = []
-            lOptions.hidelayers = layer.hidelayers.split(',');
+            if (layer.hidelayers){
+              lOptions.hidelayers = []
+              lOptions.hidelayers = layer.hidelayers.split(',');
+            }
           }
           if(layer.hasOwnProperty('minScale')){
             lOptions.minScale = layer.minScale

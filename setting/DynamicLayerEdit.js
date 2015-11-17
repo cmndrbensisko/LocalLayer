@@ -186,7 +186,11 @@ define(
         var hiddenLayer;
         var isVisible = args.config.defaultVisibility;
         if(this.config.hasOwnProperty('hidelayers')){
-          hiddenLayer = this.config.hidelayers.split(',');
+          if (this.config.hidelayers){
+            hiddenLayer = this.config.hidelayers.split(',');
+          }else{
+            hiddenLayer = [];
+          }
           if(array.indexOf(hiddenLayer, args.config.id) >= 0){
             isVisible = false;
             //isVisible = true;
@@ -230,11 +234,13 @@ define(
 
         var visibleLayers = [];
         array.map(rowsData, lang.hitch(this, function (item) {
+          if (item.layerindex == ""){item.layerindex = "0"}
           if(!item.visible){
-            if (item.layerindex == ""){item.layerindex = "0"}
             visibleLayers.push(parseInt(item.layerindex))
           }
         }));
+var _hideLayers = visibleLayers.join();
+if (_hideLayers == ""){_hideLayers = null};
         var dynamiclayer = {
           type: 'Dynamic',
           name: this.layerTitle.get('value'),
@@ -248,7 +254,7 @@ define(
           minScale: this.minScale.get('value'),
           maxScale: this.maxScale.get('value'),
           //hidelayers: allHiddenLayers.join()
-          hidelayers: visibleLayers.join()
+          hidelayers: _hideLayers
         };
         return [dynamiclayer, this.tr];
       },
