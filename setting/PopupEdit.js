@@ -21,7 +21,7 @@ define(
     'esri/request',
     'widgets/LocalLayer/setting/AddFieldBtn',
     'dijit/form/TextBox',
-    'widgets/LocalLayer/setting/SimpleTable',
+    'jimu/dijit/SimpleTable',
     'jimu/dijit/CheckBox'
   ],
   function(

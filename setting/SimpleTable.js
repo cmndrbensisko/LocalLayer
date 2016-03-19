@@ -21,12 +21,13 @@ define(['dojo/_base/declare',
     'dojo/_base/lang',
     'dojo/_base/html',
     'dojo/_base/array',
+    "jimu/dijit/CheckBox",
     'dojo/on',
     'dojo/query',
     'dojo/mouse',
     'jimu/utils'
   ],
-  function(declare, _WidgetBase, _TemplatedMixin, Evented, lang, html, array, on, query,
+  function(declare, _WidgetBase, _TemplatedMixin, Evented, lang, html, array, CheckBox, on, query,
     mouse, jimuUtils) {
     return declare([_WidgetBase, _TemplatedMixin, Evented], {
       baseClass: 'jimu-simple-table',
@@ -131,7 +132,6 @@ define(['dojo/_base/declare',
         });
         html.place(tableDiv, this.headDiv);
       },
-
       _initSelf: function() {
         this._initAttachPoints();
 
@@ -185,10 +185,31 @@ define(['dojo/_base/declare',
             }
 
             html.create('col', {width:width} ,this.colgroup);
-            var th = html.create('th', {
-              innerHTML: item.title,
-              title: item.title
-            }, tr);
+            if (item.type === 'checkbox'){
+              th.innerHTML = "";
+              //we should not bind its onChange event, because it maybe result in unexpected result
+              var cbx = new CheckBox({
+                label: item.title
+              });
+              var iconNode = query('.checkbox', cbx.domNode)[0];
+              if(iconNode){
+                iconNode.style.marginTop = "10px";
+              }
+              this.own(on(cbx.domNode, 'click', lang.hitch(this, function() {
+                if (cbx.getValue()) {
+                  this._checkAllTdCheckBoxes(item.name);
+                } else {
+                  this._uncheckAllTdCheckBoxes(item.name);
+                }
+              })));
+              cbx.placeAt(th);
+            }else{
+              var th = html.create('th', {
+                innerHTML: item.title,
+                title: item.title
+              }, tr);
+            }
+
 
             if(item.hidden){
               html.addClass(th, 'hidden-column');
@@ -204,6 +225,23 @@ define(['dojo/_base/declare',
         } else {
           this.fields = null;
         }
+      },
+      _checkAllTdCheckBoxes: function(fieldName){
+        var cbxes = this._getAllTdCheckBoxes(fieldName);
+        array.forEach(cbxes, function(cbx){
+          if(!cbx.getValue()){
+            cbx.setValue(true);
+          }
+        });
+      },
+
+      _uncheckAllTdCheckBoxes: function(fieldName){
+        var cbxes = this._getAllTdCheckBoxes(fieldName);
+        array.forEach(cbxes, function(cbx){
+          if(cbx.getValue()){
+            cbx.setValue(false);
+          }
+        });
       },
 
       _initAttachPoints:function(){

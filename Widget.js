@@ -21,6 +21,10 @@ define([
  'esri/dijit/Basemap',
  'esri/basemaps',
  'esri/dijit/PopupTemplate',
+ 'esri/symbols/jsonUtils',
+ "esri/symbols/TextSymbol",
+"esri/layers/LabelClass",
+"esri/Color",
  'dojo/domReady!'
   ],
   function (
@@ -44,7 +48,11 @@ define([
     BasemapLayer,
     Basemap,
     esriBasemaps,
-    PopupTemplate) {
+    PopupTemplate,
+    jsonUtils,
+	TextSymbol,
+	LabelClass,
+	Color) {
     var clazz = declare([BaseWidget], {
 
       constructor: function() {
@@ -125,6 +133,14 @@ define([
               lOptions.imageParameters = ip;
             }
             lLayer = new ArcGISDynamicMapServiceLayer(layer.url, lOptions);
+            if(layer.hasOwnProperty('definitionQueries')){
+              var definitionQueries = JSON.parse(layer.definitionQueries)
+              var layerDefinitions = []
+              for (var prop in definitionQueries){
+                layerDefinitions[prop] = definitionQueries[prop];
+              }
+              lLayer.setLayerDefinitions(layerDefinitions);
+            }
             if(layer.name){
               lLayer._titleForLegend = layer.name;
               lLayer.title = layer.name;
@@ -296,6 +312,28 @@ define([
               lLayer.title = layer.name;
               lLayer.noservicename = true;
             }
+            if(layer.hasOwnProperty('definitionQuery')){
+				      lLayer.setDefinitionExpression(layer.definitionQuery);	
+            }
+            if(layer.hasOwnProperty('customRenderer')){
+    				if (layer.customRenderer != ""){
+    					lLayer.setRenderer(new esri.renderer.SimpleRenderer(jsonUtils.fromJson(JSON.parse(layer.customRenderer))))
+    				}
+            }
+            if(layer.hasOwnProperty('customLabel')){
+      				if (layer.customLabel != "" && layer.customLabelStyle != ""){
+      						var labelClass = new LabelClass({"labelExpressionInfo":{"value":layer.customLabel}})
+      						labelClass.symbol = new TextSymbol(jsonUtils.fromJson(JSON.parse(layer.customLabelStyle)))
+                  if (layer.hasOwnProperty('labelMinScale')){
+                    labelClass.minScale = layer.labelMinScale;
+                  }
+                  if (layer.hasOwnProperty('labelMaxScale')){
+                    labelClass.maxScale = layer.labelMaxScale;
+                  }
+      						lLayer.setLabelingInfo([labelClass])
+      					  //setRenderer(new esri.renderer.SimpleRenderer(jsonUtils.fromJson(JSON.parse(layer.customRenderer)))
+      				}
+			       }
             lLayer.on('load',function(evt){
               //set min/max scales if present
               if(lOptions.minScale){

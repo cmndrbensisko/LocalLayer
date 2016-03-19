@@ -199,10 +199,23 @@ define(
             //isVisible = false;
           }
         }
+        var definitionQueries
+        var defQuery = ""
+        if (this.config.hasOwnProperty('definitionQueries')){
+          if (this.config.definitionQueries){
+            definitionQueries = JSON.parse(this.config.definitionQueries);
+          }else{
+            definitionQueries = [];
+          }
+          if (definitionQueries[args.config.id]){//(array.indexOf(definitionQueries, args.config.id) >= 0){
+            defQuery = definitionQueries[args.config.id]
+          }
+        }
 
         var rowData = {
           name: (args.config && args.config.name) || '',
           visible: isVisible,
+          definitionQuery: defQuery,
           layerindex: args.config.id,
         };
 
@@ -233,14 +246,20 @@ define(
         var rowsData = this.sublayersTable.getData();
 
         var visibleLayers = [];
+        var definitionQueries = new Object();
         array.map(rowsData, lang.hitch(this, function (item) {
           if (item.layerindex == ""){item.layerindex = "0"}
           if(!item.visible){
             visibleLayers.push(parseInt(item.layerindex))
           }
+          if (item.definitionQuery !== ""){
+            definitionQueries[parseInt(item.layerindex)] = item.definitionQuery
+          }
         }));
+var _definitionQueries = JSON.stringify(definitionQueries);
 var _hideLayers = visibleLayers.join();
 if (_hideLayers == ""){_hideLayers = null};
+if (_definitionQueries == ""){_definitionQueries = null};
         var dynamiclayer = {
           type: 'Dynamic',
           name: this.layerTitle.get('value'),
@@ -254,7 +273,8 @@ if (_hideLayers == ""){_hideLayers = null};
           minScale: this.minScale.get('value'),
           maxScale: this.maxScale.get('value'),
           //hidelayers: allHiddenLayers.join()
-          hidelayers: _hideLayers
+          hidelayers: _hideLayers,
+          definitionQueries: _definitionQueries
         };
         return [dynamiclayer, this.tr];
       },

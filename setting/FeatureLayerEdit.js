@@ -19,6 +19,7 @@ define(
     'jimu/dijit/CheckBox',
     'dijit/form/NumberTextBox',
     'dijit/form/ValidationTextBox',
+    'dijit/form/Textarea',
     'dojo/text!./FeatureLayerEdit.html'
   ],
   function(
@@ -41,6 +42,7 @@ define(
     CheckBox,
     NumberTextBox,
     ValidationTextBox,
+    TextArea,
     template) {
     return declare([BaseWidgetSetting, _WidgetsInTemplateMixin], {
       baseClass: 'feature-layer-edit',
@@ -99,6 +101,12 @@ define(
         if(config.hasOwnProperty('minScale')){
           this.minScale.set('value', config.minScale);
         }
+        if(config.hasOwnProperty('labelMaxScale')){
+          this.labelMaxScale.set('value', config.labelMaxScale);
+        }
+        if(config.hasOwnProperty('labelMinScale')){
+          this.labelMinScale.set('value', config.labelMinScale);
+        }
         if(config.showLabels === false){
           this.showLabelsCbx.setValue(false)
         }else{
@@ -106,6 +114,18 @@ define(
         }
         if(config.popup){
           html.removeClass(this.removePopupBtn, 'disabled');
+        }
+        if (config.hasOwnProperty('customLabel')){
+          this.customLabel.set('value',config.customLabel)
+        }
+        if (config.hasOwnProperty('definitionQuery')){
+          this.definitionQuery.set('value',config.definitionQuery)
+        }
+        if (config.hasOwnProperty('customRenderer')){
+          this.customRenderer.set('value',config.customRenderer)
+        }
+        if (config.hasOwnProperty('customLabelStyle')){
+          this.customLabelStyle.set('value',config.customLabelStyle)
         }
       },
 
@@ -175,6 +195,12 @@ define(
           autorefresh: this.autoRefresh.get('value'),
           minScale: this.minScale.get('value'),
           maxScale: this.maxScale.get('value'),
+          labelMinScale: this.labelMinScale.get('value'),
+          labelMaxScale: this.labelMaxScale.get('value'),
+		  customLabel: this.customLabel.get('value'),
+          definitionQuery: this.definitionQuery.get('value'),
+          customRenderer: this.customRenderer.get('value'),
+          customLabelStyle: this.customLabelStyle.get('value'),
           mode: this.flMode.get('value')
         };
         return [featurelayer, this.tr];
