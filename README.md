@@ -59,6 +59,7 @@ Changing that first 'true' to a 'false' will tell the menu to read all layers fr
 
 2) In \client\stemapp\jimu.js\LayerInfos\LayerInfoForMapService.js file, you should see a function called _bindEvent.  Change it to match the code below (added portions bolded);
 
+```
 _bindEvent: function() {
   this.inherited(arguments);
   if(this.layerObject && !this.layerObject.empty **&& !this.layerObject.connected**) {
@@ -67,6 +68,7 @@ _bindEvent: function() {
     **this.layerObject.connected = true;**
   }
 },
+```
 
 Basically, this will prevent multiple event handlers from being attached to the same layer.  My hunch is that something was causing a huge number of event handlers to be attached to each layer, exponential to the number of MapServices within the app.  Toggling the layer on and off in the LayerList would cause potentially hundreds of events to fire, when only one is necessary.
 
