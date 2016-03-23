@@ -167,6 +167,9 @@ define([
             if(layer.disableclientcaching){
               lLayer.setDisableClientCaching(true);
             }
+            lLayer.on('error',function(evt){
+              console.log(evt);
+            })
             lLayer.on('load',function(evt){
               //set min/max scales if present
               if(lOptions.minScale){
@@ -230,6 +233,8 @@ define([
 
               //if hidelayers has been defined in the config AND it says no layers should be visible, pass the -1
               if(lOptions.hidelayers.length == 0){
+                lOptions.hidelayers.push(-1);
+                lOptions.hidelayers.push(-1);
                 lOptions.hidelayers.push(-1);
               }
 
