@@ -33,7 +33,7 @@ Example:
 :bulb: Also, please note that the "/LocalLayer/" portion of the uri path above must match the folder name in which the widget resides on your local deployment.  If you're downloading the widget from github, you'll likely want to rename the folder from "LocalLayer-master" to simply "LocalLayer"
 
 :exclamation::exclamation: IMPORTANT: The changes that need to be made for WAB 1.3 to make this tool operational have changed. For new apps you only need to make this one change in the \client\stemapp\jimu.js\LayerInfos\LayerInfos.js. For existing/upgraded apps you only need to make this one change in the \server\apps\[App Number]\jimu.js\LayerInfos\LayerInfos.js 
-Change Line 439 from:
+Change Line 478 from:
 ```
 if (layer.url) {
 ```
@@ -89,7 +89,19 @@ Example:
 
 1. open the client\stemapp\themes\[theme name]\layouts\default\config.json in a text editor and add the code block above. This will take care of adding the Local Layer widget to default
 
-:bulb: If you would like labels to display on your Feature Services by default, make sure to add "showLabels":true under the mapOptions setting of your config.json file located under \client\stemapp\ (or at the root of your current app), in addition to checking the "Show Labels?" checkbox under the Feature Layer Settings Menu.  Please note that there is currently an ESRI API bug preventing complex labelling expressions from being displayed on Feature Layers, such as expressions containing the CONCAT operator, and hopefully this will be addressed by esri in future releases.
+:bulb: For custom Feature Service labelling to work, make sure to add a mapOptions section on your client\stemapp\predefined-apps\default\config.json directory, in addition to checking the "Show Labels?" checkbox under the Feature Layer Settings Menu.  Note that the mapOptions section must be entirely added at this level.
+
+```
+"map": {
+  ...
+  "mapOptions": {
+    "showLabels": true
+  }
+  ...
+}
+```
+
+When editing the config.json of an existing app, this section should already exist, and can just be added to
 
 ```
 Example:
@@ -104,6 +116,8 @@ Example:
     }
 ```
 
-Note that this change is necessary for the custom label rendering in the Add Feature Layer dialog to work.  For the "Custom Label Style" and "Custom Renderer" fields, paste the JSON output from [Esri's custom symbol generation app](http://developers.arcgis.com/javascript/samples/playground/main.html) application into these fields to create custom Feature Layer symbology and labels.  
+Please note that there is currently an ESRI API bug preventing complex labelling expressions from being displayed on Feature Layers, such as expressions containing the CONCAT operator, and hopefully this will be addressed by esri in future releases.
+
+Note that this change is necessary for the custom label rendering in the Add Feature Layer dialog to work.  For the "Custom Label Style" and "Custom Renderer" fields, paste the JSON output from [Esri's custom symbol generation app](http://developers.arcgis.com/javascript/samples/playground/index.html) application into these fields to create custom Feature Layer symbology and labels.  
 
 For the "Custom Label Style", use the TextSymbol option in the Playground, and make sure to delete the default "Text" line provided by the playground app output.  This will be provided by the custom label expression you provide in the "Custom Label Expression" field.  Format this field according to the "labelExpressionInfo section of the [LabelClass info page](https://developers.arcgis.com/javascript/jsapi/labelclass-amd.html#labelexpressioninfo).
