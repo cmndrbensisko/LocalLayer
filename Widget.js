@@ -326,19 +326,23 @@ define([
     				}
             }
             if(layer.hasOwnProperty('customLabel')){
-      				if (layer.customLabel != "" && layer.customLabelStyle != ""){
-      						var labelClass = new LabelClass({"labelExpressionInfo":{"value":layer.customLabel}})
-      						labelClass.symbol = new TextSymbol(jsonUtils.fromJson(JSON.parse(layer.customLabelStyle)))
-                  if (layer.hasOwnProperty('labelMinScale')){
-                    labelClass.minScale = layer.labelMinScale;
-                  }
-                  if (layer.hasOwnProperty('labelMaxScale')){
-                    labelClass.maxScale = layer.labelMaxScale;
-                  }
-      						lLayer.setLabelingInfo([labelClass])
-      					  //setRenderer(new esri.renderer.SimpleRenderer(jsonUtils.fromJson(JSON.parse(layer.customRenderer)))
-      				}
-			       }
+				if ((layer.customLabel && layer.customLabel != "")){
+					var labelClass = new LabelClass({"labelExpressionInfo":{"value":layer.customLabel}})
+					if (layer.hasOwnProperty('customLabelStyle') && layer.customLabelStyle != ""){
+						labelClass.symbol = new TextSymbol(jsonUtils.fromJson(JSON.parse(layer.customLabelStyle)))
+					}else{
+						labelClass.symbol = new TextSymbol();
+					}
+					if (layer.hasOwnProperty('labelMinScale')){
+						labelClass.minScale = layer.labelMinScale;
+					}
+					if (layer.hasOwnProperty('labelMaxScale')){
+						labelClass.maxScale = layer.labelMaxScale;
+					}
+					lLayer.setLabelingInfo([labelClass])
+					//setRenderer(new esri.renderer.SimpleRenderer(jsonUtils.fromJson(JSON.parse(layer.customRenderer)))
+				}
+			}
             lLayer.on('load',function(evt){
               //set min/max scales if present
               if(lOptions.minScale){
