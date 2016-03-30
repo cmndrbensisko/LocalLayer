@@ -254,6 +254,14 @@
         },
         "imagedpi": 96,
         "disableclientcaching": false
+      },
+      {
+	      "type": "WebTiled",
+	      "name": "Radar (OpenWeatherMap)",
+		"visible": false,
+	      "opacity": 0.6,
+	      "url": "http://{subDomain}.tile.openweathermap.org/map/radar/{level}/{col}/{row}.png",
+	      "subDomains": ["a","b","c","d"]
       }
     ]
   }
