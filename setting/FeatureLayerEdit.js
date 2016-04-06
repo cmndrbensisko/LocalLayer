@@ -112,12 +112,12 @@ define(
         }else{
           this.showLabelsCbx.setValue(true)
         }
-        if(config.trackEditByLDAP === false){
+        if(!config.trackEditByLDAP || config.trackEditByLDAP === false){
           this.trackEditByLDAPCbx.setValue(false)
         }else{
           this.trackEditByLDAPCbx.setValue(true)
         }
-        if(config.limitEditByLDAP === false){
+        if(!config.limitEditByLDAP || config.limitEditByLDAP === false){
           this.limitEditByLDAPCbx.setValue(false)
         }else{
           this.limitEditByLDAPCbx.setValue(true)
