@@ -29,6 +29,8 @@ define({
     tilePlaceHolder: "e.g. http://{subDomain}.tile.stamen.com/watercolor/{level}/{col}/{row}.jpg",
     subDomainPlaceHolder: "e.g. a,b,c",
     displayLevelsPlaceHolder: "e.g 1,2,5",
+    trackEditByLDAP: "Track Users When Editing (Windows AD)",
+    limitEditByLDAP: "Only Allow Users to Edit Features They Created (Windows AD)",
     addbasemap: "Add Basemap",
     webmaplayertype: "Layer Type",
     layeroption: "Layer",

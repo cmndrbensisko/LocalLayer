@@ -1,33 +1,33 @@
 /*global define, window, dojo*/
 define([
- 'dojo/_base/declare',
- 'jimu/BaseWidget',
- 'jimu/ConfigManager',
- 'jimu/MapManager',
- 'jimu/utils',
- 'esri/urlUtils',
- 'dojo/_base/lang',
- 'dojo/_base/array',
- 'dojo/_base/query',
- 'dojo/topic',
- 'esri/geometry/webMercatorUtils',
- 'esri/layers/ArcGISDynamicMapServiceLayer',
- 'esri/layers/ArcGISTiledMapServiceLayer',
- 'esri/layers/FeatureLayer',
- 'esri/layers/WebTiledLayer',
- 'esri/layers/ImageParameters',
- 'esri/dijit/BasemapGallery',
- 'esri/dijit/BasemapLayer',
- 'esri/dijit/Basemap',
- 'esri/basemaps',
- 'esri/dijit/PopupTemplate',
- 'esri/symbols/jsonUtils',
- "esri/symbols/TextSymbol",
-"esri/layers/LabelClass",
-"esri/Color",
- 'dojo/domReady!'
+    'dojo/_base/declare',
+    'jimu/BaseWidget',
+    'jimu/ConfigManager',
+    'jimu/MapManager',
+    'jimu/utils',
+    'esri/urlUtils',
+    'dojo/_base/lang',
+    'dojo/_base/array',
+    'dojo/_base/query',
+    'dojo/topic',
+    'esri/geometry/webMercatorUtils',
+    'esri/layers/ArcGISDynamicMapServiceLayer',
+    'esri/layers/ArcGISTiledMapServiceLayer',
+    'esri/layers/FeatureLayer',
+    'esri/layers/WebTiledLayer',
+    'esri/layers/ImageParameters',
+    'esri/dijit/BasemapGallery',
+    'esri/dijit/BasemapLayer',
+    'esri/dijit/Basemap',
+    'esri/basemaps',
+    'esri/dijit/PopupTemplate',
+    'esri/symbols/jsonUtils',
+    "esri/symbols/TextSymbol",
+    "esri/layers/LabelClass",
+    "esri/Color",
+    'dojo/domReady!'
   ],
-  function (
+  function(
     declare,
     BaseWidget,
     ConfigManager,
@@ -50,44 +50,46 @@ define([
     esriBasemaps,
     PopupTemplate,
     jsonUtils,
-	TextSymbol,
-	LabelClass,
-	Color) {
+    TextSymbol,
+    LabelClass,
+    Color) {
     var clazz = declare([BaseWidget], {
 
       constructor: function() {
         this._originalWebMap = null;
       },
 
-      onClose: function(){
-        if (query('.jimu-popup.widget-setting-popup', window.parent.document).length === 0){
+      onClose: function() {
+        if (query('.jimu-popup.widget-setting-popup', window.parent.document).length === 0) {
           var _currentExtent = dojo.clone(this.map.extent);
-          var _changedData = {itemId:this._originalWebMap};
-          var _newBasemap = topic.subscribe("mapChanged", function(_map){
+          var _changedData = {
+            itemId: this._originalWebMap
+          };
+          var _newBasemap = topic.subscribe("mapChanged", function(_map) {
             _newBasemap.remove();
             _map.setExtent(_currentExtent);
           });
-          MapManager.getInstance().onAppConfigChanged(this.appConfig,'mapChange', _changedData);
+          MapManager.getInstance().onAppConfigChanged(this.appConfig, 'mapChange', _changedData);
         }
       },
 
-      _removeAllLayersExceptBasemap: function(){
-        for(var l = this.map.layerIds.length - 1; l>1; l--){
+      _removeAllLayersExceptBasemap: function() {
+        for (var l = this.map.layerIds.length - 1; l > 1; l--) {
           var lyr = this.map.getLayer(this.map.layerIds[l]);
-          if(lyr){
+          if (lyr) {
             this.map.removeLayer(lyr);
           }
         }
         var f = this.map.graphicsLayerIds.length;
-        while (f--){
+        while (f--) {
           var fl = this.map.getLayer(this.map.graphicsLayerIds[f]);
-            if(fl.declaredClass === 'esri.layers.FeatureLayer'){
+          if (fl.declaredClass === 'esri.layers.FeatureLayer') {
             this.map.removeLayer(fl);
           }
         }
       },
 
-      startup: function () {
+      startup: function() {
         this._originalWebMap = this.map.webMapResponse.itemInfo.item.id;
         this._removeAllLayersExceptBasemap();
         if (this.config.useProxy) {
@@ -97,142 +99,156 @@ define([
           });
         }
 
-        this.config.layers.layer.forEach(function (layer) {
+        this.config.layers.layer.forEach(function(layer) {
           var lLayer;
-          var lOptions ={};
-          if(layer.hasOwnProperty('opacity')){
+          var lOptions = {};
+          if (layer.hasOwnProperty('opacity')) {
             lOptions.opacity = layer.opacity;
           }
-          if(layer.hasOwnProperty('visible') && !layer.visible){
+          if (layer.hasOwnProperty('visible') && !layer.visible) {
             lOptions.visible = false;
-          }else{
+          } else {
             lOptions.visible = true;
           }
-          if(layer.name){
+          if (layer.name) {
             lOptions.id = layer.name;
           }
-          if(layer.hasOwnProperty('hidelayers')){
-            if (layer.hidelayers){
+          if (layer.hasOwnProperty('hidelayers')) {
+            if (layer.hidelayers) {
               lOptions.hidelayers = []
               lOptions.hidelayers = layer.hidelayers.split(',');
             }
           }
-          if(layer.hasOwnProperty('minScale')){
+          if (layer.hasOwnProperty('minScale')) {
             lOptions.minScale = layer.minScale
           }
-          if(layer.hasOwnProperty('maxScale')){
+          if (layer.hasOwnProperty('maxScale')) {
             lOptions.maxScale = layer.maxScale
           }
-          if(layer.type.toUpperCase() === 'DYNAMIC'){
-            if(layer.imageformat){
+          if (layer.type.toUpperCase() === 'DYNAMIC') {
+            if (layer.imageformat) {
               var ip = new ImageParameters();
               ip.format = layer.imageformat;
-              if(layer.hasOwnProperty('imagedpi')){
+              if (layer.hasOwnProperty('imagedpi')) {
                 ip.dpi = layer.imagedpi;
               }
               lOptions.imageParameters = ip;
             }
             lLayer = new ArcGISDynamicMapServiceLayer(layer.url, lOptions);
-            if(layer.hasOwnProperty('definitionQueries')){
+            if (layer.hasOwnProperty('definitionQueries')) {
               var definitionQueries = JSON.parse(layer.definitionQueries)
               var layerDefinitions = []
-              for (var prop in definitionQueries){
+              for (var prop in definitionQueries) {
                 layerDefinitions[prop] = definitionQueries[prop];
               }
               lLayer.setLayerDefinitions(layerDefinitions);
             }
-            if(layer.name){
+            if (layer.name) {
               lLayer._titleForLegend = layer.name;
               lLayer.title = layer.name;
               lLayer.noservicename = true;
             }
-            if (layer.popup){
+            if (layer.popup) {
               var finalInfoTemp = {};
-              array.forEach(layer.popup.infoTemplates, function(_infoTemp){
+              array.forEach(layer.popup.infoTemplates, function(_infoTemp) {
                 var popupInfo = {};
                 popupInfo.title = _infoTemp.title;
-                if(_infoTemp.description){
+                if (_infoTemp.description) {
                   popupInfo.description = _infoTemp.description;
-                }else{
+                } else {
                   popupInfo.description = null;
                 }
-                if(_infoTemp.fieldInfos){
+                if (_infoTemp.fieldInfos) {
                   popupInfo.fieldInfos = _infoTemp.fieldInfos;
                 }
                 var _popupTemplate1 = new PopupTemplate(popupInfo);
-                finalInfoTemp[_infoTemp.layerId] = {infoTemplate: _popupTemplate1};
+                finalInfoTemp[_infoTemp.layerId] = {
+                  infoTemplate: _popupTemplate1
+                };
               });
               lLayer.setInfoTemplates(finalInfoTemp);
             }
-            if(layer.disableclientcaching){
+            if (layer.disableclientcaching) {
               lLayer.setDisableClientCaching(true);
             }
-            lLayer.on('error',function(evt){
+            lLayer.on('error', function(evt) {
               console.log(evt);
             })
-            lLayer.on('load',function(evt){
+            lLayer.on('load', function(evt) {
               //set min/max scales if present
-              if(lOptions.minScale){
+              if (lOptions.minScale) {
                 evt.layer.setMinScale(lOptions.minScale)
               }
-              if(lOptions.maxScale){
+              if (lOptions.maxScale) {
                 evt.layer.setMaxScale(lOptions.maxScale)
               }
 
-              if (!lOptions.hasOwnProperty('hidelayers')){
+              if (!lOptions.hasOwnProperty('hidelayers')) {
                 //This is wierd; esri's layerlist widget doesn't actually seem to follow the visibilities set in the mapservice.
 
                 //make our own hidelayers object out of the default visibilities defined in the service
                 lOptions.hidelayers = []
-                array.forEach(evt.layer.layerInfos,function(layer){
-                  if (layer.defaultVisibility == false){lOptions.hidelayers.push(layer.id)}
+                array.forEach(evt.layer.layerInfos, function(layer) {
+                  if (layer.defaultVisibility == false) {
+                    lOptions.hidelayers.push(layer.id)
+                  }
                 })
               }
               var removeLayers = []
-              //convert from a list of layers to hide to a list of layers to show
-              for(var i=0;i<lOptions.hidelayers.length;i++){lOptions.hidelayers[i] = parseInt(lOptions.hidelayers[i])}
+                //convert from a list of layers to hide to a list of layers to show
+              for (var i = 0; i < lOptions.hidelayers.length; i++) {
+                lOptions.hidelayers[i] = parseInt(lOptions.hidelayers[i])
+              }
               var showLayers = []
-              //get an array of all the layers
-              array.forEach(evt.layer.layerInfos,function(layer){showLayers.push(layer.id)})
-              //replace the hidelayers array with an inverse (shown layers only)
-              array.forEach(lOptions.hidelayers,function(id){
-                showLayers.splice(showLayers.indexOf(id),1)
+                //get an array of all the layers
+              array.forEach(evt.layer.layerInfos, function(layer) {
+                  showLayers.push(layer.id)
+                })
+                //replace the hidelayers array with an inverse (shown layers only)
+              array.forEach(lOptions.hidelayers, function(id) {
+                showLayers.splice(showLayers.indexOf(id), 1)
               })
               lOptions.hidelayers = showLayers
 
               //set defaultvisibility for everything off by default
-              array.forEach(evt.layer.layerInfos,function(layer){
-                evt.layer.layerInfos[layer.id].defaultVisibility = false
-              })
-              //except for whats set in the config
-              for(var i=0;i<lOptions.hidelayers.length;i++){
+              array.forEach(evt.layer.layerInfos, function(layer) {
+                  evt.layer.layerInfos[layer.id].defaultVisibility = false
+                })
+                //except for whats set in the config
+              for (var i = 0; i < lOptions.hidelayers.length; i++) {
                 evt.layer.layerInfos[lOptions.hidelayers[i]].defaultVisibility = true
               }
               //remove all grouplayers
-              array.forEach(evt.layer.layerInfos,function(layer){
-                if (layer.subLayerIds){
-                   if (removeLayers.indexOf(layer.id) == -1){removeLayers.push(layer.id)};
+              array.forEach(evt.layer.layerInfos, function(layer) {
+                if (layer.subLayerIds) {
+                  if (removeLayers.indexOf(layer.id) == -1) {
+                    removeLayers.push(layer.id)
+                  };
                 }
               })
-              for(var i=0;i<lOptions.hidelayers.length;i++){
-                var j=evt.layer.layerInfos[lOptions.hidelayers[i]].parentLayerId
-                while(j > -1){
+              for (var i = 0; i < lOptions.hidelayers.length; i++) {
+                var j = evt.layer.layerInfos[lOptions.hidelayers[i]].parentLayerId
+                while (j > -1) {
                   //has the parentlayer been turned on?
-                  if (lOptions.hidelayers.indexOf(j) == -1){
+                  if (lOptions.hidelayers.indexOf(j) == -1) {
                     //if the parent isnt in the visiblelayers, the child shouldn't be either.
-                    if (removeLayers.indexOf(lOptions.hidelayers[i]) == -1){removeLayers.push(lOptions.hidelayers[i])}
+                    if (removeLayers.indexOf(lOptions.hidelayers[i]) == -1) {
+                      removeLayers.push(lOptions.hidelayers[i])
+                    }
                   }
-                  j=evt.layer.layerInfos[j].parentLayerId
+                  j = evt.layer.layerInfos[j].parentLayerId
                 }
               }
               //splice out the removelayers
-              array.forEach(removeLayers,function(layerId){
+              array.forEach(removeLayers, function(layerId) {
                 //take out removed ones, they mess up the layerlist
-                if (lOptions.hidelayers.indexOf(layerId) > -1){lOptions.hidelayers.splice(lOptions.hidelayers.indexOf(layerId),1)};
+                if (lOptions.hidelayers.indexOf(layerId) > -1) {
+                  lOptions.hidelayers.splice(lOptions.hidelayers.indexOf(layerId), 1)
+                };
               })
 
               //if hidelayers has been defined in the config AND it says no layers should be visible, pass the -1
-              if(lOptions.hidelayers.length == 0){
+              if (lOptions.hidelayers.length == 0) {
                 lOptions.hidelayers.push(-1);
                 lOptions.hidelayers.push(-1);
                 lOptions.hidelayers.push(-1);
@@ -242,44 +258,48 @@ define([
             });
             this._viewerMap.addLayer(lLayer);
             this._viewerMap.setInfoWindowOnClick(true);
-          }else if (layer.type.toUpperCase() === 'WEBTILEDLAYER') {
-            if(layer.hasOwnProperty('subdomains')){
+          } else if (layer.type.toUpperCase() === 'WEBTILEDLAYER') {
+            if (layer.hasOwnProperty('subdomains')) {
               lOptions.subDomains = layer.subdomains;
             }
-            if(layer.hasOwnProperty('autorefresh')){
+            if (layer.hasOwnProperty('autorefresh')) {
               lOptions.refreshInterval = layer.autorefresh;
             }
-            if(layer.hasOwnProperty('opacity')){
+            if (layer.hasOwnProperty('opacity')) {
               lOptions.opacity = layer.opacity;
             }
-            lLayer = new WebTiledLayer(layer.url,lOptions)
-            lLayer.on('load',function(evt){
+            lLayer = new WebTiledLayer(layer.url, lOptions)
+            lLayer.on('load', function(evt) {
               //set min/max scales if present
-              if(lOptions.minScale){
+              if (lOptions.minScale) {
                 evt.layer.setMinScale(lOptions.minScale)
               }
-              if(lOptions.maxScale){
+              if (lOptions.maxScale) {
                 evt.layer.setMaxScale(lOptions.maxScale)
               }
               evt.layer.name = lOptions.id;
             });
             this._viewerMap.addLayer(lLayer);
-          }else if (layer.type.toUpperCase() === 'WEBTILEDBASEMAP') {
+          } else if (layer.type.toUpperCase() === 'WEBTILEDBASEMAP') {
             lOptions.type = "WebTiledLayer"
             lOptions.url = layer.url
-            if(layer.hasOwnProperty('subdomains')){
+            if (layer.hasOwnProperty('subdomains')) {
               lOptions.subDomains = layer.subdomains;
             }
-            if(layer.hasOwnProperty('autorefresh')){
+            if (layer.hasOwnProperty('autorefresh')) {
               lOptions.refreshInterval = layer.autorefresh;
             }
-            if(layer.hasOwnProperty('opacity')){
+            if (layer.hasOwnProperty('opacity')) {
               lOptions.opacity = layer.opacity;
             }
-            if(layer.hasOwnProperty('copyright')){
+            if (layer.hasOwnProperty('copyright')) {
               lOptions.copyright = layer.copyright;
             }
-            var _newBasemap = new Basemap({id:'defaultBasemap', title:layer.name, layers:[new BasemapLayer(lOptions)]});
+            var _newBasemap = new Basemap({
+              id: 'defaultBasemap',
+              title: layer.name,
+              layers: [new BasemapLayer(lOptions)]
+            });
             var _basemapGallery = new BasemapGallery({
               showArcGISBasemaps: false,
               map: this._viewerMap
@@ -287,126 +307,146 @@ define([
             _basemapGallery.add(_newBasemap);
             _basemapGallery.select('defaultBasemap');
             _basemapGallery.destroy();
-          }else if (layer.type.toUpperCase() === 'FEATURE') {
+          } else if (layer.type.toUpperCase() === 'FEATURE') {
             var _popupTemplate;
-            if (layer.popup){
+            if (layer.popup) {
               _popupTemplate = new PopupTemplate(layer.popup);
               lOptions.infoTemplate = _popupTemplate;
             }
-            if(layer.hasOwnProperty('mode')){
+            if (layer.hasOwnProperty('mode')) {
               var lmode;
-              if(layer.mode === 'ondemand'){
+              if (layer.mode === 'ondemand') {
                 lmode = 1;
-              }else if(layer.mode === 'snapshot'){
+              } else if (layer.mode === 'snapshot') {
                 lmode = 0;
-              }else if(layer.mode === 'selection'){
+              } else if (layer.mode === 'selection') {
                 lmode = 2;
               }
               lOptions.mode = lmode;
             }
             lOptions.outFields = ['*'];
-            if(layer.hasOwnProperty('autorefresh')){
+            if (layer.hasOwnProperty('autorefresh')) {
               lOptions.refreshInterval = layer.autorefresh;
             }
-            if(layer.hasOwnProperty('showLabels')){
+            if (layer.hasOwnProperty('showLabels')) {
               lOptions.showLabels = true;
             }
             lLayer = new FeatureLayer(layer.url, lOptions);
-            if(layer.name){
+            if (layer.name) {
               lLayer._titleForLegend = layer.name;
               lLayer.title = layer.name;
               lLayer.noservicename = true;
             }
-            if(layer.hasOwnProperty('definitionQuery')){
-				      lLayer.setDefinitionExpression(layer.definitionQuery);	
+            if (layer.hasOwnProperty('definitionQuery')) {
+              lLayer.setDefinitionExpression(layer.definitionQuery);
             }
-            if(layer.hasOwnProperty('customRenderer')){
-    				if (layer.customRenderer != ""){
-    					lLayer.setRenderer(new esri.renderer.SimpleRenderer(jsonUtils.fromJson(JSON.parse(layer.customRenderer))))
-    				}
+            if (layer.hasOwnProperty('customRenderer')) {
+              if (layer.customRenderer != "") {
+                lLayer.setRenderer(new esri.renderer.SimpleRenderer(jsonUtils.fromJson(JSON.parse(layer.customRenderer))))
+              }
             }
-            if(layer.hasOwnProperty('customLabel')){
-				if ((layer.customLabel && layer.customLabel != "")){
-					var labelClass = new LabelClass({"labelExpressionInfo":{"value":layer.customLabel}})
-					if (layer.hasOwnProperty('customLabelStyle') && layer.customLabelStyle != ""){
-						labelClass.symbol = new TextSymbol(jsonUtils.fromJson(JSON.parse(layer.customLabelStyle)))
-					}else{
-						labelClass.symbol = new TextSymbol();
-					}
-					if (layer.hasOwnProperty('labelMinScale')){
-						labelClass.minScale = layer.labelMinScale;
-					}
-					if (layer.hasOwnProperty('labelMaxScale')){
-						labelClass.maxScale = layer.labelMaxScale;
-					}
-					lLayer.setLabelingInfo([labelClass])
-					//setRenderer(new esri.renderer.SimpleRenderer(jsonUtils.fromJson(JSON.parse(layer.customRenderer)))
-				}
-			}
-            lLayer.on('load',function(evt){
+            if (layer.hasOwnProperty('customLabel')) {
+              if ((layer.customLabel && layer.customLabel != "")) {
+                var labelClass = new LabelClass({
+                  "labelExpressionInfo": {
+                    "value": layer.customLabel
+                  }
+                })
+                if (layer.hasOwnProperty('customLabelStyle') && layer.customLabelStyle != "") {
+                  labelClass.symbol = new TextSymbol(jsonUtils.fromJson(JSON.parse(layer.customLabelStyle)))
+                } else {
+                  labelClass.symbol = new TextSymbol();
+                }
+                if (layer.hasOwnProperty('labelMinScale')) {
+                  labelClass.minScale = layer.labelMinScale;
+                }
+                if (layer.hasOwnProperty('labelMaxScale')) {
+                  labelClass.maxScale = layer.labelMaxScale;
+                }
+                lLayer.setLabelingInfo([labelClass])
+              }
+            }
+            lLayer.on('load', function(evt) {
               //set min/max scales if present
-              if(lOptions.minScale){
+              if (lOptions.minScale) {
                 evt.layer.setMinScale(lOptions.minScale)
               }
-              if(lOptions.maxScale){
+              if (lOptions.maxScale) {
                 evt.layer.setMaxScale(lOptions.maxScale)
+              }
+              if (lOptions.trackEditByLDAP) {
+                this.userIsAdmin = true;
+              }
+              if (lOptions.limitEditByLDAP) {
+                //If enabled, ensure that index.html is renamed to index.aspx, and add the following snippet to the index.aspx page.
+                //<script type="text/javascript">var _llwUser = "<%= User.Identity.Name.Replace("\","\\") %>"</script>
+                this.credential = {userId:_llwUser};
               }
               evt.layer.name = lOptions.id;
             });
             this._viewerMap.addLayer(lLayer);
-          }else if(layer.type.toUpperCase() === 'TILED'){
-            if(layer.displayLevels){
+          } else if (layer.type.toUpperCase() === 'TILED') {
+            if (layer.displayLevels) {
               lOptions.displayLevels = layer.displayLevels.split(',');
             }
-            if(layer.hasOwnProperty('autorefresh')){
+            if (layer.hasOwnProperty('autorefresh')) {
               lOptions.refreshInterval = layer.autorefresh;
             }
             lLayer = new ArcGISTiledMapServiceLayer(layer.url, lOptions);
-            lLayer.on('load', function(evt){
+            lLayer.on('load', function(evt) {
               //set min/max scales if present
-              if(lOptions.minScale){
+              if (lOptions.minScale) {
                 evt.layer.setMinScale(lOptions.minScale)
               }
-              if(lOptions.maxScale){
+              if (lOptions.maxScale) {
                 evt.layer.setMaxScale(lOptions.maxScale)
               }
             })
-            if(layer.name){
+            if (layer.name) {
               lLayer._titleForLegend = layer.name;
               lLayer.title = layer.name;
               lLayer.noservicename = true;
             }
-            if (layer.popup){
+            if (layer.popup) {
               var finalInfoTemp2 = {};
-              array.forEach(layer.popup.infoTemplates, function(_infoTemp){
+              array.forEach(layer.popup.infoTemplates, function(_infoTemp) {
                 var popupInfo = {};
                 popupInfo.title = _infoTemp.title;
-                if(_infoTemp.content){
+                if (_infoTemp.content) {
                   popupInfo.description = _infoTemp.content;
-                }else{
+                } else {
                   popupInfo.description = null;
                 }
-                if(_infoTemp.fieldInfos){
+                if (_infoTemp.fieldInfos) {
                   popupInfo.fieldInfos = _infoTemp.fieldInfos;
                 }
                 var _popupTemplate2 = new PopupTemplate(popupInfo);
-                finalInfoTemp2[_infoTemp.layerId] = {infoTemplate: _popupTemplate2};
+                finalInfoTemp2[_infoTemp.layerId] = {
+                  infoTemplate: _popupTemplate2
+                };
               });
               lLayer.setInfoTemplates(finalInfoTemp2);
             }
             this._viewerMap.addLayer(lLayer);
-          }else if(layer.type.toUpperCase() === 'BASEMAP'){
-            var bmLayers = array.map(layer.layers.layer, function(bLayer){
-              var bmLayerObj = {url:bLayer.url, isReference: false};
-              if(bLayer.displayLevels){
+          } else if (layer.type.toUpperCase() === 'BASEMAP') {
+            var bmLayers = array.map(layer.layers.layer, function(bLayer) {
+              var bmLayerObj = {
+                url: bLayer.url,
+                isReference: false
+              };
+              if (bLayer.displayLevels) {
                 bmLayerObj.displayLevels = bLayer.displayLevels;
               }
-              if(layer.hasOwnProperty('opacity')){
+              if (layer.hasOwnProperty('opacity')) {
                 bmLayerObj.opacity = bLayer.opacity;
               }
               return new BasemapLayer(bmLayerObj);
             });
-            var _newBasemap = new Basemap({id:'defaultBasemap', title:layer.name, layers:bmLayers});
+            var _newBasemap = new Basemap({
+              id: 'defaultBasemap',
+              title: layer.name,
+              layers: bmLayers
+            });
             var _basemapGallery = new BasemapGallery({
               showArcGISBasemaps: false,
               map: this._viewerMap
@@ -414,44 +454,46 @@ define([
             _basemapGallery.add(_newBasemap);
             _basemapGallery.select('defaultBasemap');
             _basemapGallery.destroy();
-          }else if(layer.type.toUpperCase() === 'GEOJSON'){
+          } else if (layer.type.toUpperCase() === 'GEOJSON') {
             dojo.xhrGet({
               url: lang.trim(layer.url || ""),
               handleAs: 'json',
-              headers:{"X-Requested-With": ""}
+              headers: {
+                "X-Requested-With": ""
+              }
             }).then(lang.hitch(this, function(restData) {
-              if (layer.isValidGeoJson){
+              if (layer.isValidGeoJson) {
                 restData = restData.features
               }
               var featureArray = []
-              if (layer.popup){
+              if (layer.popup) {
                 var _popupTemplate;
-                if (layer.popup){
+                if (layer.popup) {
                   _popupTemplate = new PopupTemplate(layer.popup);
                   lOptions.infoTemplate = _popupTemplate;
                 }
               }
-              if(layer.hasOwnProperty('mode')){
+              if (layer.hasOwnProperty('mode')) {
                 var lmode;
-                if(layer.mode === 'ondemand'){
+                if (layer.mode === 'ondemand') {
                   lmode = 1;
-                }else if(layer.mode === 'snapshot'){
+                } else if (layer.mode === 'snapshot') {
                   lmode = 0;
-                }else if(layer.mode === 'selection'){
+                } else if (layer.mode === 'selection') {
                   lmode = 2;
                 }
                 lOptions.mode = lmode;
               }
               lOptions.outFields = ['*'];
-              if(layer.hasOwnProperty('autorefresh')){
+              if (layer.hasOwnProperty('autorefresh')) {
                 lOptions.refreshInterval = layer.autorefresh;
               }
-              if(layer.hasOwnProperty('showLabels')){
+              if (layer.hasOwnProperty('showLabels')) {
                 lOptions.showLabels = true;
               }
-              if (layer.symbol){
+              if (layer.symbol) {
                 var sym
-                switch (layer.symbol.type){
+                switch (layer.symbol.type) {
                   case "esriSMS":
                     sym = new esri.symbol.SimpleMarkerSymbol(layer.symbol)
                     break;
@@ -466,32 +508,31 @@ define([
                     break;
                   case "esriPFS":
                     sym = new esri.symbol.PictureFillSymbol(layer.symbol)
-                    break;                    
+                    break;
                 }
                 var renderer = new esri.renderer.SimpleRenderer(sym)
               }
-                var oidField = 0
-              array.forEach(restData,function(geojsonpoint){
-                if (!layer.isValidGeoJson){
+              var oidField = 0
+              array.forEach(restData, function(geojsonpoint) {
+                if (!layer.isValidGeoJson) {
                   geojsonpoint['OID'] = oidField
-                  var wmPoint = webMercatorUtils.lngLatToXY(geojsonpoint[layer.longitude],geojsonpoint[layer.latitude]);
-                }else{
+                  var wmPoint = webMercatorUtils.lngLatToXY(geojsonpoint[layer.longitude], geojsonpoint[layer.latitude]);
+                } else {
                   geojsonpoint.properties['OID'] = oidField
-                  var wmPoint = webMercatorUtils.lngLatToXY(geojsonpoint.geometry.coordinates[0],geojsonpoint.geometry.coordinates[1]);
+                  var wmPoint = webMercatorUtils.lngLatToXY(geojsonpoint.geometry.coordinates[0], geojsonpoint.geometry.coordinates[1]);
                   geojsonpoint = geojsonpoint.properties;
                 }
-                oidField+=1;
+                oidField += 1;
                 var point = new esri.geometry.Point(wmPoint[0], wmPoint[1], this._viewerMap.spatialReference)
-                featureArray.push(new esri.Graphic(point,null,geojsonpoint));
+                featureArray.push(new esri.Graphic(point, null, geojsonpoint));
               })
               var defFields = [{
-                    "name": "OID",
-                    "type": "esriFieldTypeOID",
-                    "alias": "OID"
-                  }
-              ]
-              if (layer.popup){
-                array.forEach(layer.popup.fieldInfos, function(FI){
+                "name": "OID",
+                "type": "esriFieldTypeOID",
+                "alias": "OID"
+              }]
+              if (layer.popup) {
+                array.forEach(layer.popup.fieldInfos, function(FI) {
                   FI['name'] = FI.fieldName
                   FI['alias'] = FI.fieldName
                   FI['type'] = "esriFieldTypeString"
@@ -511,25 +552,25 @@ define([
                   "fields": defFields
                 },
                 "featureSet": featureSet
-              },lOptions);
+              }, lOptions);
               lLayer.setRenderer(renderer)
-              if(layer.name){
+              if (layer.name) {
                 lLayer._titleForLegend = layer.name;
                 lLayer.title = layer.name;
                 lLayer.noservicename = true;
                 lLayer.name = lOptions.id;
               }
-              lLayer.on('load', function(evt){
+              lLayer.on('load', function(evt) {
                 //set min/max scales if present
-                if(lOptions.minScale){
+                if (lOptions.minScale) {
                   evt.layer.setMinScale(lOptions.minScale)
                 }
-                if(lOptions.maxScale){
+                if (lOptions.maxScale) {
                   evt.layer.setMaxScale(lOptions.maxScale)
                 }
               })
               this._viewerMap.addLayer(lLayer);
-            }), lang.hitch(this, function(err){
+            }), lang.hitch(this, function(err) {
               console.log('error')
             }));
           }

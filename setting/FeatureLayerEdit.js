@@ -112,6 +112,16 @@ define(
         }else{
           this.showLabelsCbx.setValue(true)
         }
+        if(config.trackEditByLDAP === false){
+          this.trackEditByLDAPCbx.setValue(false)
+        }else{
+          this.trackEditByLDAPCbx.setValue(true)
+        }
+        if(config.limitEditByLDAP === false){
+          this.limitEditByLDAPCbx.setValue(false)
+        }else{
+          this.limitEditByLDAPCbx.setValue(true)
+        }
         if(config.popup){
           html.removeClass(this.removePopupBtn, 'disabled');
         }
@@ -191,13 +201,15 @@ define(
           opacity: this.layerAlpha.getAlpha(),
           visible: this.isVisible.getValue(),
           showLabels: this.showLabelsCbx.getValue(),
+          trackEditByLDAP: this.trackEditByLDAPCbx.getValue(),
+          limitEditByLDAP: this.limitEditByLDAPCbx.getValue(),
           popup: this.config.popup,
           autorefresh: this.autoRefresh.get('value'),
           minScale: this.minScale.get('value'),
           maxScale: this.maxScale.get('value'),
           labelMinScale: this.labelMinScale.get('value'),
           labelMaxScale: this.labelMaxScale.get('value'),
-		  customLabel: this.customLabel.get('value'),
+          customLabel: this.customLabel.get('value'),
           definitionQuery: this.definitionQuery.get('value'),
           customRenderer: this.customRenderer.get('value'),
           customLabelStyle: this.customLabelStyle.get('value'),
