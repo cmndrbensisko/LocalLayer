@@ -1,7 +1,7 @@
 LocalLayerWidget 2.0
 ==
 
-##Setting up the LocalLayer Widget within the Default App:
+###Setting up the LocalLayer Widget within the Default App:
 
 To add this widget to your ArcGIS Web AppBuilder environment, add the widget to your \client\stemapp\widgets directory, and add a reference to the widget in the standard Default configuration located at \client\stemapp\predefined-apps\default\config.json, under the widgetOnScreen section.
 
@@ -21,7 +21,7 @@ If you plan to use the Local Layer widget with the other predefined apps like ba
 
 :bulb: "visible":false will render the widget 'off' by default when building your applications, unless you wish to override the default WAB functionality and import your own layers directly from an ArcGIS Server instance.
 
-##Setting up the LocalLayer Widget for Other Themes:
+###Setting up the LocalLayer Widget for Other Themes:
 
 Completing the steps above will only affect the default "Foldable Theme" for the WAB.  In order to add the Local Layer widget to the any of the other themes, you'll need to perform the same snippet addition to the appropriate config.json file located at a location similar to the path below,
 
@@ -29,9 +29,9 @@ Completing the steps above will only affect the default "Foldable Theme" for the
 client\stemapp\themes[theme name]\layouts\default\config.json
 ```
 
-##Feature Layers:
+###Feature Layers:
 
-#Custom Symbology and Labelling
+####Custom Symbology and Labelling
 
 When configuring Feature Layers using the LocalLayer widget, a "Show Labels" option is provided.  If you want to use this functionality, you'll need to make a small edit to the mapOptions section on your client\stemapp\predefined-apps\default\config.json directory (or appropriate Theme directory), in addition to checking the "Show Labels?" checkbox. 
 
