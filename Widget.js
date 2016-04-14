@@ -10,6 +10,8 @@ define([
     'dojo/_base/array',
     'dojo/_base/query',
     'dojo/topic',
+    'dojo/aspect',
+    'jimu/LayerInfos/LayerInfos',
     'esri/geometry/webMercatorUtils',
     'esri/layers/ArcGISDynamicMapServiceLayer',
     'esri/layers/ArcGISTiledMapServiceLayer',
@@ -38,6 +40,8 @@ define([
     array,
     query,
     topic,
+    aspect,
+    LayerInfos,
     webMercatorUtils,
     ArcGISDynamicMapServiceLayer,
     ArcGISTiledMapServiceLayer,
@@ -98,6 +102,8 @@ define([
             proxyUrl: this.config.proxyAddress
           });
         }
+
+        var _layersToAdd=[];
 
         this.config.layers.layer.forEach(function(layer) {
           var lLayer;
@@ -256,7 +262,8 @@ define([
 
               evt.layer.setVisibleLayers(lOptions.hidelayers);
             });
-            this._viewerMap.addLayer(lLayer);
+            //this._viewerMap.addLayer(lLayer);
+            _layersToAdd.push(lLayer);
             this._viewerMap.setInfoWindowOnClick(true);
           } else if (layer.type.toUpperCase() === 'WEBTILEDLAYER') {
             if (layer.hasOwnProperty('subdomains')) {
@@ -279,7 +286,8 @@ define([
               }
               evt.layer.name = lOptions.id;
             });
-            this._viewerMap.addLayer(lLayer);
+            //this._viewerMap.addLayer(lLayer);
+            _layersToAdd.push(lLayer);
           } else if (layer.type.toUpperCase() === 'WEBTILEDBASEMAP') {
             lOptions.type = "WebTiledLayer"
             lOptions.url = layer.url
@@ -384,7 +392,8 @@ define([
               }
               evt.layer.name = lOptions.id;
             });
-            this._viewerMap.addLayer(lLayer);
+            //this._viewerMap.addLayer(lLayer);
+            _layersToAdd.push(lLayer);
           } else if (layer.type.toUpperCase() === 'TILED') {
             if (layer.displayLevels) {
               lOptions.displayLevels = layer.displayLevels.split(',');
@@ -427,7 +436,8 @@ define([
               });
               lLayer.setInfoTemplates(finalInfoTemp2);
             }
-            this._viewerMap.addLayer(lLayer);
+            //this._viewerMap.addLayer(lLayer);
+            _layersToAdd.push(lLayer);
           } else if (layer.type.toUpperCase() === 'BASEMAP') {
             var bmLayers = array.map(layer.layers.layer, function(bLayer) {
               var bmLayerObj = {
@@ -569,12 +579,47 @@ define([
                   evt.layer.setMaxScale(lOptions.maxScale)
                 }
               })
-              this._viewerMap.addLayer(lLayer);
+              //this._viewerMap.addLayer(lLayer);
+              _layersToAdd.push(lLayer);
             }), lang.hitch(this, function(err) {
               console.log('error')
             }));
           }
         });
+        //hook into the updater, and use the empty property as our 'hitch'
+        aspect.after(LayerInfos.prototype,"update",function(){
+          array.forEach(this._finalLayerInfos,function(layerInfo){
+            aspect.before(layerInfo.__proto__,"_bindEvent",function(){
+              if (this.layerObject){
+                if (!this.layerObject.empty){
+                  this.layerObject.modified = true;
+                  this.layerObject.empty = true;
+                }
+              }
+            })
+            aspect.after(layerInfo.__proto__,"_bindEvent",function(){
+              if (this.layerObject){
+                if (this.layerObject.modified){
+                  this.layerObject.empty = false;
+                }
+              }
+            },true)
+          })
+        });
+        aspect.before(LayerInfos.prototype,"_addTable",function(changedType,evt){
+          var _foundMatch = false
+          array.forEach(this._finalTableInfos,function(table){
+            if (table.id == changedType.id){
+              _foundMatch = true;
+            }
+          })
+          if (!_foundMatch){
+            return [changedType,evt];
+          }else{
+            return [null, null]
+          }
+        }, true)
+        window._viewerMap.addLayers(_layersToAdd);
       }
     });
     return clazz;
