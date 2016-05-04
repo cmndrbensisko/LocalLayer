@@ -167,6 +167,9 @@ define([
                 if (_infoTemp.fieldInfos) {
                   popupInfo.fieldInfos = _infoTemp.fieldInfos;
                 }
+                if (_infoTemp.showAttachments){
+                  popupInfo.showAttachments = true;
+                }
                 var _popupTemplate1 = new PopupTemplate(popupInfo);
                 finalInfoTemp[_infoTemp.layerId] = {
                   infoTemplate: _popupTemplate1
@@ -579,8 +582,7 @@ define([
                   evt.layer.setMaxScale(lOptions.maxScale)
                 }
               })
-              //this._viewerMap.addLayer(lLayer);
-              _layersToAdd.push(lLayer);
+              this._viewerMap.addLayer(lLayer);
             }), lang.hitch(this, function(err) {
               console.log('error')
             }));
