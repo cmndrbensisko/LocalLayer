@@ -621,6 +621,13 @@ define([
             return [null, null]
           }
         }, true)
+        aspect.around(LayerInfos.prototype,"_onTableChange",lang.hitch(this,function(originalFunction){
+          return lang.hitch(this,function(tableInfos,changedType){
+            if (tableInfos.length > 0){
+              return originalFunction.call(this,tableInfos,changedType);
+            }
+          })
+        }), true)
         window._viewerMap.addLayers(_layersToAdd);
       }
     });
