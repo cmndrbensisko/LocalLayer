@@ -89,6 +89,9 @@ define(
         if(config.imageformat){
           this.imgFormat.set('value', config.imageformat);
         }
+        if(config.hasOwnProperty('autorefresh')){
+          this.autoRefresh.set('value', config.autorefresh);
+        }
         if(config.hasOwnProperty('maxScale')){
           this.maxScale.set('value', config.maxScale);
         }
@@ -267,6 +270,7 @@ if (_definitionQueries == ""){_definitionQueries = null};
           opacity: this.layerAlpha.getAlpha(),
           visible: this.isVisible.getValue(),
           imageformat: this.imgFormat.get('value'),
+          autorefresh: this.autoRefresh.get('value'),
           popup: this.config.popup,
           imagedpi: this.imgDPI.get('value'),
           disableclientcaching: this.disableClientCachingCbx.getValue(),

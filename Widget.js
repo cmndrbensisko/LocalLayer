@@ -177,6 +177,10 @@ define([
               });
               lLayer.setInfoTemplates(finalInfoTemp);
             }
+            if (layer.hasOwnProperty('autorefresh')) {
+              lLayer.refreshInterval = layer.autorefresh;
+              
+            }
             if (layer.disableclientcaching) {
               lLayer.setDisableClientCaching(true);
             }
@@ -197,11 +201,11 @@ define([
 
                 //make our own hidelayers object out of the default visibilities defined in the service
                 lOptions.hidelayers = []
-                array.forEach(evt.layer.layerInfos, function(layer) {
+                /*array.forEach(evt.layer.layerInfos, function(layer) {
                   if (layer.defaultVisibility == false) {
                     lOptions.hidelayers.push(layer.id)
                   }
-                })
+                })*/
               }
               var removeLayers = []
                 //convert from a list of layers to hide to a list of layers to show
@@ -218,14 +222,23 @@ define([
                 showLayers.splice(showLayers.indexOf(id), 1)
               })
               lOptions.hidelayers = showLayers
-
+              var getArrayItemById = function(_array,_id){
+                var _matchItem;
+                array.some(_array,function(_arrayItem){
+                  if (_arrayItem.id == _id){
+                    _matchItem = _arrayItem;
+                    return true;
+                  }
+                })
+                return _matchItem;
+              }
               //set defaultvisibility for everything off by default
               array.forEach(evt.layer.layerInfos, function(layer) {
-                  evt.layer.layerInfos[layer.id].defaultVisibility = false
+                  layer.defaultVisibility = false;
                 })
                 //except for whats set in the config
               for (var i = 0; i < lOptions.hidelayers.length; i++) {
-                evt.layer.layerInfos[lOptions.hidelayers[i]].defaultVisibility = true
+                getArrayItemById(evt.layer.layerInfos,lOptions.hidelayers[i]).defaultVisibility = true;
               }
               //remove all grouplayers
               array.forEach(evt.layer.layerInfos, function(layer) {
@@ -236,7 +249,7 @@ define([
                 }
               })
               for (var i = 0; i < lOptions.hidelayers.length; i++) {
-                var j = evt.layer.layerInfos[lOptions.hidelayers[i]].parentLayerId
+                var j=getArrayItemById(evt.layer.layerInfos,lOptions.hidelayers[i]).parentLayerId
                 while (j > -1) {
                   //has the parentlayer been turned on?
                   if (lOptions.hidelayers.indexOf(j) == -1) {
@@ -245,7 +258,7 @@ define([
                       removeLayers.push(lOptions.hidelayers[i])
                     }
                   }
-                  j = evt.layer.layerInfos[j].parentLayerId
+                  j=getArrayItemById(evt.layer.layerInfos,j);
                 }
               }
               //splice out the removelayers
@@ -363,6 +376,7 @@ define([
                     "value": layer.customLabel
                   }
                 })
+                var labelClass = new LabelClass(labelClassParams)
                 if (layer.hasOwnProperty('customLabelStyle') && layer.customLabelStyle != "") {
                   labelClass.symbol = new TextSymbol(jsonUtils.fromJson(JSON.parse(layer.customLabelStyle)))
                 } else {
@@ -373,6 +387,9 @@ define([
                 }
                 if (layer.hasOwnProperty('labelMaxScale')) {
                   labelClass.maxScale = layer.labelMaxScale;
+                }
+                if (layer.hasOwnProperty('labelPlacement')){
+                  labelClass.labelPlacement = layer.labelPlacement;
                 }
                 lLayer.setLabelingInfo([labelClass])
               }
