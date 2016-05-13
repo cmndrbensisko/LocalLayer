@@ -258,7 +258,7 @@ define([
                       removeLayers.push(lOptions.hidelayers[i])
                     }
                   }
-                  j=getArrayItemById(evt.layer.layerInfos,j);
+                  j=getArrayItemById(evt.layer.layerInfos,j).parentLayerId;
                 }
               }
               //splice out the removelayers

@@ -29,6 +29,22 @@ Completing the steps above will only affect the default "Foldable Theme" for the
 client\stemapp\themes[theme name]\layouts\default\config.json
 ```
 
+###Attribute Table:
+
+To ensure that the Attribute Table widget accepts your LocalLayer Layers, perform the following change.
+
+1) In \client\stemapp\widgets\AttributeTable\setting\Setting.js, change line 375 from
+
+```javascript
+utils.readConfigLayerInfosFromMap(this.map, true, true)
+```
+to
+```javascript
+utils.readConfigLayerInfosFromMap(this.map, false, true)
+```
+
+Changing that first 'true' to a 'false' will tell the menu to read all layers from the map as normal, instead of just ArcGIS Online layers. Changing the second 'true' to a 'false' will let the Attribute Table include MapNotes layers from AGOL WebMaps.
+
 ###Feature Layers:
 
 ####Custom Symbology and Labelling
