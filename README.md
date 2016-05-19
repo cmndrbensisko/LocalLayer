@@ -53,6 +53,8 @@ The LocalLayer widget can be used alongside the Edit widget to enable editing of
 <script type="text/javascript">var _llwUser = "<%= User.Identity.Name.Replace("\","\\") %>"</script>
 ```
 
+Note that for both cases, the application needs to have Anonymous Authentication disabled in IIS, and have Windows Authentication enabled.
+
 ###Customizing Feature Layers:
 
 ####Custom Symbology and Labelling
