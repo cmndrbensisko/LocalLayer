@@ -45,6 +45,14 @@ utils.readConfigLayerInfosFromMap(this.map, false, true)
 
 Changing that first 'true' to a 'false' will tell the menu to read all layers from the map as normal, instead of just ArcGIS Online layers. Changing the second 'true' to a 'false' will let the Attribute Table include MapNotes layers from AGOL WebMaps.
 
+###Editor Tracking
+
+The LocalLayer widget can be used alongside the Edit widget to enable editing of FeatureServices.  This way, users can edit LocalLayerWidget layers without having ArcGIS Online login information.  Editor Tracking can be performed using LDAP-based Windows Active Directory, by simply ticking the appropriate boxes when setting up your Feature Layer.  Note that two options are available: "Track Users When Editing", which will simply record the user's Active Directory name in the tracking field specified in the service, and "Only Allow Users to Edit Features They Created", which will prohibit users from editing features that they didn't create under their Active Directory name.  Note that if the second option is ticked, as specified on line 410 of Widget.js, your application's index.html file will need to be turned into an index.aspx file (and appropriately hosted as a server-side application through IIS), and the following line will need to be added to the index.aspx page,
+
+```javascript
+<script type="text/javascript">var _llwUser = "<%= User.Identity.Name.Replace("\","\\") %>"</script>
+```
+
 ###Customizing Feature Layers:
 
 ####Custom Symbology and Labelling
