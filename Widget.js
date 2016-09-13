@@ -6,6 +6,7 @@ define([
     'jimu/MapManager',
     'jimu/utils',
     'esri/urlUtils',
+    'dojo/io-query',
     'dojo/_base/lang',
     'dojo/_base/array',
     'dojo/_base/query',
@@ -36,6 +37,7 @@ define([
     MapManager,
     utils,
     urlUtils,
+    ioQuery,
     lang,
     array,
     query,
@@ -96,6 +98,21 @@ define([
       startup: function() {
         this._originalWebMap = this.map.webMapResponse.itemInfo.item.id;
         this._removeAllLayersExceptBasemap();
+        var urlParams = ioQuery.queryToObject(decodeURIComponent(dojo.doc.location.search.slice(1)));
+        if (urlParams.urlConfig){
+          this.config = JSON.parse(urlParams.urlConfig);
+        }
+        if (urlParams.url){
+          var type
+          if (urlParams.url.match("MapServer")){
+            type = "DYNAMIC"
+          }
+          if (urlParams.url.match("FeatureServer")){
+            type = "FEATURE"
+          }
+          this.config = {"layers":{"layer":[{"type":type, "url":urlParams.url, "flyPopups": true}]}} 
+
+        }
         if (this.config.useProxy) {
           urlUtils.addProxyRule({
             urlPrefix: this.config.proxyPrefix,
@@ -188,6 +205,20 @@ define([
               console.log(evt);
             })
             lLayer.on('load', function(evt) {
+              if (layer.flyPopups){
+                var _infoTemps = []
+                evt.layer.layerInfos.forEach(function(layer){
+                  _infoTemps.push({infoTemplate:new PopupTemplate({
+                    title:layer.name,
+                    fieldInfos: [{  
+                      fieldName: "*",  
+                      visible: true,  
+                      label: "*"  
+                    }]                    
+                  })})
+                })
+                evt.layer.setInfoTemplates(_infoTemps)
+              }
               //set min/max scales if present
               if (lOptions.minScale) {
                 evt.layer.setMinScale(lOptions.minScale)
@@ -337,6 +368,15 @@ define([
               _popupTemplate = new PopupTemplate(layer.popup);
               lOptions.infoTemplate = _popupTemplate;
             }
+            if (layer.flyPopups){
+              lOptions.infoTemplate = new PopupTemplate({  
+                fieldInfos: [{  
+                  fieldName: "*",  
+                  visible: true,  
+                  label: "*"  
+                }]
+              })
+            }
             if (layer.hasOwnProperty('mode')) {
               var lmode;
               if (layer.mode === 'ondemand') {
@@ -376,7 +416,6 @@ define([
                     "value": layer.customLabel
                   }
                 })
-                var labelClass = new LabelClass(labelClassParams)
                 if (layer.hasOwnProperty('customLabelStyle') && layer.customLabelStyle != "") {
                   labelClass.symbol = new TextSymbol(jsonUtils.fromJson(JSON.parse(layer.customLabelStyle)))
                 } else {
