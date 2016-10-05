@@ -16,9 +16,11 @@ define([
     'esri/geometry/webMercatorUtils',
     'esri/layers/ArcGISDynamicMapServiceLayer',
     'esri/layers/ArcGISTiledMapServiceLayer',
+    "esri/layers/ArcGISImageServiceLayer",
     'esri/layers/FeatureLayer',
     'esri/layers/WebTiledLayer',
     'esri/layers/ImageParameters',
+    "esri/layers/ImageServiceParameters",
     'esri/dijit/BasemapGallery',
     'esri/dijit/BasemapLayer',
     'esri/dijit/Basemap',
@@ -47,9 +49,11 @@ define([
     webMercatorUtils,
     ArcGISDynamicMapServiceLayer,
     ArcGISTiledMapServiceLayer,
+    ArcGISImageServiceLayer,
     FeatureLayer,
     WebTiledLayer,
     ImageParameters,
+    ImageServiceParameters,
     BasemapGallery,
     BasemapLayer,
     Basemap,
@@ -312,6 +316,26 @@ define([
             //this._viewerMap.addLayer(lLayer);
             _layersToAdd.push(lLayer);
             this._viewerMap.setInfoWindowOnClick(true);
+          } else if (layer.type.toUpperCase() === 'IMAGE') {
+            lOptions.imageServiceParameters = new ImageServiceParameters();
+            var _popupTemplate;
+            if (layer.popup) {
+              _popupTemplate = new PopupTemplate(layer.popup);
+              lOptions.infoTemplate = _popupTemplate;
+            }
+            lLayer = new ArcGISImageServiceLayer(layer.url, lOptions)
+            lLayer.on('load', function(evt) {
+              //set min/max scales if present
+              if (lOptions.minScale) {
+                evt.layer.setMinScale(lOptions.minScale)
+              }
+              if (lOptions.maxScale) {
+                evt.layer.setMaxScale(lOptions.maxScale)
+              }
+              evt.layer.name = lOptions.id;
+            });
+            //this._viewerMap.addLayer(lLayer);
+            _layersToAdd.push(lLayer);
           } else if (layer.type.toUpperCase() === 'WEBTILEDLAYER') {
             if (layer.hasOwnProperty('subdomains')) {
               lOptions.subDomains = layer.subdomains;

@@ -33,6 +33,7 @@ define([
     './BasemapEdit',
     './geoJSONEdit',
     './WebTiledLayerEdit',
+    './ImageLayerEdit',
     './ReverseProxyEdit',
     'dojo/keys'
   ],
@@ -55,6 +56,7 @@ define([
     BasemapEdit,
     GeoJsonEdit,
     WebTiledLayerEdit,
+    ImageLayerEdit,
     ReverseProxyEdit,
     keys) {
     return declare([BaseWidgetSetting, _WidgetsInTemplateMixin], {
@@ -66,6 +68,7 @@ define([
       popupwebtiledlyredit: null,
       popupbmedit: null,
       popupgjedit: null,
+      popupimageedit: null,
       reverseproxyedit: null,
       popup: null,
       popupState: '', // ADD or EDIT
@@ -185,6 +188,8 @@ define([
             this._openGJEdit(this.nls.editgeojson + ': ' + editLayer.name , tr);
           }else if(editLayer.type.toUpperCase() === 'WEBTILEDBASEMAP'||editLayer.type.toUpperCase() === 'WEBTILEDLAYER'){
             this._openWebTileEdit(this.nls.editwebtile + ': ' + editLayer.name , tr);
+          }else if(editLayer.type.toUpperCase() === 'IMAGE'){
+            this._openImageEdit(this.nls.editimage + ': ' + editLayer.name , tr);
           }
         })));
         this.own(on(this.LayersTable,'row-delete',lang.hitch(this,function(tr){
@@ -248,6 +253,16 @@ define([
           var tr = this._createLayer(args);
           if (tr) {
             this._openWebTileEdit(this.nls.addwebtile, tr);
+          }
+        })));
+        this.own(on(this.btnAddImageLayer,'click',lang.hitch(this,function(){
+          var args = {
+             config:{type:'Image'}
+          };
+          this.popupState = 'ADD';
+          var tr = this._createLayer(args);
+          if (tr) {
+            this._openImageEdit(this.nls.addimagelayer, tr);
           }
         })));
       },
@@ -564,6 +579,71 @@ define([
         });
         html.addClass(this.popup.domNode, 'widget-setting-popup');
         this.popupbmedit.startup();
+      },
+
+      _onImageEditOk: function() {
+        var layerConfig = this.popupimageedit.getConfig();
+        console.info(layerConfig);
+
+        if (layerConfig.length < 0) {
+          new Message({
+            message: this.nls.warning
+          });
+          return;
+        }
+        if(this.popupState === 'ADD'){
+          this.LayersTable.editRow(layerConfig[1], {
+            name: layerConfig[0].name
+          });
+          layerConfig[1].singleLayer = layerConfig[0];
+          this.popupState = '';
+        }else{
+          this.LayersTable.editRow(layerConfig[1], {
+            name: layerConfig[0].name
+          });
+          layerConfig[1].singleLayer = layerConfig[0];
+        }
+
+        this.popup.close();
+        this.popupState = '';
+      },
+
+      _onImageEditClose: function() {
+        var layerConfig = this.popupimageedit.getConfig();
+        if(this.popupState === 'ADD'){
+          this.LayersTable.deleteRow(layerConfig[1]);
+        }
+        this.popupimageedit = null;
+        this.popup = null;
+      },
+
+      _openImageEdit: function(title, tr) {
+        this.popupimageedit = new ImageLayerEdit({
+          nls: this.nls,
+          config: tr.singleLayer || {},
+          tr: tr,
+          map: this.map
+        });
+
+        this.popup = new Popup({
+          titleLabel: title,
+          autoHeight: true,
+          content: this.popupimageedit,
+          container: 'main-page',
+          width: 840,
+          height: 420,
+          buttons: [{
+            label: this.nls.ok,
+            key: keys.ENTER,
+            onClick: lang.hitch(this, '_onImageEditOk')
+          }, {
+            label: this.nls.cancel,
+            key: keys.ESCAPE
+          }],
+          onClose: lang.hitch(this, '_onImageEditClose')
+        });
+        html.addClass(this.popup.domNode, 'widget-setting-popup');
+        this.popupimageedit.startup();
       },
 
       _onGJEditOk: function() {
