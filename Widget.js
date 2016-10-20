@@ -14,13 +14,14 @@ define([
     'dojo/aspect',
     'jimu/LayerInfos/LayerInfos',
     'esri/geometry/webMercatorUtils',
+    'esri/arcgis/utils',
     'esri/layers/ArcGISDynamicMapServiceLayer',
     'esri/layers/ArcGISTiledMapServiceLayer',
-    "esri/layers/ArcGISImageServiceLayer",
+    'esri/layers/ArcGISImageServiceLayer',
     'esri/layers/FeatureLayer',
     'esri/layers/WebTiledLayer',
     'esri/layers/ImageParameters',
-    "esri/layers/ImageServiceParameters",
+    'esri/layers/ImageServiceParameters',
     'esri/dijit/BasemapGallery',
     'esri/dijit/BasemapLayer',
     'esri/dijit/Basemap',
@@ -47,6 +48,7 @@ define([
     aspect,
     LayerInfos,
     webMercatorUtils,
+    arcgisUtils,
     ArcGISDynamicMapServiceLayer,
     ArcGISTiledMapServiceLayer,
     ArcGISImageServiceLayer,
@@ -102,20 +104,21 @@ define([
       startup: function() {
         this._originalWebMap = this.map.webMapResponse.itemInfo.item.id;
         this._removeAllLayersExceptBasemap();
-        var urlParams = ioQuery.queryToObject(decodeURIComponent(dojo.doc.location.search.slice(1)));
-        if (urlParams.urlConfig){
-          this.config = JSON.parse(urlParams.urlConfig);
-        }
-        if (urlParams.url){
-          var type
-          if (urlParams.url.match("MapServer")){
-            type = "DYNAMIC"
+        if (this.config.review){
+          var urlParams = ioQuery.queryToObject(decodeURIComponent(dojo.doc.location.search.slice(1)));
+          if (urlParams._jsonconfig){
+            this.config = JSON.parse(urlParams.urlConfig);
           }
-          if (urlParams.url.match("FeatureServer")){
-            type = "FEATURE"
+          if (urlParams._preview){
+            var type
+            if (urlParams.url.toUpperCase().match("MAPSERVER")){
+              type = "DYNAMIC"
+            }
+            if (urlParams.url.toUpperCase().match("FEATURESERVER")){
+              type = "FEATURE"
+            }
+            this.config = {"layers":{"layer":[{"type":type, "url":urlParams.url, "flyPopups": true}]}} 
           }
-          this.config = {"layers":{"layer":[{"type":type, "url":urlParams.url, "flyPopups": true}]}} 
-
         }
         if (this.config.useProxy) {
           urlUtils.addProxyRule({
@@ -315,6 +318,7 @@ define([
             });
             //this._viewerMap.addLayer(lLayer);
             _layersToAdd.push(lLayer);
+            LayerInfos.getInstanceSync()._operLayers.push(lLayer);
             this._viewerMap.setInfoWindowOnClick(true);
           } else if (layer.type.toUpperCase() === 'IMAGE') {
             lOptions.imageServiceParameters = new ImageServiceParameters();
@@ -359,6 +363,7 @@ define([
             });
             //this._viewerMap.addLayer(lLayer);
             _layersToAdd.push(lLayer);
+            LayerInfos.getInstanceSync()._operLayers.push(lLayer);
           } else if (layer.type.toUpperCase() === 'WEBTILEDBASEMAP') {
             lOptions.type = "WebTiledLayer"
             lOptions.url = layer.url
@@ -440,6 +445,7 @@ define([
                     "value": layer.customLabel
                   }
                 })
+                var labelClass = new LabelClass(labelClassParams)
                 if (layer.hasOwnProperty('customLabelStyle') && layer.customLabelStyle != "") {
                   labelClass.symbol = new TextSymbol(jsonUtils.fromJson(JSON.parse(layer.customLabelStyle)))
                 } else {
@@ -476,7 +482,15 @@ define([
               evt.layer.name = lOptions.id;
             });
             //this._viewerMap.addLayer(lLayer);
-            _layersToAdd.push(lLayer);
+            if (layer.fltype != "Table"){
+              _layersToAdd.push(lLayer);
+              LayerInfos.getInstanceSync()._operLayers.push(lLayer);
+            }else{
+              if (!LayerInfos.getInstanceSync()._tables){
+                LayerInfos.getInstanceSync()._tables = [];
+              }
+              LayerInfos.getInstanceSync()._tables.push(lLayer)
+            }
           } else if (layer.type.toUpperCase() === 'TILED') {
             if (layer.displayLevels) {
               lOptions.displayLevels = layer.displayLevels.split(',');
@@ -521,6 +535,7 @@ define([
             }
             //this._viewerMap.addLayer(lLayer);
             _layersToAdd.push(lLayer);
+            LayerInfos.getInstanceSync()._operLayers.push(lLayer);
           } else if (layer.type.toUpperCase() === 'BASEMAP') {
             var bmLayers = array.map(layer.layers.layer, function(bLayer) {
               var bmLayerObj = {
@@ -670,7 +685,7 @@ define([
         });
         //hook into the updater, and use the empty property as our 'hitch'
         aspect.after(LayerInfos.prototype,"update",function(){
-          array.forEach(this._finalLayerInfos,function(layerInfo){
+          array.forEach(this._finalLayerInfos,lang.hitch(this,function(layerInfo){
             aspect.before(layerInfo.__proto__,"_bindEvent",function(){
               if (this.layerObject){
                 if (!this.layerObject.empty){
@@ -686,8 +701,17 @@ define([
                 }
               }
             },true)
-          })
+          }))
         });
+        aspect.after(arcgisUtils,"getLegendLayers",lang.hitch(this,function(legendObject){
+          var returnArray = []
+          array.forEach(LayerInfos.getInstanceSync()._operLayers,function(_layer){
+            var newLayer = {defaultSymbol:true,layer:_layer,title:_layer.title}
+            returnArray.push(newLayer)
+          })
+          return returnArray;
+        }))
+        /*
         aspect.before(LayerInfos.prototype,"_addTable",function(changedType,evt){
           var _foundMatch = false
           array.forEach(this._finalTableInfos,function(table){
@@ -708,7 +732,11 @@ define([
             }
           })
         }), true)
+        */
         window._viewerMap.addLayers(_layersToAdd);
+        window._viewerMap.updatedLayerInfos = LayerInfos.getInstanceSync()
+        LayerInfos.getInstanceSync()._initLayerInfos();
+        LayerInfos.getInstanceSync()._initTablesInfos()
       }
     });
     return clazz;

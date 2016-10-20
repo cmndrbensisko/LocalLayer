@@ -24,9 +24,11 @@ define([
     'dojo/_base/query',
     'dojo/_base/array',
     'dojo/_base/html',
+    'dojo/aspect',
     'jimu/dijit/Message',
     'jimu/dijit/Popup',
     'dijit/form/Select',
+    'jimu/LayerInfos/LayerInfos',
     './DynamicLayerEdit',
     './TiledLayerEdit',
     './FeatureLayerEdit',
@@ -47,9 +49,11 @@ define([
     query,
     array,
     html,
+    aspect,
     Message,
     Popup,
     Select,
+    LayerInfos,
     DynamicLayerEdit,
     TiledLayerEdit,
     FeatureLayerEdit,
@@ -77,10 +81,19 @@ define([
         this.inherited(arguments);
         this._bindEvents();
         this.setConfig(this.config);
+        aspect.after(this, 'destroy', function(){
+          LayerInfos.getInstanceSync()._tables = this.map.updatedLayerInfos._tables;  
+          LayerInfos.getInstanceSync()._initTablesInfos()
+        })        
       },
 
       setConfig: function(config) {
         this.config = config;
+        if(!config.review || config.review === false){
+          this.reviewCbx.setValue(false)
+        }else{
+          this.reviewCbx.setValue(true)
+        }
         this._initLayersTable();
       },
 
@@ -101,7 +114,8 @@ define([
       },
 
       getConfig: function() {
-        this.config.layers.layer =  this._getAllLayers();
+        this.config.layers.layer = this._getAllLayers();
+        this.config.review = this.reviewCbx.getValue()
         this._removeAllLayersExceptBasemap();
         console.info(this.config);
         return this.config;
@@ -158,6 +172,8 @@ define([
           return this.nls.webtiledbasemap;
         }else if(type === 'WEBTILEDLAYER'){
           return this.nls.webtiledlayer;
+        }else if(type === 'IMAGE'){
+          return this.nls.imagelayer;
         }
       },
 

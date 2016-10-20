@@ -77,6 +77,7 @@ define(
         this.layerUrl.proceedValue = false;
         this.layerUrl.setProcessFunction(lang.hitch(this, '_onServiceFetch', this.layerUrl),
                                     lang.hitch(this, '_onServiceFetchError'));
+
         if(config.url){
           this.layerUrl.set('value', config.url);
         }
@@ -196,6 +197,7 @@ define(
       getConfig: function() {
         var featurelayer = {
           type: 'Feature',
+          fltype: this.featureLayerDetails.data.type,
           url: this.layerUrl.get('value'),
           name: this.layerTitle.get('value'),
           opacity: this.layerAlpha.getAlpha(),

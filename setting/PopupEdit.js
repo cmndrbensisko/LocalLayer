@@ -326,27 +326,27 @@ define(
           return item.type !== 'esriFieldTypeGeometry';
         });
         if (this.fields.length > 0) {
-      var sortedFieldInfo = [];
-      //load it up with matches in the right order
-      array.forEach(this.config.fieldInfos, lang.hitch(this, function(fldInfo) {
+        var sortedFieldInfo = [];
+        //load it up with matches in the right order
+        array.forEach(this.config.fieldInfos, lang.hitch(this, function(fldInfo) {
+          array.forEach(this.fields, lang.hitch(this, function(fieldInfo) {
+          if(fldInfo.fieldName.toLowerCase() === fieldInfo.name.toLowerCase()){
+            sortedFieldInfo.push(fieldInfo)
+          }
+          }))
+        }))
+        //now everything that didnt match
         array.forEach(this.fields, lang.hitch(this, function(fieldInfo) {
-        if(fldInfo.fieldName.toLowerCase() === fieldInfo.name.toLowerCase()){
+        if (!array.some(sortedFieldInfo, lang.hitch(this, function(fldInfo,fldIndex) {
+          if(fldInfo.name.toLowerCase() === fieldInfo.name.toLowerCase()){
+            return true;
+          }
+        }))){
           sortedFieldInfo.push(fieldInfo)
         }
         }))
-      }))
-      //now everything that didnt match
-      array.forEach(this.fields, lang.hitch(this, function(fieldInfo) {
-      if (!array.some(sortedFieldInfo, lang.hitch(this, function(fldInfo,fldIndex) {
-        if(fldInfo.name.toLowerCase() === fieldInfo.name.toLowerCase()){
-          return true;
-        }
-      }))){
-        sortedFieldInfo.push(fieldInfo)
-      }
-      }))
-      //array.forEach(this.fields, lang.hitch(this, function(fieldInfo) {
-      array.forEach(sortedFieldInfo, lang.hitch(this, function(fieldInfo) {
+        //array.forEach(this.fields, lang.hitch(this, function(fieldInfo) {
+        array.forEach(sortedFieldInfo, lang.hitch(this, function(fieldInfo) {
             this._getConfigFieldInfo(fieldInfo);
           }));
         } else {

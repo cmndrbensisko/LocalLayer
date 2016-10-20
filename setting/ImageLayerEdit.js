@@ -208,6 +208,18 @@ define(
           var _layer = new ArcGISImageServiceLayer(evt.url);
           _layer.on('load', lang.hitch(this,function(evt) {
             _layer.getRasterAttributeTable().then(lang.hitch(this,function(table){
+              array.forEach(table.fields, function(field){
+                if (field.name == "Value"){
+                  field.name = "Raster.ServicePixelValue"
+                }else{
+                  field.name = "Raster." + field.name
+                }
+              })
+              table.fields.push({
+                alias:"Raw Value",
+                name:"Raster.ServicePixelValue.Raw",
+                type: "esriFieldTypeString"
+              })
               this.featureLayerDetails = {"data": table}
             }))
           }))
@@ -218,7 +230,6 @@ define(
         }
 
         this._checkProceed(errormessage);
-//        console.info(evt.data.layers);
         return result;
       },
 
@@ -232,6 +243,7 @@ define(
         }
         if (canProceed) {
           this.popup.enableButton(0);
+          html.removeClass(this.addPopupBtn, 'disabled');
         } else {
           this.popup.disableButton(0);
           if (errormessage) {
