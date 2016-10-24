@@ -1,4 +1,4 @@
-LocalLayerWidget 2.0
+LocalLayerWidget 2.2
 ==
 
 ###Setting up the LocalLayer Widget within the Default App:
@@ -44,6 +44,12 @@ utils.readConfigLayerInfosFromMap(this.map, false, true)
 ```
 
 Changing that first 'true' to a 'false' will tell the menu to read all layers from the map as normal, instead of just ArcGIS Online layers. Changing the second 'true' to a 'false' will let the Attribute Table include MapNotes layers from AGOL WebMaps.
+
+###Related Tables in Edit Widget, IncidentAwareness Widget
+
+In order to ensure that Related Tables appear within the Edit Widget's settings, ensure that you've added both the Spatial Layer and the Related Table layer to your application as Feature Layers, and exited from the LocalLayer Settings Menu by clicking the "OK" button.  If you do not open and close the LocalLayer Settings Menu within the WebAppBuilder Builder UI via the OK button, the Edit Widget's Configuration menu will not properly identify your Related Table for configuration.
+
+If, for any reason, your layers added via the LocalLayer widget are not appearing within Setting menus for any other widgets, try opening the LocalLayer settings and exiting via the OK button, then try opening your Settings menu again.
 
 ###Editor Tracking
 
