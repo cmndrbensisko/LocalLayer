@@ -215,10 +215,24 @@ define(
           }
         }
 
+        var hideInLegends
+        var hideInLegend
+        if (this.config.hasOwnProperty('hideInLegends')){
+          if (this.config.hideInLegends){
+            hideInLegends = JSON.parse(this.config.hideInLegends);
+          }else{
+            hideInLegends = []
+          }
+          if (hideInLegends[args.config.id]){
+            hideInLegend = hideInLegends[args.config.id]
+          }
+        }
+
         var rowData = {
           name: (args.config && args.config.name) || '',
           visible: isVisible,
           definitionQuery: defQuery,
+          hideInLegend: hideInLegend,
           layerindex: args.config.id,
         };
 
@@ -250,6 +264,7 @@ define(
 
         var visibleLayers = [];
         var definitionQueries = new Object();
+        var hideInLegends = new Object();
         array.map(rowsData, lang.hitch(this, function (item) {
           if (item.layerindex == ""){item.layerindex = "0"}
           if(!item.visible){
@@ -258,7 +273,13 @@ define(
           if (item.definitionQuery !== ""){
             definitionQueries[parseInt(item.layerindex)] = item.definitionQuery
           }
+          if (item.hideInLegend){
+            hideInLegends[parseInt(item.layerindex)] = true;
+          }else{
+            hideInLegends[parseInt(item.layerindex)] = false;
+          }
         }));
+var _hideInLegends = JSON.stringify(hideInLegends)
 var _definitionQueries = JSON.stringify(definitionQueries);
 var _hideLayers = visibleLayers.join();
 if (_hideLayers == ""){_hideLayers = null};
@@ -269,6 +290,7 @@ if (_definitionQueries == ""){_definitionQueries = null};
           url: this.layerUrl.get('value'),
           opacity: this.layerAlpha.getAlpha(),
           visible: this.isVisible.getValue(),
+          hideInLegends: _hideInLegends,
           imageformat: this.imgFormat.get('value'),
           autorefresh: this.autoRefresh.get('value'),
           popup: this.config.popup,

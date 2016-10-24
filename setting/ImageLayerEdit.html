@@ -72,86 +72,6 @@
                 <table style="width:100%;" cellspacing="0">
                   <tbody>
                     <tr>
-                      <td style="width:125px;text-align:left;">
-                        <span>${nls.imageFormat}</span>
-                      </td>
-                      <td style="width:auto;">
-                        <select data-dojo-attach-point="imgFormat" data-dojo-type="dijit/form/Select">
-                          <option value="png8" selected="selected">png8</option>
-                          <option value="png24">png24</option>
-                          <option value="png32">png32</option>
-                          <option value="jpg">jpg</option>
-                          <option value="gif">gif</option>
-                        </select>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </td>
-              <td style="width:50%;">
-                <table style="width:100%;" cellspacing="0">
-                  <tbody>
-                    <tr>
-                      <td style="width:165px;text-align:left;">
-                        <span>${nls.imageDPI}</span>
-                      </td>
-                      <td style="width:auto;">
-                        <input type="text" data-dojo-attach-point="imgDPI" data-dojo-type="dijit/form/NumberTextBox"
-              data-dojo-props="style:{width:'150px'},required:true,value:96,constraints:{min:0,places:0,max:300}" />
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-      <tr>
-        <td colspan="2">
-          <table style="width:100%;" cellspacing="0">
-            <tr>
-              <td style="width:50%;">
-                <table style="width:100%;" cellspacing="0">
-                  <tbody>
-                    <tr>
-                      <td style="width:220px;text-align:left;">
-                        <span>${nls.disableclientcaching}</span>
-                      </td>
-                      <td style="width:auto;">
-                        <div data-dojo-type="jimu/dijit/CheckBox" data-dojo-attach-point="disableClientCachingCbx" />
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </td>
-              <td style="width:50%;">
-                <table style="width:100%;" cellspacing="0">
-                  <tbody>
-                    <tr>
-                      <td style="width:165px;text-align:left;">
-                        <span>${nls.autorefresh}</span>
-                      </td>
-                      <td style="width:auto;">
-                        <input type="text" data-dojo-attach-point="autoRefresh" data-dojo-type="dijit/form/NumberTextBox"
-              data-dojo-props="style:{width:'150px'},required:true,value:0,constraints:{min:0,places:2,max:2880}" />
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-      <tr>
-        <td colspan="2">
-          <table style="width:100%;" cellspacing="0">
-            <tr>
-              <td style="width:50%;">
-                <table style="width:100%;" cellspacing="0">
-                  <tbody>
-                    <tr>
                       <td style="width:200px;text-align:left;">
                         <span>${nls.minScale}</span>
                       </td>
@@ -205,6 +125,22 @@
                       </tr>
                     </tbody>
                   </table>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <table style="width:100%;padding-top:8px;" cellspacing="0">
+            <tbody>
+              <tr>
+                <td style="width:220px;text-align:left;">
+                  <span>${nls.hideinlegend}</span>
+                </td>
+                <td style="width:auto;">
+                  <div data-dojo-type="jimu/dijit/CheckBox" data-dojo-attach-point="hideInLegendCbx" />
                 </td>
               </tr>
             </tbody>

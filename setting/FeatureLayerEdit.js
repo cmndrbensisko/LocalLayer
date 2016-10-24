@@ -113,6 +113,9 @@ define(
         }else{
           this.showLabelsCbx.setValue(true)
         }
+        if(config.hideInLegend){
+          this.hideInLegendCbx.setValue(true)
+        }
         if(!config.trackEditByLDAP || config.trackEditByLDAP === false){
           this.trackEditByLDAPCbx.setValue(false)
         }else{
@@ -203,6 +206,7 @@ define(
           opacity: this.layerAlpha.getAlpha(),
           visible: this.isVisible.getValue(),
           showLabels: this.showLabelsCbx.getValue(),
+          hideInLegend: this.hideInLegendCbx.getValue(),
           trackEditByLDAP: this.trackEditByLDAPCbx.getValue(),
           limitEditByLDAP: this.limitEditByLDAPCbx.getValue(),
           popup: this.config.popup,

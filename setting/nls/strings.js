@@ -60,6 +60,7 @@ define({
     sublayers: "Sub-layers",
     basemaplayers: "Basemap Layers",
     autorefresh: "Auto refresh (minutes)",
+    hideinlegend: "Hide In Legend",
     invaliddynamiclayer: "Invalid Dynamic Map Service URL",
     invalidfeaturelayer: "Invalid Feature Map Service URL",
     invalidBasemapUrl1: "This type of layer cannot be used as a basemap.",

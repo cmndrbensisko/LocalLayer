@@ -86,6 +86,9 @@ define(
         }else{
           this.isVisible.setValue(true);
         }
+        if(config.hideInLegend){
+          this.hideInLegendCbx.setValue(true)
+        }
         if(config.disableclientcaching){
           this.disableClientCachingCbx.setValue(true);
         }
@@ -328,6 +331,7 @@ define(
           url: this.layerUrl.get('value'),
           opacity: this.layerAlpha.getAlpha(),
           visible: this.isVisible.getValue(),
+          hideInLegend: this.hideInLegendCbx.getValue(),
           popup: this.config.popup,
           minScale: this.minScale.get('value'),
           maxScale: this.maxScale.get('value')

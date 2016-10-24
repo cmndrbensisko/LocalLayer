@@ -14,6 +14,7 @@ define([
     'dojo/aspect',
     'jimu/LayerInfos/LayerInfos',
     'esri/geometry/webMercatorUtils',
+    "esri/tasks/PrintTask",
     'esri/arcgis/utils',
     'esri/layers/ArcGISDynamicMapServiceLayer',
     'esri/layers/ArcGISTiledMapServiceLayer',
@@ -48,6 +49,7 @@ define([
     aspect,
     LayerInfos,
     webMercatorUtils,
+    PrintTask,
     arcgisUtils,
     ArcGISDynamicMapServiceLayer,
     ArcGISTiledMapServiceLayer,
@@ -111,13 +113,13 @@ define([
           }
           if (urlParams._preview){
             var type
-            if (urlParams.url.toUpperCase().match("MAPSERVER")){
+            if (urlParams._preview.toUpperCase().match("MAPSERVER")){
               type = "DYNAMIC"
             }
-            if (urlParams.url.toUpperCase().match("FEATURESERVER")){
+            if (urlParams._preview.toUpperCase().match("FEATURESERVER")){
               type = "FEATURE"
             }
-            this.config = {"layers":{"layer":[{"type":type, "url":urlParams.url, "flyPopups": true}]}} 
+            this.config = {"layers":{"layer":[{"type":type, "name":urlParams._preview.split("/")[urlParams._preview.split("/").length-2], "url":urlParams._preview, "flyPopups": true}]}} 
           }
         }
         if (this.config.useProxy) {
@@ -315,6 +317,22 @@ define([
               }
 
               evt.layer.setVisibleLayers(lOptions.hidelayers);
+
+              if (layer.hasOwnProperty('hideInLegends')) {
+                var hideLegends = JSON.parse(layer.hideInLegends)
+                var finalLegends = []
+                for (var prop in hideLegends) {
+                  array.forEach(evt.layer.layerInfos,lang.hitch(this,function(layerInfo){
+                    if (layerInfo.id == parseInt(prop)){
+                      layerInfo.showLegend = !hideLegends[prop]
+                    }
+                  }))
+                  //finalLegends.push({"id": parseInt(prop), "showLegend":!hideLegends[prop], "name":"", "minScale":"", "maxScale":"", "parentLayerId":"", "defaultVisibility":""})
+                }
+                lLayer.layers = evt.layer.layerInfos
+                LayerInfos.getInstanceSync()._initLayerInfos();
+                LayerInfos.getInstanceSync().update()
+              }
             });
             //this._viewerMap.addLayer(lLayer);
             _layersToAdd.push(lLayer);
@@ -328,6 +346,14 @@ define([
               lOptions.infoTemplate = _popupTemplate;
             }
             lLayer = new ArcGISImageServiceLayer(layer.url, lOptions)
+            if (layer.hasOwnProperty('hideInLegend')) {
+              lLayer.showLegend = !layer.hideInLegend
+            }
+            if (layer.name) {
+              lLayer._titleForLegend = layer.name;
+              lLayer.title = layer.name;
+              lLayer.noservicename = true;
+            }
             lLayer.on('load', function(evt) {
               //set min/max scales if present
               if (lOptions.minScale) {
@@ -425,6 +451,9 @@ define([
               lOptions.showLabels = true;
             }
             lLayer = new FeatureLayer(layer.url, lOptions);
+            if (layer.hasOwnProperty('hideInLegend')) {
+              lLayer.showLegend = !layer.hideInLegend
+            }
             if (layer.name) {
               lLayer._titleForLegend = layer.name;
               lLayer.title = layer.name;
@@ -686,6 +715,12 @@ define([
         //hook into the updater, and use the empty property as our 'hitch'
         aspect.after(LayerInfos.prototype,"update",function(){
           array.forEach(this._finalLayerInfos,lang.hitch(this,function(layerInfo){
+            if (layerInfo.layerObject.layers){
+              layerInfo.originOperLayer.layers = layerInfo.layerObject.layers
+            }
+            if (layerInfo.layerObject.showLegend === false){
+              layerInfo.originOperLayer.showLegend = layerInfo.layerObject.showLegend
+            }
             aspect.before(layerInfo.__proto__,"_bindEvent",function(){
               if (this.layerObject){
                 if (!this.layerObject.empty){
@@ -735,8 +770,25 @@ define([
         */
         window._viewerMap.addLayers(_layersToAdd);
         window._viewerMap.updatedLayerInfos = LayerInfos.getInstanceSync()
+        //var printTask = new PrintTask();   
+        //LayerInfos.getInstanceSync()._operLayers = printTask._getPrintDefinition(window._viewerMap,{preserveScale:false}).operationalLayers;
+        
+        array.forEach(LayerInfos.getInstanceSync()._operLayers,function(operLayer){
+          if (operLayer instanceof ArcGISDynamicMapServiceLayer){
+            operLayer.declaredClass = 'esri.layers.ArcGISDynamicMapServiceLayer'
+            operLayer.layerObject = operLayer;
+            operLayer.layerType = 'ArcGISMapServiceLayer'
+            //operLayer.selfType = 'mapservice_dynamic'
+          }
+          if (operLayer instanceof FeatureLayer){
+            operLayer.layerType = 'ArcGISFeatureLayer'
+            operLayer.layerObject = operLayer;
+          }          
+        })
+        
         LayerInfos.getInstanceSync()._initLayerInfos();
         LayerInfos.getInstanceSync()._initTablesInfos()
+        LayerInfos.getInstanceSync().update()
       }
     });
     return clazz;

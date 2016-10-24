@@ -83,7 +83,8 @@ define([
         this.setConfig(this.config);
         aspect.after(this, 'destroy', function(){
           LayerInfos.getInstanceSync()._tables = this.map.updatedLayerInfos._tables;  
-          LayerInfos.getInstanceSync()._initTablesInfos()
+          LayerInfos.getInstanceSync()._initLayerInfos();
+          LayerInfos.getInstanceSync()._initTablesInfos();
         })        
       },
 
