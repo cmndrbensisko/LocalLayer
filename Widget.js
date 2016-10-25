@@ -111,7 +111,7 @@ define([
         if (this.config.review){
           var urlParams = ioQuery.queryToObject(decodeURIComponent(dojo.doc.location.search.slice(1)));
           if (urlParams._jsonconfig){
-            this.config = JSON.parse(urlParams.urlConfig);
+            this.config = JSON.parse(urlParams._jsonconfig);
           }
           if (urlParams._preview){
             var type
