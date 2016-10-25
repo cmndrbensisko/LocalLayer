@@ -106,6 +106,8 @@ define([
       startup: function() {
         this._originalWebMap = this.map.webMapResponse.itemInfo.item.id;
         this._removeAllLayersExceptBasemap();
+        LayerInfos.getInstanceSync()._operLayers = [];
+        LayerInfos.getInstanceSync()._tables = [];
         if (this.config.review){
           var urlParams = ioQuery.queryToObject(decodeURIComponent(dojo.doc.location.search.slice(1)));
           if (urlParams._jsonconfig){
@@ -721,6 +723,7 @@ define([
             if (layerInfo.layerObject.showLegend === false){
               layerInfo.originOperLayer.showLegend = layerInfo.layerObject.showLegend
             }
+            /*
             aspect.before(layerInfo.__proto__,"_bindEvent",function(){
               if (this.layerObject){
                 if (!this.layerObject.empty){
@@ -736,8 +739,10 @@ define([
                 }
               }
             },true)
+            */
           }))
         });
+        /*
         aspect.after(arcgisUtils,"getLegendLayers",lang.hitch(this,function(legendObject){
           var returnArray = []
           array.forEach(LayerInfos.getInstanceSync()._operLayers,function(_layer){
@@ -746,6 +751,7 @@ define([
           })
           return returnArray;
         }))
+        /*
         /*
         aspect.before(LayerInfos.prototype,"_addTable",function(changedType,evt){
           var _foundMatch = false
@@ -770,15 +776,12 @@ define([
         */
         window._viewerMap.addLayers(_layersToAdd);
         window._viewerMap.updatedLayerInfos = LayerInfos.getInstanceSync()
-        //var printTask = new PrintTask();   
-        //LayerInfos.getInstanceSync()._operLayers = printTask._getPrintDefinition(window._viewerMap,{preserveScale:false}).operationalLayers;
         
         array.forEach(LayerInfos.getInstanceSync()._operLayers,function(operLayer){
           if (operLayer instanceof ArcGISDynamicMapServiceLayer){
             operLayer.declaredClass = 'esri.layers.ArcGISDynamicMapServiceLayer'
-            operLayer.layerObject = operLayer;
             operLayer.layerType = 'ArcGISMapServiceLayer'
-            //operLayer.selfType = 'mapservice_dynamic'
+            operLayer.layerObject = operLayer;
           }
           if (operLayer instanceof FeatureLayer){
             operLayer.layerType = 'ArcGISFeatureLayer'
