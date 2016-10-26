@@ -106,7 +106,7 @@ define([
       startup: function() {
         this._originalWebMap = this.map.webMapResponse.itemInfo.item.id;
         this._removeAllLayersExceptBasemap();
-        LayerInfos.getInstanceSync()._operLayers = [];
+        //LayerInfos.getInstanceSync()._operLayers = [];
         LayerInfos.getInstanceSync()._tables = [];
         if (this.config.review){
           var urlParams = ioQuery.queryToObject(decodeURIComponent(dojo.doc.location.search.slice(1)));
