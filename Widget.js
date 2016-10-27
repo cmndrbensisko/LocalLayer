@@ -331,14 +331,14 @@ define([
                   }))
                   //finalLegends.push({"id": parseInt(prop), "showLegend":!hideLegends[prop], "name":"", "minScale":"", "maxScale":"", "parentLayerId":"", "defaultVisibility":""})
                 }
-                lLayer.layers = evt.layer.layerInfos
-                LayerInfos.getInstanceSync()._initLayerInfos();
-                LayerInfos.getInstanceSync().update()
+                //LayerInfos.getInstanceSync()._initLayerInfos();
+                //LayerInfos.getInstanceSync().update()
               }
+              lLayer.layers = evt.layer.layerInfos
             });
             //this._viewerMap.addLayer(lLayer);
             _layersToAdd.push(lLayer);
-            LayerInfos.getInstanceSync()._operLayers.push(lLayer);
+            //LayerInfos.getInstanceSync()._operLayers.push(lLayer);
             this._viewerMap.setInfoWindowOnClick(true);
           } else if (layer.type.toUpperCase() === 'IMAGE') {
             lOptions.imageServiceParameters = new ImageServiceParameters();
@@ -391,7 +391,7 @@ define([
             });
             //this._viewerMap.addLayer(lLayer);
             _layersToAdd.push(lLayer);
-            LayerInfos.getInstanceSync()._operLayers.push(lLayer);
+            //LayerInfos.getInstanceSync()._operLayers.push(lLayer);
           } else if (layer.type.toUpperCase() === 'WEBTILEDBASEMAP') {
             lOptions.type = "WebTiledLayer"
             lOptions.url = layer.url
@@ -471,7 +471,7 @@ define([
             }
             if (layer.hasOwnProperty('customLabel')) {
               if ((layer.customLabel && layer.customLabel != "")) {
-                var labelClass = new LabelClass({
+                var labelClassParams = new LabelClass({
                   "labelExpressionInfo": {
                     "value": layer.customLabel
                   }
@@ -515,7 +515,7 @@ define([
             //this._viewerMap.addLayer(lLayer);
             if (layer.fltype != "Table"){
               _layersToAdd.push(lLayer);
-              LayerInfos.getInstanceSync()._operLayers.push(lLayer);
+              //LayerInfos.getInstanceSync()._operLayers.push(lLayer);
             }else{
               if (!LayerInfos.getInstanceSync()._tables){
                 LayerInfos.getInstanceSync()._tables = [];
@@ -566,7 +566,7 @@ define([
             }
             //this._viewerMap.addLayer(lLayer);
             _layersToAdd.push(lLayer);
-            LayerInfos.getInstanceSync()._operLayers.push(lLayer);
+            //LayerInfos.getInstanceSync()._operLayers.push(lLayer);
           } else if (layer.type.toUpperCase() === 'BASEMAP') {
             var bmLayers = array.map(layer.layers.layer, function(bLayer) {
               var bmLayerObj = {
@@ -714,8 +714,22 @@ define([
             }));
           }
         });
+        aspect.before(LayerInfos.prototype,"update",function(){
+          var newOriginOperLayers = []
+          array.forEach(this._finalLayerInfos,lang.hitch(this,function(layerInfo){
+            if (layerInfo.originOperLayer.layerObject instanceof ArcGISDynamicMapServiceLayer){
+              layerInfo.declaredClass = 'esri.layers.ArcGISDynamicMapServiceLayer'
+              layerInfo.originOperLayer.layerType = 'ArcGISMapServiceLayer';
+            }   
+            newOriginOperLayers.push(layerInfo.originOperLayer);
+          }))
+          this._operLayers = newOriginOperLayers;
+          LayerInfos.getInstanceSync()._initLayerInfos();
+          console.log('work?')
+        });
         //hook into the updater, and use the empty property as our 'hitch'
         aspect.after(LayerInfos.prototype,"update",function(){
+          //this._layerInfos = this._finalLayerInfos;
           array.forEach(this._finalLayerInfos,lang.hitch(this,function(layerInfo){
             if (layerInfo.layerObject.layers){
               layerInfo.originOperLayer.layers = layerInfo.layerObject.layers
@@ -742,7 +756,7 @@ define([
             */
           }))
         });
-        /*
+        
         aspect.after(arcgisUtils,"getLegendLayers",lang.hitch(this,function(legendObject){
           var returnArray = []
           array.forEach(LayerInfos.getInstanceSync()._operLayers,function(_layer){
@@ -751,7 +765,7 @@ define([
           })
           return returnArray;
         }))
-        /*
+        
         /*
         aspect.before(LayerInfos.prototype,"_addTable",function(changedType,evt){
           var _foundMatch = false
@@ -775,23 +789,11 @@ define([
         }), true)
         */
         window._viewerMap.addLayers(_layersToAdd);
-        window._viewerMap.updatedLayerInfos = LayerInfos.getInstanceSync()
-        
-        array.forEach(LayerInfos.getInstanceSync()._operLayers,function(operLayer){
-          if (operLayer instanceof ArcGISDynamicMapServiceLayer){
-            operLayer.declaredClass = 'esri.layers.ArcGISDynamicMapServiceLayer'
-            operLayer.layerType = 'ArcGISMapServiceLayer'
-            operLayer.layerObject = operLayer;
-          }
-          if (operLayer instanceof FeatureLayer){
-            operLayer.layerType = 'ArcGISFeatureLayer'
-            operLayer.layerObject = operLayer;
-          }          
-        })
-        
-        LayerInfos.getInstanceSync()._initLayerInfos();
+        window._viewerMap.updatedLayerInfos = LayerInfos.getInstanceSync()       
+       
+        //LayerInfos.getInstanceSync()._initLayerInfos();
         LayerInfos.getInstanceSync()._initTablesInfos()
-        LayerInfos.getInstanceSync().update()
+        //LayerInfos.getInstanceSync().update()
       }
     });
     return clazz;
