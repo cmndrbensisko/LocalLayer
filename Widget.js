@@ -725,11 +725,9 @@ define([
           }))
           this._operLayers = newOriginOperLayers;
           LayerInfos.getInstanceSync()._initLayerInfos();
-          console.log('work?')
         });
-        //hook into the updater, and use the empty property as our 'hitch'
+
         aspect.after(LayerInfos.prototype,"update",function(){
-          //this._layerInfos = this._finalLayerInfos;
           array.forEach(this._finalLayerInfos,lang.hitch(this,function(layerInfo){
             if (layerInfo.layerObject.layers){
               layerInfo.originOperLayer.layers = layerInfo.layerObject.layers
@@ -737,23 +735,6 @@ define([
             if (layerInfo.layerObject.showLegend === false){
               layerInfo.originOperLayer.showLegend = layerInfo.layerObject.showLegend
             }
-            /*
-            aspect.before(layerInfo.__proto__,"_bindEvent",function(){
-              if (this.layerObject){
-                if (!this.layerObject.empty){
-                  this.layerObject.modified = true;
-                  this.layerObject.empty = true;
-                }
-              }
-            })
-            aspect.after(layerInfo.__proto__,"_bindEvent",function(){
-              if (this.layerObject){
-                if (this.layerObject.modified){
-                  this.layerObject.empty = false;
-                }
-              }
-            },true)
-            */
           }))
         });
         
@@ -765,35 +746,10 @@ define([
           })
           return returnArray;
         }))
-        
-        /*
-        aspect.before(LayerInfos.prototype,"_addTable",function(changedType,evt){
-          var _foundMatch = false
-          array.forEach(this._finalTableInfos,function(table){
-            if (table.id == changedType.id){
-              _foundMatch = true;
-            }
-          })
-          if (!_foundMatch){
-            return [changedType,evt];
-          }else{
-            return [null, null]
-          }
-        }, true)
-        aspect.around(LayerInfos.prototype,"_onTableChange",lang.hitch(this,function(originalFunction){
-          return lang.hitch(this,function(tableInfos,changedType){
-            if (tableInfos.length > 0){
-              return originalFunction.call(this,tableInfos,changedType);
-            }
-          })
-        }), true)
-        */
+
         window._viewerMap.addLayers(_layersToAdd);
         window._viewerMap.updatedLayerInfos = LayerInfos.getInstanceSync()       
-       
-        //LayerInfos.getInstanceSync()._initLayerInfos();
         LayerInfos.getInstanceSync()._initTablesInfos()
-        //LayerInfos.getInstanceSync().update()
       }
     });
     return clazz;
