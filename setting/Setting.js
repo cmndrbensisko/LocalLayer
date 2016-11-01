@@ -36,6 +36,7 @@ define([
     './geoJSONEdit',
     './WebTiledLayerEdit',
     './ImageLayerEdit',
+    './WMSLayerEdit',
     './ReverseProxyEdit',
     'dojo/keys'
   ],
@@ -61,6 +62,7 @@ define([
     GeoJsonEdit,
     WebTiledLayerEdit,
     ImageLayerEdit,
+    WMSLayerEdit,
     ReverseProxyEdit,
     keys) {
     return declare([BaseWidgetSetting, _WidgetsInTemplateMixin], {
@@ -70,6 +72,7 @@ define([
       popupfeatlyredit: null,
       popuptiledlyredit: null,
       popupwebtiledlyredit: null,
+      popupwmsedit: null,
       popupbmedit: null,
       popupgjedit: null,
       popupimageedit: null,
@@ -82,15 +85,20 @@ define([
         this._bindEvents();
         this.setConfig(this.config);
         aspect.before(this, 'destroy', function(){
+          //LayerInfos.getInstanceSync()._operLayers = this.map.updatedLayerInfos._operLayers;
           LayerInfos.getInstanceSync()._tables = this.map.updatedLayerInfos._tables;  
+          //LayerInfos.getInstanceSync()._initLayerInfos();
           LayerInfos.getInstanceSync()._initTablesInfos();
           aspect.before(LayerInfos.prototype,"update",function(){
             var newOriginOperLayers = []
+            //LayerInfos.getInstanceSync()._tables = this.map.updatedLayerInfos._tables;  
             array.forEach(this._finalLayerInfos,lang.hitch(this,function(layerInfo){
               newOriginOperLayers.push(layerInfo.originOperLayer);
             }))
             this._operLayers = newOriginOperLayers;
             LayerInfos.getInstanceSync()._initLayerInfos();
+            //LayerInfos.getInstanceSync()._initTablesInfos();
+            console.log('work?')
           });
         })        
       },
@@ -182,6 +190,8 @@ define([
           return this.nls.webtiledlayer;
         }else if(type === 'IMAGE'){
           return this.nls.imagelayer;
+        }else if(type === 'WMS'){
+          return this.nls.wmslayer;
         }
       },
 
@@ -214,6 +224,8 @@ define([
             this._openWebTileEdit(this.nls.editwebtile + ': ' + editLayer.name , tr);
           }else if(editLayer.type.toUpperCase() === 'IMAGE'){
             this._openImageEdit(this.nls.editimage + ': ' + editLayer.name , tr);
+          }else if(editLayer.type.toUpperCase() === 'WMS'){
+            this._openWMSEdit(this.nls.editwms + ': ' + editLayer.name , tr);
           }
         })));
         this.own(on(this.LayersTable,'row-delete',lang.hitch(this,function(tr){
@@ -287,6 +299,16 @@ define([
           var tr = this._createLayer(args);
           if (tr) {
             this._openImageEdit(this.nls.addimagelayer, tr);
+          }
+        })));
+        this.own(on(this.btnAddWMSLayer,'click',lang.hitch(this,function(){
+          var args = {
+             config:{type:'WMS'}
+          };
+          this.popupState = 'ADD';
+          var tr = this._createLayer(args);
+          if (tr) {
+            this._openWMSEdit(this.nls.addwmslayer, tr);
           }
         })));
       },
@@ -668,6 +690,71 @@ define([
         });
         html.addClass(this.popup.domNode, 'widget-setting-popup');
         this.popupimageedit.startup();
+      },
+
+      _onWMSEditOk: function() {
+        var layerConfig = this.popupwmsedit.getConfig();
+        console.info(layerConfig);
+
+        if (layerConfig.length < 0) {
+          new Message({
+            message: this.nls.warning
+          });
+          return;
+        }
+        if(this.popupState === 'ADD'){
+          this.LayersTable.editRow(layerConfig[1], {
+            name: layerConfig[0].name
+          });
+          layerConfig[1].singleLayer = layerConfig[0];
+          this.popupState = '';
+        }else{
+          this.LayersTable.editRow(layerConfig[1], {
+            name: layerConfig[0].name
+          });
+          layerConfig[1].singleLayer = layerConfig[0];
+        }
+
+        this.popup.close();
+        this.popupState = '';
+      },
+
+      _onWMSEditClose: function() {
+        var layerConfig = this.popupwmsedit.getConfig();
+        if(this.popupState === 'ADD'){
+          this.LayersTable.deleteRow(layerConfig[1]);
+        }
+        this.popupwmsedit = null;
+        this.popup = null;
+      },
+
+      _openWMSEdit: function(title, tr) {
+        this.popupwmsedit = new WMSLayerEdit({
+          nls: this.nls,
+          config: tr.singleLayer || {},
+          tr: tr,
+          map: this.map
+        });
+
+        this.popup = new Popup({
+          titleLabel: title,
+          autoHeight: true,
+          content: this.popupwmsedit,
+          container: 'main-page',
+          width: 840,
+          height: 420,
+          buttons: [{
+            label: this.nls.ok,
+            key: keys.ENTER,
+            onClick: lang.hitch(this, '_onWMSEditOk')
+          }, {
+            label: this.nls.cancel,
+            key: keys.ESCAPE
+          }],
+          onClose: lang.hitch(this, '_onWMSEditClose')
+        });
+        html.addClass(this.popup.domNode, 'widget-setting-popup');
+        this.popupwmsedit.startup();
       },
 
       _onGJEditOk: function() {

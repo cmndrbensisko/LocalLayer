@@ -19,6 +19,8 @@ define([
     'esri/layers/ArcGISDynamicMapServiceLayer',
     'esri/layers/ArcGISTiledMapServiceLayer',
     'esri/layers/ArcGISImageServiceLayer',
+    "esri/layers/WMSLayer",
+    "esri/layers/WMSLayerInfo",
     'esri/layers/FeatureLayer',
     'esri/layers/WebTiledLayer',
     'esri/layers/ImageParameters',
@@ -54,6 +56,8 @@ define([
     ArcGISDynamicMapServiceLayer,
     ArcGISTiledMapServiceLayer,
     ArcGISImageServiceLayer,
+    WMSLayer,
+    WMSLayerInfo,
     FeatureLayer,
     WebTiledLayer,
     ImageParameters,
@@ -593,6 +597,28 @@ define([
             _basemapGallery.add(_newBasemap);
             _basemapGallery.select('defaultBasemap');
             _basemapGallery.destroy();
+          } else if (layer.type.toUpperCase() === 'WMS') {
+            lLayer = new WMSLayer(layer.url)//,{visibleLayers:layer.visibleLayers,resourceInfo:layer.resourceInfo});
+            if (layer.name) {
+              lLayer._titleForLegend = layer.name;
+              lLayer.title = layer.name;
+              lLayer.noservicename = true;
+            }
+            _layersToAdd.push(lLayer);
+            lLayer.on("load",lang.hitch(this,function(_layer){
+              //console.log(layer)
+              _layer.layer.title = layer.name
+              if (layer.maxScale){
+                _layer.layer.maxScale = layer.maxScale
+              }
+              if (layer.minScale){
+                _layer.layer.minScale = layer.minScale
+              }
+              _layer.layer.layerInfos = layer.resourceInfo.layerInfos
+              //_layer.layer.visibleLayers = layer.visibleLayers
+              _layer.layer.setVisibleLayers(layer.visibleLayers)
+            }))
+            this._viewerMap.setInfoWindowOnClick(true);
           } else if (layer.type.toUpperCase() === 'GEOJSON') {
             dojo.xhrGet({
               url: lang.trim(layer.url || ""),
@@ -725,9 +751,11 @@ define([
           }))
           this._operLayers = newOriginOperLayers;
           LayerInfos.getInstanceSync()._initLayerInfos();
+          console.log('work?')
         });
-
+        //hook into the updater, and use the empty property as our 'hitch'
         aspect.after(LayerInfos.prototype,"update",function(){
+          //this._layerInfos = this._finalLayerInfos;
           array.forEach(this._finalLayerInfos,lang.hitch(this,function(layerInfo){
             if (layerInfo.layerObject.layers){
               layerInfo.originOperLayer.layers = layerInfo.layerObject.layers
@@ -735,6 +763,23 @@ define([
             if (layerInfo.layerObject.showLegend === false){
               layerInfo.originOperLayer.showLegend = layerInfo.layerObject.showLegend
             }
+            /*
+            aspect.before(layerInfo.__proto__,"_bindEvent",function(){
+              if (this.layerObject){
+                if (!this.layerObject.empty){
+                  this.layerObject.modified = true;
+                  this.layerObject.empty = true;
+                }
+              }
+            })
+            aspect.after(layerInfo.__proto__,"_bindEvent",function(){
+              if (this.layerObject){
+                if (this.layerObject.modified){
+                  this.layerObject.empty = false;
+                }
+              }
+            },true)
+            */
           }))
         });
         
@@ -746,10 +791,39 @@ define([
           })
           return returnArray;
         }))
+        
+        /*
+        aspect.before(LayerInfos.prototype,"_addTable",function(changedType,evt){
+          var _foundMatch = false
+          array.forEach(this._finalTableInfos,function(table){
+            if (table.id == changedType.id){
+              _foundMatch = true;
+            }
+          })
+          if (!_foundMatch){
+            return [changedType,evt];
+          }else{
+            return [null, null]
+          }
+        }, true)
+        aspect.around(LayerInfos.prototype,"_onTableChange",lang.hitch(this,function(originalFunction){
+          return lang.hitch(this,function(tableInfos,changedType){
+            if (tableInfos.length > 0){
+              return originalFunction.call(this,tableInfos,changedType);
+            }
+          })
+        }), true)
+        */
+//var testlyrinfo = new WMSLayerInfo({"name":"vegetation","title":"Vegetation"})
+//var testlyr = new WMSLayer("http://wms.ess-ws.nrcan.gc.ca/wms/toporama_en",{visibleLayers:["Vegetation","Feature_names"],resourceInfo:{layerInfos:testlyrinfo,extent:_viewerMap.extent}})
+//_layersToAdd.push(testlyr);
 
         window._viewerMap.addLayers(_layersToAdd);
         window._viewerMap.updatedLayerInfos = LayerInfos.getInstanceSync()       
+       
+        //LayerInfos.getInstanceSync()._initLayerInfos();
         LayerInfos.getInstanceSync()._initTablesInfos()
+        //LayerInfos.getInstanceSync().update()
       }
     });
     return clazz;

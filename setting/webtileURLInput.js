@@ -15,7 +15,11 @@ require(["dojo/_base/declare", "esri/layers/WebTiledLayer", 'dojo/on', "jimu/dij
 
           this._validating();
           try{
-            var isTiledLayer = new WebTiledLayer(lang.trim(serviceUrl), {"subDomains": ["a", "b", "c"]})
+            if (serviceUrl.toUpperCase().indexOf("SUBDOMAIN")>-1){
+              var isTiledLayer = new WebTiledLayer(lang.trim(serviceUrl), {"subDomains": ["a", "b", "c"]})
+            }else{
+              var isTiledLayer = new WebTiledLayer(lang.trim(serviceUrl))
+            }
             def.resolve('success');
             var status = this.onFetch({
               url: this.getValue(),
