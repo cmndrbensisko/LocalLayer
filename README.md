@@ -31,11 +31,27 @@ client\stemapp\themes[theme name]\layouts\default\config.json
 
 ###Configuring Other Widgets
 
-When configuring other widgets to interact with your Local Layers, a small additional step must be taken prior to opening the Settings menu for these tools.  Prior to configuring the Edit Widget, Attribute Table widget, or the Incident Analysis widgets, make sure to open the Settings for the LocalLayer widget and exit again via the OK button.  This will ensure that the latest 'collection' of layers are present in the configuration menus of your other widgets.
+When configuring other widgets to interact with your Local Layers, a small additional step must be taken prior to opening the Settings menu for these tools.  Prior to configuring the Edit Widget or the Incident Analysis widgets, make sure to open the Settings for the LocalLayer widget and exit again via the OK button.  This will ensure that the latest 'collection' of layers are present in the configuration menus of your other widgets.
 
 To ensure that Related Tables appear within the Edit Widget's settings, ensure that you've added both the Spatial Layer and the Related Table layer to your application as Feature Layers.  If you do not open and close the LocalLayer Settings Menu within the WebAppBuilder Builder UI via the OK button, the Edit Widget's Configuration menu will not properly identify your Related Table for configuration.
 
 If, for any reason, your layers added via the LocalLayer widget are not appearing within Setting menus for any other widgets, try opening the LocalLayer settings and exiting via the OK button, then try opening your Settings menu again.  Occasionally, after multiple configuration changes within the builder without a full refresh of the page, you may end up with multiple Related Table records appearing within your Attribute Table and Edit widget configuration menus.  Saving your changes, then refreshing the builder should remove these duplicate records.  Make sure to refresh the 'collection' as described above once you've refreshed the page.
+
+###Attribute Table:
+
+To ensure that the Attribute Table widget accepts your LocalLayer Layers, perform the following change.
+
+1) In \client\stemapp\widgets\AttributeTable\setting\Setting.js, change line 379 from
+
+```javascript
+utils.readConfigLayerInfosFromMap(this.map, true, true)
+```
+to
+```javascript
+utils.readConfigLayerInfosFromMap(this.map, false, true)
+```
+
+Changing that first 'true' to a 'false' will tell the menu to read all layers from the map as normal, instead of just ArcGIS Online layers. Changing the second 'true' to a 'false' will let the Attribute Table include MapNotes layers from AGOL WebMaps.
 
 ###Editor Tracking
 

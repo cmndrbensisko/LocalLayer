@@ -333,10 +333,7 @@ define([
                       layerInfo.showLegend = !hideLegends[prop]
                     }
                   }))
-                  //finalLegends.push({"id": parseInt(prop), "showLegend":!hideLegends[prop], "name":"", "minScale":"", "maxScale":"", "parentLayerId":"", "defaultVisibility":""})
                 }
-                //LayerInfos.getInstanceSync()._initLayerInfos();
-                //LayerInfos.getInstanceSync().update()
               }
               lLayer.layers = evt.layer.layerInfos
             });
@@ -516,10 +513,8 @@ define([
               }
               evt.layer.name = lOptions.id;
             });
-            //this._viewerMap.addLayer(lLayer);
             if (layer.fltype != "Table"){
               _layersToAdd.push(lLayer);
-              //LayerInfos.getInstanceSync()._operLayers.push(lLayer);
             }else{
               if (!LayerInfos.getInstanceSync()._tables){
                 LayerInfos.getInstanceSync()._tables = [];
@@ -568,9 +563,7 @@ define([
               });
               lLayer.setInfoTemplates(finalInfoTemp2);
             }
-            //this._viewerMap.addLayer(lLayer);
             _layersToAdd.push(lLayer);
-            //LayerInfos.getInstanceSync()._operLayers.push(lLayer);
           } else if (layer.type.toUpperCase() === 'BASEMAP') {
             var bmLayers = array.map(layer.layers.layer, function(bLayer) {
               var bmLayerObj = {
@@ -598,7 +591,7 @@ define([
             _basemapGallery.select('defaultBasemap');
             _basemapGallery.destroy();
           } else if (layer.type.toUpperCase() === 'WMS') {
-            lLayer = new WMSLayer(layer.url)//,{visibleLayers:layer.visibleLayers,resourceInfo:layer.resourceInfo});
+            lLayer = new WMSLayer(layer.url)
             if (layer.name) {
               lLayer._titleForLegend = layer.name;
               lLayer.title = layer.name;
@@ -606,8 +599,18 @@ define([
             }
             _layersToAdd.push(lLayer);
             lLayer.on("load",lang.hitch(this,function(_layer){
-              //console.log(layer)
               _layer.layer.title = layer.name
+              if (layer.hasOwnProperty('opacity')) {
+                _layer.layer.opacity = layer.opacity;
+              }
+              if (layer.hasOwnProperty('visible') && !layer.visible) {
+                _layer.layer.visible = false;
+              } else {
+                _layer.layer.visible = true;
+              }
+              if (layer.hasOwnProperty('autorefresh')) {
+                _layer.layer.refreshInterval = layer.autorefresh;
+              }
               if (layer.maxScale){
                 _layer.layer.maxScale = layer.maxScale
               }
@@ -615,7 +618,6 @@ define([
                 _layer.layer.minScale = layer.minScale
               }
               _layer.layer.layerInfos = layer.resourceInfo.layerInfos
-              //_layer.layer.visibleLayers = layer.visibleLayers
               _layer.layer.setVisibleLayers(layer.visibleLayers)
             }))
             this._viewerMap.setInfoWindowOnClick(true);
@@ -740,6 +742,7 @@ define([
             }));
           }
         });
+
         aspect.before(LayerInfos.prototype,"update",function(){
           var newOriginOperLayers = []
           array.forEach(this._finalLayerInfos,lang.hitch(this,function(layerInfo){
@@ -751,15 +754,14 @@ define([
           }))
           this._operLayers = newOriginOperLayers;
           LayerInfos.getInstanceSync()._initLayerInfos();
-          console.log('work?')
         });
         //hook into the updater, and use the empty property as our 'hitch'
         aspect.after(LayerInfos.prototype,"update",function(){
           //this._layerInfos = this._finalLayerInfos;
           array.forEach(this._finalLayerInfos,lang.hitch(this,function(layerInfo){
-            if (layerInfo.layerObject.layers){
-              layerInfo.originOperLayer.layers = layerInfo.layerObject.layers
-            }
+            //if (layerInfo.layerObject.layers){
+            //  layerInfo.originOperLayer.layers = layerInfo.layerObject.layers
+            //}
             if (layerInfo.layerObject.showLegend === false){
               layerInfo.originOperLayer.showLegend = layerInfo.layerObject.showLegend
             }
@@ -791,9 +793,7 @@ define([
           })
           return returnArray;
         }))
-        
-        /*
-        aspect.before(LayerInfos.prototype,"_addTable",function(changedType,evt){
+        /*t.before(LayerInfos.prototype,"_addTable",function(changedType,evt){
           var _foundMatch = false
           array.forEach(this._finalTableInfos,function(table){
             if (table.id == changedType.id){
@@ -814,10 +814,6 @@ define([
           })
         }), true)
         */
-//var testlyrinfo = new WMSLayerInfo({"name":"vegetation","title":"Vegetation"})
-//var testlyr = new WMSLayer("http://wms.ess-ws.nrcan.gc.ca/wms/toporama_en",{visibleLayers:["Vegetation","Feature_names"],resourceInfo:{layerInfos:testlyrinfo,extent:_viewerMap.extent}})
-//_layersToAdd.push(testlyr);
-
         window._viewerMap.addLayers(_layersToAdd);
         window._viewerMap.updatedLayerInfos = LayerInfos.getInstanceSync()       
        

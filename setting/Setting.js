@@ -85,21 +85,20 @@ define([
         this._bindEvents();
         this.setConfig(this.config);
         aspect.before(this, 'destroy', function(){
-          //LayerInfos.getInstanceSync()._operLayers = this.map.updatedLayerInfos._operLayers;
-          LayerInfos.getInstanceSync()._tables = this.map.updatedLayerInfos._tables;  
-          //LayerInfos.getInstanceSync()._initLayerInfos();
-          LayerInfos.getInstanceSync()._initTablesInfos();
-          aspect.before(LayerInfos.prototype,"update",function(){
-            var newOriginOperLayers = []
-            //LayerInfos.getInstanceSync()._tables = this.map.updatedLayerInfos._tables;  
-            array.forEach(this._finalLayerInfos,lang.hitch(this,function(layerInfo){
-              newOriginOperLayers.push(layerInfo.originOperLayer);
-            }))
-            this._operLayers = newOriginOperLayers;
-            LayerInfos.getInstanceSync()._initLayerInfos();
-            //LayerInfos.getInstanceSync()._initTablesInfos();
-            console.log('work?')
-          });
+          if (LayerInfos.getInstanceSync()){
+            LayerInfos.getInstanceSync()._tables = this.map.updatedLayerInfos._tables;  
+            LayerInfos.getInstanceSync()._initTablesInfos();
+            
+            aspect.before(LayerInfos.prototype,"update",function(){
+              var newOriginOperLayers = []
+              array.forEach(LayerInfos.getInstanceSync()._finalLayerInfos,lang.hitch(this,function(layerInfo){
+                newOriginOperLayers.push(layerInfo.originOperLayer);
+              }))
+              LayerInfos.getInstanceSync()._operLayers = newOriginOperLayers;
+              LayerInfos.getInstanceSync()._initLayerInfos();
+            });
+            
+          }
         })        
       },
 
