@@ -793,7 +793,7 @@ define([
           })
           return returnArray;
         }))
-        /*t.before(LayerInfos.prototype,"_addTable",function(changedType,evt){
+        aspect.before(LayerInfos.prototype,"_addTable",function(changedType,evt){
           var _foundMatch = false
           array.forEach(this._finalTableInfos,function(table){
             if (table.id == changedType.id){
@@ -813,7 +813,6 @@ define([
             }
           })
         }), true)
-        */
         window._viewerMap.addLayers(_layersToAdd);
         window._viewerMap.updatedLayerInfos = LayerInfos.getInstanceSync()       
        
