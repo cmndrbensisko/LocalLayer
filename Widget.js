@@ -765,7 +765,7 @@ define([
             if (layerInfo.layerObject.showLegend === false){
               layerInfo.originOperLayer.showLegend = layerInfo.layerObject.showLegend
             }
-            /*
+            
             aspect.before(layerInfo.__proto__,"_bindEvent",function(){
               if (this.layerObject){
                 if (!this.layerObject.empty){
@@ -781,7 +781,7 @@ define([
                 }
               }
             },true)
-            */
+            
           }))
         });
         
@@ -813,6 +813,12 @@ define([
             }
           })
         }), true)
+
+        var dummyLayer = new ArcGISDynamicMapServiceLayer("dummy")
+        dummyLayer.on("error",function(evt){
+          window._viewerMap.removeLayer(evt.target)
+        })
+        _layersToAdd.push(dummyLayer)
         window._viewerMap.addLayers(_layersToAdd);
         window._viewerMap.updatedLayerInfos = LayerInfos.getInstanceSync()       
        
