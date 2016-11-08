@@ -88,7 +88,6 @@ define([
           if (LayerInfos.getInstanceSync()){
             LayerInfos.getInstanceSync()._tables = this.map.updatedLayerInfos._tables;  
             LayerInfos.getInstanceSync()._initTablesInfos();
-            
             aspect.before(LayerInfos.prototype,"update",function(){
               var newOriginOperLayers = []
               array.forEach(LayerInfos.getInstanceSync()._finalLayerInfos,lang.hitch(this,function(layerInfo){
@@ -97,7 +96,6 @@ define([
               LayerInfos.getInstanceSync()._operLayers = newOriginOperLayers;
               LayerInfos.getInstanceSync()._initLayerInfos();
             });
-            
           }
         })        
       },

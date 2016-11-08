@@ -14,13 +14,13 @@ define([
     'dojo/aspect',
     'jimu/LayerInfos/LayerInfos',
     'esri/geometry/webMercatorUtils',
-    "esri/tasks/PrintTask",
+    'esri/tasks/PrintTask',
     'esri/arcgis/utils',
     'esri/layers/ArcGISDynamicMapServiceLayer',
     'esri/layers/ArcGISTiledMapServiceLayer',
     'esri/layers/ArcGISImageServiceLayer',
-    "esri/layers/WMSLayer",
-    "esri/layers/WMSLayerInfo",
+    'esri/layers/WMSLayer',
+    'esri/layers/WMSLayerInfo',
     'esri/layers/FeatureLayer',
     'esri/layers/WebTiledLayer',
     'esri/layers/ImageParameters',
@@ -31,9 +31,9 @@ define([
     'esri/basemaps',
     'esri/dijit/PopupTemplate',
     'esri/symbols/jsonUtils',
-    "esri/symbols/TextSymbol",
-    "esri/layers/LabelClass",
-    "esri/Color",
+    'esri/symbols/TextSymbol',
+    'esri/layers/LabelClass',
+    'esri/Color',
     'dojo/domReady!'
   ],
   function(
@@ -72,11 +72,9 @@ define([
     LabelClass,
     Color) {
     var clazz = declare([BaseWidget], {
-
       constructor: function() {
         this._originalWebMap = null;
       },
-
       onClose: function() {
         if (query('.jimu-popup.widget-setting-popup', window.parent.document).length === 0) {
           var _currentExtent = dojo.clone(this.map.extent);
@@ -90,7 +88,6 @@ define([
           MapManager.getInstance().onAppConfigChanged(this.appConfig, 'mapChange', _changedData);
         }
       },
-
       _removeAllLayersExceptBasemap: function() {
         for (var l = this.map.layerIds.length - 1; l > 1; l--) {
           var lyr = this.map.getLayer(this.map.layerIds[l]);
@@ -106,12 +103,12 @@ define([
           }
         }
       },
-
       startup: function() {
         this._originalWebMap = this.map.webMapResponse.itemInfo.item.id;
         this._removeAllLayersExceptBasemap();
-        //LayerInfos.getInstanceSync()._operLayers = [];
-        LayerInfos.getInstanceSync()._tables = [];
+        if (!LayerInfos.getInstanceSync()._tables){
+          LayerInfos.getInstanceSync()._tables = [];
+        }
         if (this.config.review){
           var urlParams = ioQuery.queryToObject(decodeURIComponent(dojo.doc.location.search.slice(1)));
           if (urlParams._jsonconfig){
@@ -134,9 +131,7 @@ define([
             proxyUrl: this.config.proxyAddress
           });
         }
-
         var _layersToAdd=[];
-
         this.config.layers.layer.forEach(function(layer) {
           var lLayer;
           var lOptions = {};
@@ -243,27 +238,16 @@ define([
               }
 
               if (!lOptions.hasOwnProperty('hidelayers')) {
-                //This is wierd; esri's layerlist widget doesn't actually seem to follow the visibilities set in the mapservice.
-
-                //make our own hidelayers object out of the default visibilities defined in the service
                 lOptions.hidelayers = []
-                /*array.forEach(evt.layer.layerInfos, function(layer) {
-                  if (layer.defaultVisibility == false) {
-                    lOptions.hidelayers.push(layer.id)
-                  }
-                })*/
               }
               var removeLayers = []
-                //convert from a list of layers to hide to a list of layers to show
               for (var i = 0; i < lOptions.hidelayers.length; i++) {
                 lOptions.hidelayers[i] = parseInt(lOptions.hidelayers[i])
               }
               var showLayers = []
-                //get an array of all the layers
               array.forEach(evt.layer.layerInfos, function(layer) {
                   showLayers.push(layer.id)
                 })
-                //replace the hidelayers array with an inverse (shown layers only)
               array.forEach(lOptions.hidelayers, function(id) {
                 showLayers.splice(showLayers.indexOf(id), 1)
               })
@@ -278,15 +262,12 @@ define([
                 })
                 return _matchItem;
               }
-              //set defaultvisibility for everything off by default
               array.forEach(evt.layer.layerInfos, function(layer) {
-                  layer.defaultVisibility = false;
-                })
-                //except for whats set in the config
+                layer.defaultVisibility = false;
+              })
               for (var i = 0; i < lOptions.hidelayers.length; i++) {
                 getArrayItemById(evt.layer.layerInfos,lOptions.hidelayers[i]).defaultVisibility = true;
               }
-              //remove all grouplayers
               array.forEach(evt.layer.layerInfos, function(layer) {
                 if (layer.subLayerIds) {
                   if (removeLayers.indexOf(layer.id) == -1) {
@@ -297,9 +278,7 @@ define([
               for (var i = 0; i < lOptions.hidelayers.length; i++) {
                 var j=getArrayItemById(evt.layer.layerInfos,lOptions.hidelayers[i]).parentLayerId
                 while (j > -1) {
-                  //has the parentlayer been turned on?
                   if (lOptions.hidelayers.indexOf(j) == -1) {
-                    //if the parent isnt in the visiblelayers, the child shouldn't be either.
                     if (removeLayers.indexOf(lOptions.hidelayers[i]) == -1) {
                       removeLayers.push(lOptions.hidelayers[i])
                     }
@@ -307,15 +286,12 @@ define([
                   j=getArrayItemById(evt.layer.layerInfos,j).parentLayerId;
                 }
               }
-              //splice out the removelayers
               array.forEach(removeLayers, function(layerId) {
-                //take out removed ones, they mess up the layerlist
                 if (lOptions.hidelayers.indexOf(layerId) > -1) {
                   lOptions.hidelayers.splice(lOptions.hidelayers.indexOf(layerId), 1)
                 };
               })
 
-              //if hidelayers has been defined in the config AND it says no layers should be visible, pass the -1
               if (lOptions.hidelayers.length == 0) {
                 lOptions.hidelayers.push(-1);
                 lOptions.hidelayers.push(-1);
@@ -337,9 +313,7 @@ define([
               }
               lLayer.layers = evt.layer.layerInfos
             });
-            //this._viewerMap.addLayer(lLayer);
             _layersToAdd.push(lLayer);
-            //LayerInfos.getInstanceSync()._operLayers.push(lLayer);
             this._viewerMap.setInfoWindowOnClick(true);
           } else if (layer.type.toUpperCase() === 'IMAGE') {
             lOptions.imageServiceParameters = new ImageServiceParameters();
@@ -358,7 +332,6 @@ define([
               lLayer.noservicename = true;
             }
             lLayer.on('load', function(evt) {
-              //set min/max scales if present
               if (lOptions.minScale) {
                 evt.layer.setMinScale(lOptions.minScale)
               }
@@ -367,7 +340,6 @@ define([
               }
               evt.layer.name = lOptions.id;
             });
-            //this._viewerMap.addLayer(lLayer);
             _layersToAdd.push(lLayer);
           } else if (layer.type.toUpperCase() === 'WEBTILEDLAYER') {
             if (layer.hasOwnProperty('subdomains')) {
@@ -381,7 +353,6 @@ define([
             }
             lLayer = new WebTiledLayer(layer.url, lOptions)
             lLayer.on('load', function(evt) {
-              //set min/max scales if present
               if (lOptions.minScale) {
                 evt.layer.setMinScale(lOptions.minScale)
               }
@@ -390,9 +361,7 @@ define([
               }
               evt.layer.name = lOptions.id;
             });
-            //this._viewerMap.addLayer(lLayer);
             _layersToAdd.push(lLayer);
-            //LayerInfos.getInstanceSync()._operLayers.push(lLayer);
           } else if (layer.type.toUpperCase() === 'WEBTILEDBASEMAP') {
             lOptions.type = "WebTiledLayer"
             lOptions.url = layer.url
@@ -742,8 +711,8 @@ define([
             }));
           }
         });
-
         aspect.before(LayerInfos.prototype,"update",function(){
+          //Migrate _finalLayerInfos back to the _operLayers parameter on update.
           var newOriginOperLayers = []
           array.forEach(this._finalLayerInfos,lang.hitch(this,function(layerInfo){
             if (layerInfo.originOperLayer.layerObject instanceof ArcGISDynamicMapServiceLayer){
@@ -755,17 +724,12 @@ define([
           this._operLayers = newOriginOperLayers;
           LayerInfos.getInstanceSync()._initLayerInfos();
         });
-        //hook into the updater, and use the empty property as our 'hitch'
+        //Note that the _bindEvent and _addTable aspects are essential to prevent redundant event binding on layer add.
         aspect.after(LayerInfos.prototype,"update",function(){
-          //this._layerInfos = this._finalLayerInfos;
           array.forEach(this._finalLayerInfos,lang.hitch(this,function(layerInfo){
-            //if (layerInfo.layerObject.layers){
-            //  layerInfo.originOperLayer.layers = layerInfo.layerObject.layers
-            //}
             if (layerInfo.layerObject.showLegend === false){
               layerInfo.originOperLayer.showLegend = layerInfo.layerObject.showLegend
             }
-            
             aspect.before(layerInfo.__proto__,"_bindEvent",function(){
               if (this.layerObject){
                 if (!this.layerObject.empty){
@@ -780,11 +744,9 @@ define([
                   this.layerObject.empty = false;
                 }
               }
-            },true)
-            
+            },true)         
           }))
-        });
-        
+        });       
         aspect.after(arcgisUtils,"getLegendLayers",lang.hitch(this,function(legendObject){
           var returnArray = []
           array.forEach(LayerInfos.getInstanceSync()._operLayers,function(_layer){
@@ -813,18 +775,14 @@ define([
             }
           })
         }), true)
-
-        var dummyLayer = new ArcGISDynamicMapServiceLayer("dummy")
+        var dummyLayer = new WMSLayer("__ignore__")
         dummyLayer.on("error",function(evt){
           window._viewerMap.removeLayer(evt.target)
         })
         _layersToAdd.push(dummyLayer)
         window._viewerMap.addLayers(_layersToAdd);
-        window._viewerMap.updatedLayerInfos = LayerInfos.getInstanceSync()       
-       
-        //LayerInfos.getInstanceSync()._initLayerInfos();
+        window._viewerMap.updatedLayerInfos = LayerInfos.getInstanceSync()            
         LayerInfos.getInstanceSync()._initTablesInfos()
-        //LayerInfos.getInstanceSync().update()
       }
     });
     return clazz;
