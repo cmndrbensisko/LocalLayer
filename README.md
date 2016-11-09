@@ -1,7 +1,7 @@
 LocalLayerWidget 2.2
 ==
 
-[![paypal](http://mrgif.nyc/content/images/2015/07/mtv-get-schooled-09.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=LLXK28GA2T3CG)
+[![paypal](http://mrgif.nyc/content/images/2015/07/mtv-get-schooled-09.gif =150x)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=LLXK28GA2T3CG)
 
 Help keep the author caffeinated!  If you find the LocalLayer Widget useful, feel free to drop a few bucks in the tip jar to support ongoing development.
 
