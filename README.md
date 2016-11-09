@@ -1,7 +1,7 @@
 LocalLayerWidget 2.2
 ==
 
-[![paypal](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=LLXK28GA2T3CG)
+[![paypal](https://github.com/cmndrbensisko/LocalLayer/blob/LocalLayer2.2/images/jar.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=LLXK28GA2T3CG)
 
 Help keep the author caffeinated!  If you find the LocalLayer Widget useful, feel free to drop a few bucks in the tip jar to support ongoing development.
 
