@@ -1,9 +1,9 @@
 LocalLayerWidget 2.2
 ==
 
-[![make maps great again!](https://github.com/cmndrbensisko/LocalLayer/blob/LocalLayer2.2/images/jar.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=LLXK28GA2T3CG)
-
 Help keep the author caffeinated!  If you find the LocalLayer Widget useful, feel free to click the [tip jar](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=LLXK28GA2T3CG) to help support ongoing development.
+
+[![paypal link](https://github.com/cmndrbensisko/LocalLayer/blob/LocalLayer2.2/images/jar.gif "make maps great again!")](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=LLXK28GA2T3CG)
 
 ###About
 
