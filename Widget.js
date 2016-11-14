@@ -779,7 +779,7 @@ define([
         dummyLayer.on("error",function(evt){
           window._viewerMap.removeLayer(evt.target)
         })
-        _layersToAdd.push(dummyLayer)
+        window._viewerMap.addLayer(dummyLayer);   
         window._viewerMap.addLayers(_layersToAdd);
         window._viewerMap.updatedLayerInfos = LayerInfos.getInstanceSync()            
         LayerInfos.getInstanceSync()._initTablesInfos()
