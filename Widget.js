@@ -34,6 +34,8 @@ define([
     'esri/symbols/TextSymbol',
     'esri/layers/LabelClass',
     'esri/Color',
+    'dojo/_base/json',
+    'jimu/MapUrlParamsHandler',
     'dojo/domReady!'
   ],
   function(
@@ -70,7 +72,9 @@ define([
     jsonUtils,
     TextSymbol,
     LabelClass,
-    Color) {
+    Color,
+    dojoJSON,
+    MapUrlParamsHandler) {
     var clazz = declare([BaseWidget], {
       constructor: function() {
         this._originalWebMap = null;
@@ -726,6 +730,13 @@ define([
         });
         //Note that the _bindEvent and _addTable aspects are essential to prevent redundant event binding on layer add.
         aspect.after(LayerInfos.prototype,"update",function(){
+          var updatedMapLayerJSON = esri.tasks.PrintTask()._getPrintDefinition(_viewerMap, esri.tasks.PrintTemplate())
+          _viewerMap.itemInfo.itemData.operationalLayers = updatedMapLayerJSON.operationalLayers
+          var mapDeferred = esri.arcgis.utils.createMap(_viewerMap.itemInfo,"map")
+          mapDeferred.then(lang.hitch(this,function(result){
+            _viewerMap.itemInfo.itemData.operationalLayers = result.itemInfo.itemData.operationalLayers
+            MapUrlParamsHandler.postProcessUrlParams(MapManager.getInstance().urlParams, _viewerMap);
+          }))          
           array.forEach(this._finalLayerInfos,lang.hitch(this,function(layerInfo){
             if (layerInfo.layerObject.showLegend === false){
               layerInfo.originOperLayer.showLegend = layerInfo.layerObject.showLegend
@@ -775,14 +786,17 @@ define([
             }
           })
         }), true)
-        var dummyLayer = new WMSLayer("__ignore__")
+        /*
+        var dummyLayer = new WMSLayer("__dummyLayerIntendedToFail__")
         dummyLayer.on("error",function(evt){
           window._viewerMap.removeLayer(evt.target)
         })
-        window._viewerMap.addLayer(dummyLayer);   
+        _layersToAdd.push(dummyLayer)
+        */
         window._viewerMap.addLayers(_layersToAdd);
         window._viewerMap.updatedLayerInfos = LayerInfos.getInstanceSync()            
         LayerInfos.getInstanceSync()._initTablesInfos()
+        _viewerMap.itemInfo.itemData.operationalLayers = LayerInfos.getInstanceSync();
       }
     });
     return clazz;
