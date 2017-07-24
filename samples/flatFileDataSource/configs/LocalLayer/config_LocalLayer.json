@@ -1,0 +1,46 @@
+{
+  "layers": {
+    "layer": [
+      {
+        "type": "custom",
+        "url": "",
+        "name": "Global Climate Stations",
+        "opacity": 1,
+        "visible": true,
+        "customTransformerName": "demoFeatureSetFromHardcodedFile",
+        "customTransformerJson": "",
+        "popup": {
+         "title": "Station Name: {StationName}",
+         "fieldInfos": [
+             {
+               "fieldName": "CountryArea",
+               "label": "Country",
+               "visible": true
+             }
+           ],
+           "description": "Country: {CountryArea}",
+           "showAttachments": false,
+           "tr": null
+        },
+        "showLabels": true,
+        "autorefresh": 0,
+        "mode": "ondemand",
+        "symbol": {
+          "angle": 0,
+          "xoffset": 0,
+          "yoffset": 0,
+          "type": "esriPMS",
+          "url": null,
+          "imageData": "iVBORw0KGgoAAAANSUhEUgAAACAAAAAlCAYAAAAjt+tHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAEUElEQVRYhdWXXWgcVRTHfzPZmf3MVvLZECmbSiRWTCyWWhUVZOODiO2LIqKg4IMPPokQEKHi2yL4XHwotQ/Sp1ILFnEXtJWSEKwxRUSxNLXQNCTtmmx2Z2dnJ3N9uHf2I9nd7EoS6IHL3Z25c///e87/nnuPJoQAYHJyMgDogKn6ADtrLuABDuCl02kXQBNC+OAmEFLNVAT0HQL3FAEHsFVz0um0qyWTSR88AsRVH2J3PGADFpBTveOvMqTABzILqekdBq6z5MjUM+qnB7i1ro9kFlLTJBIQiUAotLPItg2WRWYhNZ0cmXoCFYZa4UnE3QCHzXP6OtMDyFj7rX6g60KhAEJAuQyGAYEAhMPQ1dUYqFSCYLDaNyZRwfSFtlXtngdLSxzo13j31Sh5K0CusMH5GZdsEYjF6seXy3DvHpTLHD1kMnvbkYR7esA0QdM2I+g+k8Zm28SCgpnTQwz1ytV+e8XC3Shy5qeS9IBew3t9nYP9gvOp/UyMmsz/7fBBKstvd4vYrgvRaEOY5gSE4OWnQxVwgOMvRLh+o8z4kMVytogu5Kp0HfRu+OitOBOjJgAToyavPR8mcdPj3KzXFKalBwBKZUHQqLrv/eMxDg4HOHIoSDyq4zhCpjfH4+GBel288myY2ytFqaUm1jzTGQb7e7u4cNmqe2zZHm+fvM/Y64tc+bXI2Ut53vxkhbE37nL2UqFu7MzvJRZX3OaCbUlA0/h+TpDNeXx3tQhAwfb48It/pXZNk3M/OrhCY/YGEA5z+mKBtbx091re4+LPRX6Yp0brW635m1CIm8tlPvu6yPgB+PKbHH/+47J434O+PhUijVDEkAqPx/nlr2USJ+5w4sUIFy5b5AoCr6+/ZV5pTsAwYN8+lh2HzE1P5oJAAIYCsrdtQJ6kCCH3/PAwq5bFmbkQGCYMRyW5rVuwDQIgYxcOtxxSZ7pezQ/d3e190v7su2MPMAHhx1/939jYQwKlEpTL9EQFru0wEBewtCTPgz0hsLbGscMxjj1ucuQxk5mv+hlLGJDN7hGBUonP3zH49NQqPXGd1bzHqY/j4DgdT/X/7n1CMP6IgVMWPPmoSdDQZAb0ddGBPcC7YIcJND+wG36lQ/Ps2q55IDXg1jSZ49u4lL50UpArCI6+t4SugbtBy5xfmVtaBTNAtVySby11/rciMTjIH3c06O3j+nqXvHAYBgxuA25V7ha2wvS0ZDJpAjHgIVoVJomEvGC2Y9ks3LrV8JUqTJaBVSDve8BGlkuooqG2NNMBMgupq8D2JBR4cmTqOfXE19fm0swGvHaK08odPrOQutbSE1Xwp6jXVvPidJvy3O9ry7e5hiSq4IfVKv041xJoXJ63MkUshNRJTJGYryNRBZ9Q4HnVbB+omW1LoAmJWMUTULvyPB2At02gAYm4InEN8GOeR4qrbfCOCGwiEVHNVK8cpOutTsA7JlBDwhelv1X9LeZ0Ag7wH/t24zpZ+o2CAAAAAElFTkSuQmCC",
+          "contentType": "image/png",
+          "width": 25.5,
+          "height": 25.5
+        },
+        "minScale": "",
+        "maxScale": "",
+        "geometryType": "esriGeometryPoint"
+      }
+    ]
+  },
+  "review": false
+}

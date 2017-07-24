@@ -1,0 +1,58 @@
+<div style="width:100%;">
+  <table class="popup-config-layout">
+    <tbody>
+      <tr>
+        <td style="width:75px;" nowrap>
+          <span>${nls.title}</span>
+        </td>
+        <td style="width:Auto;">
+          <input data-dojo-attach-point="titleTextBox" data-dojo-type="dijit/form/TextBox" style="width:100%;" />
+        </td>
+        <td style="width:50px;">
+          <div data-dojo-type="widgets/LocalLayer/setting/AddFieldBtn" data-dojo-attach-point="titleAddButton"/>
+        </td>
+      </tr>
+      <tr>
+        <td style="width:75px;vertical-align: baseline;" nowrap>
+          <span>${wnls.display}</span>
+        </td>
+        <td colspan="2" style="width:Auto;">
+          <div data-dojo-attach-point="detailSection">
+            <div data-dojo-attach-point="keyValueTabNode" style="margin-top:10px;" class="keyValues">
+              <div data-dojo-attach-point="fieldsTable" data-dojo-type="jimu/dijit/SimpleTable"
+                   data-dojo-props='fields:[
+                                    {name:"visibility",title:"${nls.visibility}",type:"checkbox",width:"80px"},
+                                    {name:"name",title:"${nls.name}",type:"text",editable:false},
+                                    {name:"alias",title:"${nls.alias}",type:"text",editable:true},
+                                    {name:"actions",width:"120px",title:"${nls.actions}",type:"actions",actions:["up","down","edit"]},
+                                    {name:"isdate",type:"text",hidden:true},
+                                    {name:"isnumber",type:"text",hidden:true}]'></div>
+            </div>
+            <div data-dojo-attach-point="customTabNode" style="margin-top:10px;">
+              <table style="width:100%;" cellspacing="0">
+                <tbody>
+                  <tr data-dojo-attach-point="customContentRow">
+                    <td style="width:100%;">
+                      <textarea style="width:100%;padding:3px 3px;" rows="9" data-dojo-attach-point="customContentTA"></textarea>
+                    </td>
+                    <td style="width:115px;vertical-align:top;">
+                      <div data-dojo-type="widgets/LocalLayer/setting/AddFieldBtn" data-dojo-attach-point="customContentAddButton"/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="width:100%;padding-top:8px;" data-dojo-attach-point="customPopupButtonsTD" />
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td style="width:Auto;" colspan="3">
+          <div data-dojo-type="jimu/dijit/CheckBox" data-dojo-attach-point="showAttachmentsCbx" /><span style="padding-left:8px;">${wnls.showattachments}</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

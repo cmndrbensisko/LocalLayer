@@ -1,0 +1,64 @@
+<div style="width:100%;padding-bottom:10px;">
+  <div class="error-message-div" data-dojo-attach-point="errorMessage"></div>
+  <table class="input-table" cellspacing="0">
+    <tbody>
+      <tr>
+        <td colspan="2">
+          <table style="width:100%;" cellspacing="0">
+            <tr>
+              <td style="width:100%;">
+                <table style="width:100%;" cellspacing="0">
+                  <tbody>
+                    <tr>
+                      <td style="width:115px;text-align:left;">
+                        <span>${nls.layerTitle}</span>
+                      </td>
+                      <td style="width:auto;">
+                        <input type="text" data-dojo-type="dijit/form/ValidationTextBox" data-dojo-attach-point="layerTitle"
+                               required="true" data-dojo-props='style:{width:"100%"}'/></input>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <table class="setting-table input-table" cellspacing="0">
+            <tbody>
+              <tr>
+                <td style="width:auto;text-align:right;">
+                  <div class="add-layer-url" data-dojo-attach-event="onclick: onAddLayerUrl">
+                    <span class="add-layer-url-label">${nls.addBaselayer}</span>
+                  </div>
+                </td>
+                <td style="width:22px;text-align:left;">
+                  <div class="add-layer-url" data-dojo-attach-event="onclick: onAddLayerUrl">
+                    <span class="add-layer-url-icon"></span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <table style="width:100%;padding-top:8px;" cellspacing="0">
+            <tbody>
+              <tr>
+                <td style="width:115px;text-align:left;valign:top;">${nls.basemaplayers}</td>
+                <td style="width:auto;vertical-align:top;">
+                  <div class="sublayers-table" style="width:100%;" data-dojo-attach-point="sublayersTable" data-dojo-type="jimu/dijit/SimpleTable" data-dojo-props='fields:[{name:"name",title:"${nls.layerTitle}",type:"text",editable:false},{name:"actions",title:"${nls.actions}",class:"actions",width:"120px",type:"actions",actions:["edit","delete"]}]'></div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

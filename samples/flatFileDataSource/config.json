@@ -1,0 +1,327 @@
+{
+  "theme": {
+    "name": "FoldableTheme",
+    "styles": [
+      "default",
+      "black",
+      "blue",
+      "cyan",
+      "green",
+      "purple",
+      "red",
+      "yellow"
+    ],
+    "version": "2.5",
+    "sharedTheme": {
+      "isPortalSupport": false,
+      "useHeader": false,
+      "useLogo": false
+    }
+  },
+  "portalUrl": "http://ottawa.maps.arcgis.com",
+  "appId": "",
+  "authorizedCrossOriginDomains": [],
+  "title": "climateStations",
+  "subtitle": "with Web AppBuilder for ArcGIS",
+  "keepAppState": true,
+  "logo": "images/app-logo.png",
+  "geometryService": "https://utility.arcgisonline.com/arcgis/rest/services/Geometry/GeometryServer",
+  "links": [],
+  "widgetOnScreen": {
+    "widgets": [
+      {
+        "uri": "themes/FoldableTheme/widgets/HeaderController/Widget",
+        "position": {
+          "left": 0,
+          "top": 0,
+          "right": 0,
+          "height": 40,
+          "relativeTo": "browser"
+        },
+        "version": "2.5",
+        "id": "themes_FoldableTheme_widgets_HeaderController_Widget_1",
+        "name": "HeaderController"
+      },
+      {
+        "uri": "widgets/LocalLayer/Widget",
+        "id": "widgets_LocalLayer_Widget_2",
+        "name": "LocalLayer",
+        "version": "2.5",
+        "config": "configs/LocalLayer/config_LocalLayer.json",
+        "position": {
+          "relativeTo": "map"
+        }
+      },
+      {
+        "uri": "widgets/Scalebar/Widget",
+        "position": {
+          "left": 7,
+          "bottom": 25,
+          "relativeTo": "map"
+        },
+        "version": "2.5",
+        "id": "widgets_Scalebar_Widget_3",
+        "name": "Scalebar"
+      },
+      {
+        "uri": "widgets/Search/Widget",
+        "position": {
+          "left": 55,
+          "top": 5,
+          "relativeTo": "map"
+        },
+        "version": "2.5",
+        "id": "widgets_Search_Widget_4",
+        "name": "Search"
+      },
+      {
+        "uri": "widgets/Coordinate/Widget",
+        "position": {
+          "left": 7,
+          "bottom": 5,
+          "relativeTo": "map"
+        },
+        "version": "2.5",
+        "id": "widgets_Coordinate_Widget_5",
+        "name": "Coordinate"
+      },
+      {
+        "position": {
+          "left": 55,
+          "top": 45,
+          "relativeTo": "map"
+        },
+        "placeholderIndex": 1,
+        "id": "_6"
+      },
+      {
+        "position": {
+          "left": 105,
+          "top": 45,
+          "relativeTo": "map"
+        },
+        "placeholderIndex": 2,
+        "id": "_7"
+      },
+      {
+        "position": {
+          "left": 155,
+          "top": 45,
+          "relativeTo": "map"
+        },
+        "placeholderIndex": 3,
+        "id": "_8"
+      },
+      {
+        "position": {
+          "left": 205,
+          "top": 45,
+          "relativeTo": "map"
+        },
+        "placeholderIndex": 4,
+        "id": "_9"
+      },
+      {
+        "position": {
+          "left": 255,
+          "top": 45,
+          "relativeTo": "map"
+        },
+        "placeholderIndex": 5,
+        "id": "_10"
+      },
+      {
+        "uri": "widgets/OverviewMap/Widget",
+        "position": {
+          "bottom": 0,
+          "right": 0,
+          "zIndex": 1,
+          "relativeTo": "map"
+        },
+        "version": "2.5",
+        "id": "widgets_OverviewMap_Widget_11",
+        "name": "OverviewMap"
+      },
+      {
+        "uri": "widgets/HomeButton/Widget",
+        "position": {
+          "left": 7,
+          "top": 75,
+          "relativeTo": "map"
+        },
+        "version": "2.5",
+        "id": "widgets_HomeButton_Widget_12",
+        "name": "HomeButton"
+      },
+      {
+        "uri": "widgets/MyLocation/Widget",
+        "position": {
+          "left": 7,
+          "top": 110,
+          "relativeTo": "map"
+        },
+        "version": "2.5",
+        "id": "widgets_MyLocation_Widget_13",
+        "name": "MyLocation"
+      },
+      {
+        "uri": "widgets/AttributeTable/Widget",
+        "position": {
+          "relativeTo": "browser"
+        },
+        "version": "2.5",
+        "id": "widgets_AttributeTable_Widget_14",
+        "name": "AttributeTable"
+      },
+      {
+        "uri": "widgets/Splash/Widget",
+        "visible": false,
+        "position": {
+          "relativeTo": "browser"
+        },
+        "version": "2.5",
+        "id": "widgets_Splash_Widget_15",
+        "name": "Splash"
+      },
+      {
+        "uri": "widgets/ZoomSlider/Widget",
+        "position": {
+          "top": 5,
+          "left": 7,
+          "relativeTo": "map"
+        },
+        "version": "2.5",
+        "id": "widgets_ZoomSlider_Widget_16",
+        "name": "ZoomSlider"
+      },
+      {
+        "uri": "widgets/ExtentNavigate/Widget",
+        "visible": false,
+        "position": {
+          "top": 150,
+          "left": 7,
+          "relativeTo": "map"
+        },
+        "id": "widgets_ExtentNavigate_Widget_17",
+        "name": "ExtentNavigate",
+        "version": "2.5"
+      },
+      {
+        "uri": "widgets/FullScreen/Widget",
+        "visible": false,
+        "position": {
+          "right": 8,
+          "top": 8,
+          "relativeTo": "map"
+        },
+        "version": "2.5",
+        "id": "widgets_FullScreen_Widget_18",
+        "name": "FullScreen"
+      }
+    ],
+    "panel": {
+      "uri": "jimu/OnScreenWidgetPanel",
+      "position": {
+        "relativeTo": "map"
+      }
+    }
+  },
+  "map": {
+    "3D": false,
+    "2D": true,
+    "position": {
+      "left": 0,
+      "top": 40,
+      "right": 0,
+      "bottom": 0
+    },
+    "itemId": "f5de3e115dbd4d279a4d782a5113bf2c",
+    "mapOptions": {
+      "extent": {
+        "xmin": -18256839.68081416,
+        "ymin": -13568797.275580788,
+        "xmax": 16182627.783345927,
+        "ymax": 20166226.535903297,
+        "spatialReference": {
+          "wkid": 102100
+        }
+      }
+    },
+    "id": "map",
+    "portalUrl": "http://www.arcgis.com",
+    "mapRefreshInterval": {
+      "useWebMapRefreshInterval": true
+    }
+  },
+  "widgetPool": {
+    "panel": {
+      "uri": "themes/FoldableTheme/panels/FoldablePanel/Panel",
+      "position": {
+        "top": 5,
+        "right": 5,
+        "bottom": 5,
+        "zIndex": 5,
+        "relativeTo": "map"
+      }
+    },
+    "widgets": [
+      {
+        "uri": "widgets/Legend/Widget",
+        "version": "2.5",
+        "id": "widgets_Legend_Widget_19",
+        "name": "Legend",
+        "index": 0
+      },
+      {
+        "uri": "widgets/LayerList/Widget",
+        "version": "2.5",
+        "id": "widgets_LayerList_Widget_20",
+        "name": "LayerList",
+        "index": 1
+      }
+    ]
+  },
+  "mobileLayout": {
+    "widgetOnScreen": {
+      "widgets": {
+        "widgets/Scalebar/Widget": {
+          "position": {
+            "left": 7,
+            "bottom": 40
+          },
+          "version": "1.4"
+        },
+        "widgets/Coordinate/Widget": {
+          "position": {
+            "left": 7,
+            "bottom": 17
+          },
+          "version": "1.4"
+        }
+      }
+    }
+  },
+  "loadingPage": {
+    "backgroundColor": "#508dca",
+    "backgroundImage": {
+      "visible": false
+    },
+    "loadingGif": {
+      "visible": true,
+      "uri": "configs/loading/images/predefined_loading_1.gif",
+      "width": 58,
+      "height": 29
+    }
+  },
+  "wabVersion": "2.5",
+  "isTemplateApp": true,
+  "isWebTier": false,
+  "httpProxy": {
+    "useProxy": true,
+    "url": "/proxy.js"
+  },
+  "dataSource": {
+    "dataSources": {},
+    "settings": {}
+  }
+}

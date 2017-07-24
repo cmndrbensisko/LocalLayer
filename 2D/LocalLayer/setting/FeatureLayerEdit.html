@@ -1,0 +1,337 @@
+<div style="width:100%;padding-bottom:10px;">
+  <div class="error-message-div" data-dojo-attach-point="errorMessage"></div>
+  <table class="input-table" cellspacing="0">
+    <tbody>
+      <tr>
+        <td style="width:115px;text-align:left;">${nls.layerUrl}</td>
+        <td style="width:auto;">
+          <input type="text" data-dojo-type="jimu/dijit/ServiceURLInput" data-dojo-attach-point="layerUrl" data-dojo-props='style:{width:"100%"}' required="true"/>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <table style="width:100%;" cellspacing="0">
+            <tr>
+              <td style="width:100%;">
+                <table style="width:100%;" cellspacing="0">
+                  <tbody>
+                    <tr>
+                      <td style="width:115px;text-align:left;">
+                        <span>${nls.layerTitle}</span>
+                      </td>
+                      <td style="width:auto;">
+                        <input type="text" data-dojo-type="dijit/form/ValidationTextBox" data-dojo-attach-point="layerTitle"
+                               required="true" data-dojo-props='style:{width:"100%"}'/></input>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <table style="width:100%;" cellspacing="0">
+            <tr>
+              <td style="width:50%;">
+                <table style="width:100%;" cellspacing="0">
+                  <tbody>
+                    <tr>
+                      <td style="width:220px;text-align:left;">
+                        <span>${nls.visibilityandtransparency}</span>
+                      </td>
+                      <td style="width:auto;">
+                        <div data-dojo-type="jimu/dijit/CheckBox" data-dojo-attach-point="isVisible" />
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+              <td style="width:50%;">
+                <table style="width:100%;" cellspacing="0">
+                  <tbody>
+                    <tr>
+                      <td style="padding-right:10px;">
+                        <div data-dojo-attach-point="layerAlpha" data-dojo-type="jimu/dijit/_Transparency" data-dojo-props='alpha:0.6' style="font-size:13px;"></div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <table style="width:100%;" cellspacing="0">
+            <tr>
+              <td style="width:50%;">
+                <table style="width:100%;" cellspacing="0">
+                  <tbody>
+                    <tr>
+                      <td style="width:200px;text-align:left;">
+                        <span>${nls.minScale}</span>
+                      </td>
+                      <td style="width:auto;">
+                        <input type="text" data-dojo-type="dijit/form/ValidationTextBox" data-dojo-attach-point="minScale"
+                               required="false" data-dojo-props='style:{width:"100%"}'/></input>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+              <td style="width:50%;">
+                <table style="width:100%;" cellspacing="0">
+                  <tbody>
+                    <tr>
+                      <td style="width:200px;text-align:left;">
+                        <span>${nls.maxScale}</span>
+                      </td>
+                      <td style="width:auto;">
+                        <input type="text" data-dojo-type="dijit/form/ValidationTextBox" data-dojo-attach-point="maxScale"
+                               required="false" data-dojo-props='style:{width:"100%"}'/></input>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <table style="width:100%;" cellspacing="0">
+            <tr>
+              <td style="width:50%;">
+                <table style="width:100%;" cellspacing="0">
+                  <tbody>
+                    <tr>
+                      <td style="width:220px;text-align:left;">
+                        <span>${nls.showLabels}</span>
+                      </td>
+                      <td style="width:auto;">
+                        <div data-dojo-type="jimu/dijit/CheckBox" data-dojo-attach-point="showLabelsCbx" />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="width:220px;text-align:left;">
+                        <span>${nls.hideinlegend}</span>
+                      </td>
+                      <td style="width:auto;">
+                        <div data-dojo-type="jimu/dijit/CheckBox" data-dojo-attach-point="hideInLegendCbx" />
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <table style="width:100%;" cellspacing="0">
+            <tr>
+              <td style="width:50%;">
+                <table style="width:100%;" cellspacing="0">
+                  <tbody>
+                    <tr>
+                      <td style="width:165px;text-align:left;">
+                        <span>${nls.customLabel}</span>
+                      </td>
+                      <td style="width:auto;">
+                        <input type="text" data-dojo-type="dijit/form/ValidationTextBox" data-dojo-attach-point="customLabel" data-dojo-props='style:{width:"100%"}'/></input>
+                      </td>
+                      </tr>
+                      <tr>
+                      <td style="width:20%;text-align:left;vertical-align:middle;"><a href='http://developers.arcgis.com/javascript/samples/playground/index.html' target="_blank">${nls.customLabelStyle}</a></td>
+                      <td style="width:80%;vertical-align:midle;">
+                        <textarea data-dojo-type="dijit/form/Textarea" data-dojo-attach-point="customLabelStyle" style="width:100%"></textarea>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <table style="width:100%;" cellspacing="0">
+            <tr>
+              <td style="width:50%;">
+                <table style="width:100%;" cellspacing="0">
+                  <tbody>
+                    <tr>
+                      <td style="width:200px;text-align:left;">
+                        <span>${nls.labelMinScale}</span>
+                      </td>
+                      <td style="width:auto;">
+                        <input type="text" data-dojo-type="dijit/form/ValidationTextBox" data-dojo-attach-point="labelMinScale"
+                               required="false" data-dojo-props='style:{width:"100%"}'/></input>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+              <td style="width:50%;">
+                <table style="width:100%;" cellspacing="0">
+                  <tbody>
+                    <tr>
+                      <td style="width:200px;text-align:left;">
+                        <span>${nls.labelMaxScale}</span>
+                      </td>
+                      <td style="width:auto;">
+                        <input type="text" data-dojo-type="dijit/form/ValidationTextBox" data-dojo-attach-point="labelMaxScale"
+                               required="false" data-dojo-props='style:{width:"100%"}'/></input>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <table style="width:100%;" cellspacing="0">
+            <tr>
+              <td style="width:50%;">
+                <table style="width:100%;" cellspacing="0">
+                  <tbody>
+                    <tr>
+                      <td style="width:115px;text-align:left;">
+                        <span>${nls.featurelayermode}</span>
+                      </td>
+                      <td style="width:auto;">
+                        <select data-dojo-attach-point="flMode" data-dojo-type="dijit/form/Select">
+                          <option value="ondemand" selected="selected">${nls.modeondemand}</option>
+                          <option value="snapshot">${nls.modesnapshot}</option>
+                          <option value="selection">${nls.modeselection}</option>
+                        </select>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+              <td style="width:50%;">
+                <table style="width:100%;" cellspacing="0">
+                  <tbody>
+                    <tr>
+                      <td style="width:165px;text-align:left;">
+                        <span>${nls.autorefresh}</span>
+                      </td>
+                      <td style="width:auto;">
+                        <input type="text" data-dojo-attach-point="autoRefresh" data-dojo-type="dijit/form/NumberTextBox"
+              data-dojo-props='style:{width:"150px"},required:true,value:0,constraints:{min:0,places:2,max:2880}' />
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <table style="width:100%;padding-top:8px;" cellspacing="0">
+            <tbody>
+              <tr>
+                <td style="width:50%">
+                  <table style="width:100%;" cellspacing="0">
+                    <tbody>
+                      <tr>
+                        <td style="width:115px;text-align:left;vertical-align:middle;">${nls.popup}</td>
+                        <td style="width:22px;vertical-align:midle;">
+                          <div data-dojo-attach-event="onclick: onAddPopup" title="${nls.configurepopup}">
+                            <span class="add-popup-icon disabled" data-dojo-attach-point="addPopupBtn"></span>
+                          </div>
+                        </td>
+                        <td style="width:auto;vertical-align:midle;">
+                          <div data-dojo-attach-event="onclick: onRemovePopup" title="${nls.removepopup}">
+                            <span class="delete-popup-icon disabled" data-dojo-attach-point="removePopupBtn"></span>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+                <td style="width:50%;">
+                  <table style="width:100%;" cellspacing="0">
+                    <tbody>
+                      <tr>
+                        <td style="width:165px;text-align:left;">
+                          <span>${nls.defQuery}</span>
+                        </td>
+                        <td style="width:auto;">
+                          <input type="text" data-dojo-type="dijit/form/ValidationTextBox" data-dojo-attach-point="definitionQuery" data-dojo-props='style:{width:"100%"}'/></input>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <table style="width:100%;padding-top:8px;" cellspacing="0">
+            <tbody>
+              <tr>
+                <td style="width:50%">
+                  <table style="width:100%;" cellspacing="0">
+                    <tbody>
+                      <tr>
+                        <td style="width:220px;text-align:left;">
+                          <span>${nls.trackEditByLDAP}</span>
+                        </td>
+                        <td style="width:auto;">
+                          <div data-dojo-type="jimu/dijit/CheckBox" data-dojo-attach-point="trackEditByLDAPCbx" />
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+                <td style="width:50%;">
+                  <table style="width:100%;" cellspacing="0">
+                    <tbody>
+                      <tr>
+                        <td style="width:220px;text-align:left;">
+                          <span>${nls.limitEditByLDAP}</span>
+                        </td>
+                        <td style="width:auto;">
+                          <div data-dojo-type="jimu/dijit/CheckBox" data-dojo-attach-point="limitEditByLDAPCbx" />
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <table style="width:100%;" cellspacing="0">
+            <tbody>
+              <tr>
+                <td style="width:20%;text-align:left;vertical-align:middle;"><a href='http://developers.arcgis.com/javascript/samples/playground/index.html'  target="_blank">${nls.customRenderer}</a></td>
+                <td style="width:80%;vertical-align:midle;">
+                  <textarea data-dojo-type="dijit/form/Textarea" data-dojo-attach-point="customRenderer" style="width:100%"></textarea>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

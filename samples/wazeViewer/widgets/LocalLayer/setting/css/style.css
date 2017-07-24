@@ -1,0 +1,609 @@
+/* jimu-widget-local-layer-setting */
+.jimu-widget-local-layer-setting{
+  margin:0;
+  padding:0;
+  font-size:15px;
+}
+
+.jimu-widget-local-layer-setting .setting-table,
+.reverse-proxy-edit .setting-table{
+  width: 100%;
+}
+
+.jimu-widget-local-layer-setting .setting-table > thead > tr > th,
+.jimu-widget-local-layer-setting .setting-table > tbody > tr > td,
+.reverse-proxy-edit .setting-table > thead > tr > th,
+.reverse-proxy-edit .setting-table > tbody > tr > td{
+  height:40px;
+  line-height:40px;
+  vertical-align:middle;
+}
+
+.jimu-widget-local-layer-setting .setting-table > tbody > tr > .first{
+  width:200px;
+  text-align: right;
+  padding-right:15px;
+  nowrap;
+}
+
+.reverse-proxy-edit .setting-table > tbody > tr > .first{
+  width:220px;
+  text-align: right;
+  padding-right:15px;
+  nowrap;
+}
+
+.jimu-widget-local-layer-setting .setting-table > tbody > tr > .second,
+.reverse-proxy-edit > tbody > tr > .second{
+  width:auto;
+}
+
+.jimu-widget-local-layer-setting .btn-dynamic-section,
+.jimu-widget-local-layer-setting .btn-tiled-section,
+.jimu-widget-local-layer-setting .btn-feature-section,
+.jimu-widget-local-layer-setting .btn-rev-proxy-section,
+.jimu-widget-local-layer-setting .btn-basemap-section,
+.jimu-widget-local-layer-setting .btn-geojson-section,
+.jimu-widget-local-layer-setting .btn-image-section{
+  display:inline-block;
+  overflow:hidden;
+  height:24px;
+  margin-left:1px;
+  margin-bottom:3px;
+  cursor:pointer;
+  font-size:13px;
+  color:#538ec8;
+}
+
+.jimu-widget-local-layer-setting .btn-dynamic-section .btn-add-icon,
+.jimu-widget-local-layer-setting .btn-tiled-section .btn-add-icon,
+.jimu-widget-local-layer-setting .btn-feature-section .btn-add-icon,
+.jimu-widget-local-layer-setting .btn-rev-proxy-section .btn-edit-icon,
+.jimu-widget-local-layer-setting .btn-basemap-section .btn-add-icon,
+.jimu-widget-local-layer-setting .btn-geojson-section .btn-add-icon,
+.jimu-widget-local-layer-setting .btn-image-section .btn-add-icon{
+  float:left;
+  height:100%;
+  width:14px;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-image: url(images/add_enable.png);
+}
+
+.jimu-widget-local-layer-setting .btn-dynamic-section .btn-add-label,
+.jimu-widget-local-layer-setting .btn-tiled-section .btn-add-label,
+.jimu-widget-local-layer-setting .btn-feature-section .btn-add-label,
+.jimu-widget-local-layer-setting .btn-rev-proxy-section .btn-edit-label,
+.jimu-widget-local-layer-setting .btn-basemap-section .btn-add-label,
+.jimu-widget-local-layer-setting .btn-geojson-section .btn-add-label,
+.jimu-widget-local-layer-setting .btn-image-section .btn-add-label  {
+  float:left;
+  height:100%;
+  line-height:24px;
+  vertical-align:middle;
+  margin-left:7px;
+  text-decoration: underline;
+}
+
+.dynamic-layer-edit,
+.tiled-layer-edit,
+.feature-layer-edit,
+.basemap-layer-edit,
+.basemap-edit,
+.image-edit {
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.dynamic-layer-edit .input-table,
+.tiled-layer-edit .input-table,
+.feature-layer-edit .input-table,
+.basemap-layer-edit .input-table,
+.geojson-layer-edit .input-table,
+.basemap-edit .input-table,
+.image-edit .input-table{
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 5px;
+}
+
+.dynamic-layer-edit .input-table > tbody > tr > td,
+.tiled-layer-edit .input-table > tbody > tr > td,
+.feature-layer-edit .input-table > tbody > tr > td,
+.basemap-layer-edit .input-table > tbody > tr > td,
+.geojson-layer-edit .input-table > tbody > tr > td,
+.basemap-edit .input-table > tbody > tr > td,
+.image-edit .input-table > tbody > tr > td{
+  height:30px;
+  line-height: 30px;
+  vertical-align: middle;
+  padding:3px 0;
+}
+
+.dynamic-layer-edit .error-message-div,
+.tiled-layer-edit .error-message-div,
+.feature-layer-edit .error-message-div,
+.basemap-layer-edit .error-message-div,
+.geojson-layer-edit .error-message-div,
+.basemap-edit .error-message-div,
+.image-edit .error-message-div{
+  border: 0px solid;
+  font-size: 11px;
+  color: red;
+  margin-left: 126px;
+}
+
+.dynamic-layer-edit .jimu-serviceurl-input .dijitInputInner,
+.tiled-layer-edit .jimu-serviceurl-input .dijitInputInner,
+.feature-layer-edit .jimu-serviceurl-input .dijitInputInner,
+.basemap-layer-edit .jimu-serviceurl-input .dijitInputInner,
+.basemap-layer-edit .jimu-serviceurl-input .dijitInputInner,
+.geojson-layer-edit .jimu-serviceurl-input .dijitInputInner,
+.image-layer-edit .jimu-serviceurl-input .dijitInputInner  {
+  padding-right: 18px !important;
+}
+
+/* basemap-edit */
+.basemap-edit .add-layer-url-icon{
+  background-image: url(images/add_enable.png);
+  background-repeat: no-repeat;
+  background-position: bottom;
+  width: 20px;
+  float: right;
+  height: 20px;
+  display: inline-block;
+  vertical-align: bottom;
+  cursor:pointer;
+}
+
+.basemap-edit .add-layer-url-label{
+  font-size: 17px;
+  color: #518dca;
+  margin-left: 10px;
+  display: inline-block;
+  height: 100%;
+  text-decoration: underline;
+  cursor:pointer;
+}
+
+.image-layer-edit .add-popup-icon{
+  background-image: url(images/edit_enabled.png);
+  background-repeat: no-repeat;
+  background-position: bottom;
+  width: 20px;
+  float: left;
+  height: 20px;
+  display: inline-block;
+  vertical-align: bottom;
+  cursor:pointer;
+}
+
+.image-layer-edit .delete-popup-icon{
+  background-image: url(images/delete_enabled.png);
+  background-repeat: no-repeat;
+  background-position: bottom;
+  width: 20px;
+  float: left;
+  height: 20px;
+  display: inline-block;
+  cursor:pointer;
+}
+
+.image-layer-edit .delete-popup-icon.disabled{
+  background-image: url(images/delete_disabled.png);
+  cursor: default;
+}
+
+.image-layer-edit .add-popup-icon.disabled{
+  background-image: url(images/edit_disabled.png);
+  cursor: default;
+}
+
+.feature-layer-edit .add-popup-icon{
+  background-image: url(images/edit_enabled.png);
+  background-repeat: no-repeat;
+  background-position: bottom;
+  width: 20px;
+  float: left;
+  height: 20px;
+  display: inline-block;
+  vertical-align: bottom;
+  cursor:pointer;
+}
+
+.feature-layer-edit .delete-popup-icon{
+  background-image: url(images/delete_enabled.png);
+  background-repeat: no-repeat;
+  background-position: bottom;
+  width: 20px;
+  float: left;
+  height: 20px;
+  display: inline-block;
+  cursor:pointer;
+}
+
+.feature-layer-edit .delete-popup-icon.disabled{
+  background-image: url(images/delete_disabled.png);
+  cursor: default;
+}
+
+.feature-layer-edit .add-popup-icon.disabled{
+  background-image: url(images/edit_disabled.png);
+  cursor: default;
+}
+
+/*the css for DropMenu dijit*/
+.jimu-widget-search-setting .jimu-dropmenu{
+  overflow: visible;
+  padding 0 0 0 0;
+}
+.popup-edit .add-field-button>.add-field-icon-btn{
+  cursor: pointer;
+  display: inline-block;
+  padding: 0 15px;
+  font-size: 14px;
+  line-height: 33px;
+  text-align: center;
+  background: none repeat scroll 0% 0% #518DCA;
+  vertical-align: middle;
+  color: #FFF;
+  border-radius: 5px;
+  width:40px;
+  height:28px;
+  margin-left:5px;
+}
+.popup-edit .add-field-button>.add-field-icon-btn:hover{
+  cursor: pointer;
+  display: inline-block;
+  padding: 0 15px;
+  font-size: 14px;
+  line-height: 33px;
+  text-align: center;
+  background: none repeat scroll 0% 0% #15a4fa;
+  vertical-align: middle;
+  color: #FFF;
+  border-radius: 5px;
+  width:40px;
+  height:28px;
+  margin-left:5px;
+}
+.popup-edit .add-field-button>.drop-menu{
+  position: absolute;
+  border: 1px solid #999999;
+  background-color: #ffffff;
+  z-index: 99;
+  overflow-y: auto;
+  max-height: 220px;
+}
+.popup-edit .add-field-button .menu-item{
+  height: 25px;
+  min-width: 50px;
+  margin: 0;
+  padding: 0 5px;
+  cursor: pointer;
+  font-size: 10;
+  white-space: nowrap;
+}
+.popup-edit .add-field-button .menu-item:hover{
+  color: #000000;
+  background-color: #cae7ff;
+  text-decoration:none;
+}
+.popup-edit .add-field-button .menu-item-line{
+  border: 1px solid #ffffff;
+  margin: 0px;
+}
+
+.popup-edit .plus-sign {
+  background:white;
+  width:4px;
+  height:12px;
+  position:relative;
+  margin-left:4px;
+}
+
+.popup-edit .plus-sign:before {
+  background:white;
+  content:"";
+  width:12px;
+  height:4px;
+  position:absolute;
+  top:4px;
+  left:-4px;
+}
+
+.popup-edit .add-button-enable{
+  cursor: pointer;
+  display: inline-block;
+  padding: 0 15px;
+  font-size: 14px;
+  line-height: 33px;
+  text-align: center;
+  background: none repeat scroll 0% 0% #518DCA;
+  vertical-align: middle;
+  color: #FFF;
+  border-radius: 5px;
+}
+
+.popup-edit .add-button-enable:hover{
+  cursor: pointer;
+  display: inline-block;
+  padding: 0 15px;
+  font-size: 14px;
+  line-height: 33px;
+  text-align: center;
+  background: none repeat scroll 0% 0% #15a4fa;
+  vertical-align: middle;
+  color: #FFF;
+  border-radius: 5px;
+}
+
+.popup-edit .help-icon{
+  cursor: pointer;
+  display: inline-block;
+  font-size: 18px;
+  line-height: 20px;
+  background: none repeat scroll 0% 0% #518DCA;
+  color: #FFF;
+  border-radius:99px;
+  -moz-border-radius:99px;
+  -webkit-border-radius:99px;
+  /*-webkit-box-shadow: 0px 2px 4px #000000;
+  -moz-box-shadow: 0px 2px 4px #000000;
+  box-shadow: 0px 2px 4px #000000;*/
+  font-weight:bold;
+}
+
+.popup-edit .help-icon:hover{
+  cursor: pointer;
+  display: inline-block;
+  font-size: 18px;
+  line-height: 20px;
+  background: none repeat scroll 0% 0% #15a4fa;
+  color: #FFF;
+  border-radius:99px;
+  -moz-border-radius:99px;
+  -webkit-border-radius:99px;
+  /*-webkit-box-shadow: 0px 2px 4px #000000;
+  -moz-box-shadow: 0px 2px 4px #000000;
+  box-shadow: 0px 2px 4px #000000;*/
+  font-weight:bold;
+}
+
+.popup-edit {
+  margin:0;
+  padding:0;
+  font-size:15px;
+}
+
+.popup-edit .popup-config-layout {
+  width: 100%;
+}
+
+.popup-edit .popup-config-layout > thead > tr > th,
+.popup-edit .popup-config-layout > tbody > tr > td{
+  height:30px;
+  vertical-align:middle;
+  padding-bottom: 8px;
+}
+
+.popup=edit .custom-popup-buttons{
+  display: inline-block;
+  padding: 0 8px;
+  float: left;
+}
+
+.popup-edit .custom-popup-buttons>.icon-btn{
+  cursor: pointer;
+  display: inline-block;
+  padding: 0 15px;
+  font-size: 14px;
+  line-height: 28px;
+  text-align: center;
+  background: none repeat scroll 0% 0% #518DCA;
+  vertical-align: middle;
+  color: #FFF;
+  border-radius: 5px;
+  width:40px;
+  height:28px;
+  margin-left:5px;
+}
+
+.popup-edit .custom-popup-buttons>.icon-btn:hover{
+  cursor: pointer;
+  display: inline-block;
+  padding: 0 15px;
+  font-size: 14px;
+  line-height: 28px;
+  text-align: center;
+  background: none repeat scroll 0% 0% #15a4fa;
+  vertical-align: middle;
+  color: #FFF;
+  border-radius: 5px;
+  width:40px;
+  height:28px;
+  margin-left:5px;
+}
+
+.popup-edit .custom-popup-buttons .seperator {
+  border-right: 2px solid gray;
+  width:4px;
+  display: inline-block;
+  line-height: 28px;
+  vertical-align: middle;
+  text-align: center;
+  height:28px;
+  margin-left:5px;
+}
+
+.popup-edit .custom-popup-buttons .bold-btn{
+  font-weight: bold;
+}
+
+.popup-edit .custom-popup-buttons .italic-btn{
+  font-style: italic;
+}
+
+.popup-edit .custom-popup-buttons .under-btn{
+  text-decoration: underline;
+}
+
+.popup-edit .custom-popup-buttons .hyperlink-btn{
+  background-image: url(images/link.png);
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.popup-edit .custom-popup-buttons .image-btn{
+  background-image: url(images/image.png);
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.popup-edit .custom-popup-buttons .hyperlink-btn:hover{
+  background-image: url(images/link.png);
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.popup-edit .custom-popup-buttons .image-btn:hover{
+  background-image: url(images/image.png);
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.popup-edit textarea {
+  resize: none;
+}
+
+/* hyperlink-edit */
+.hyperlink-edit .hyperlink-config-layout > thead > tr > th,
+.hyperlink-edit .hyperlink-config-layout > tbody > tr > td{
+  height:30px;
+  line-height:30px;
+  vertical-align:middle;
+  padding-bottom: 8px;
+}
+
+.hyperlink-edit {
+  margin:0;
+  padding:0;
+  font-size:15px;
+}
+
+.hyperlink-edit .hyperlink-config-layout {
+  width: 100%;
+}
+
+/*the css for DropMenu dijit*/
+.hyperlink-edit .add-field-button>.add-field-icon-btn,
+.image-edit .add-field-button>.add-field-icon-btn{
+  cursor: pointer;
+  display: inline-block;
+  padding: 0 15px;
+  font-size: 14px;
+  line-height: 33px;
+  text-align: center;
+  background: none repeat scroll 0% 0% #518DCA;
+  vertical-align: middle;
+  color: #FFF;
+  border-radius: 5px;
+  width:40px;
+  height:28px;
+  margin-left:5px;
+}
+
+.hyperlink-edit .add-field-button>.add-field-icon-btn:hover{
+  cursor: pointer;
+  display: inline-block;
+  padding: 0 15px;
+  font-size: 14px;
+  line-height: 33px;
+  text-align: center;
+  background: none repeat scroll 0% 0% #15a4fa;
+  vertical-align: middle;
+  color: #FFF;
+  border-radius: 5px;
+  width:40px;
+  height:28px;
+  margin-left:5px;
+}
+
+.hyperlink-edit .add-field-button>.drop-menu,
+.image-edit .add-field-button>.drop-menu{
+  position: absolute;
+  border: 1px solid #999999;
+  background-color: #ffffff;
+  z-index: 99;
+}
+
+.hyperlink-edit .add-field-button .menu-item,
+.image-edit .add-field-button .menu-item{
+  height: 25px;
+  min-width: 50px;
+  margin: 0;
+  padding: 0 5px;
+  cursor: pointer;
+  font-size: 10;
+  white-space: nowrap;
+}
+
+.hyperlink-edit .add-field-button .menu-item:hover,
+.image-edit .add-field-button .menu-item:hover{
+  color: #000000;
+  background-color: #cae7ff;
+  text-decoration:none;
+}
+
+.hyperlink-edit .add-field-button .menu-item-line,
+.image-edit .add-field-button .menu-item-line{
+  border: 1px solid #ffffff;
+  margin: 0px;
+}
+
+.hyperlink-edit .plus-sign,
+.image-edit .plus-sign{
+  background:white;
+  width:4px;
+  height:12px;
+  position:relative;
+  margin-left:4px;
+}
+
+.hyperlink-edit .plus-sign:before,
+.image-edit .plus-sign:before{
+  background:white;
+  content:"";
+  width:12px;
+  height:4px;
+  position:absolute;
+  top:4px;
+  left:-4px;
+}
+
+/* image-edit */
+.image-edit .image-config-layout > thead > tr > th,
+.image-edit .image-config-layout > tbody > tr > td{
+  height:30px;
+  line-height:30px;
+  vertical-align:middle;
+  padding-bottom: 8px;
+}
+
+.image-edit {
+  margin:0;
+  padding:0;
+  font-size:15px;
+}
+
+.image-edit .image-config-layout {
+  width: 100%;
+}
+
+.popup-edit .popup-config-layout .keyValues {
+  height: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}

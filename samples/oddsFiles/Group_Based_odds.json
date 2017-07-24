@@ -1,0 +1,14 @@
+{
+	"uiActions":[
+		
+	],
+	"groupActions":[
+		{"type":"hide", "role":["CITY_ Management - Managers and L6 Supervisors"], "queryString":".dojoxGridCell .itemLabel", "parentItem":"td", "value":"Fire", "recur":true},
+		{"type":"hide", "role":["CITY_Constellation_ 100 - Room 917E"], "queryString":".dojoxGridCell .itemLabel", "parentItem":"td", "value":"Police", "recur":true},
+		{"type":"autoPopulate", "role":["CITY_ Management - Managers and L6 Supervisors"], "queryString":".atiAttributes input.dijitInputInner", "order":0, "recur":true, "value":"Fire", "preventEditingByOtherGroups": true},
+		{"type":"disable", "role":["CITY_ Management - Managers and L6 Supervisors"], "queryString":".atiAttributes input.dijitInputInner", "order":0, "recur":true},
+		{"type":"autoPopulate", "role":["CITY_Constellation_ 100 - Room 917E"], "queryString":".atiAttributes input.dijitInputInner", "order":0, "recur":true, "value":"Police", "preventEditingByOtherGroups": true},
+		{"type":"disable", "role":["CITY_Constellation_ 100 - Room 917E"], "queryString":".atiAttributes input.dijitInputInner", "order":0, "recur":true},
+		{"type":"autoPopulate", "role":[], "queryString":".atiAttributes input.dijitInputInner", "recur":true, "value":"EMT"}
+	]
+}

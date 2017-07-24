@@ -1,0 +1,10 @@
+{
+	"uiActions":[
+		{"type":"destroy", "queryString":"#widgets_Edit_Widget_21_panel", "recur":false},
+		{"type":"hide", "queryString":"[dojoattachpoint='editButtons']", "recur": true},
+		{"type":"autoPush", "queryString":".oddLine", "recur": true}
+	],
+	"groupActions":[
+		{"type":"disable", "role":[], "queryString":".dijitInputInner", "recur":true}
+	]
+}
