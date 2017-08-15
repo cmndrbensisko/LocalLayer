@@ -262,7 +262,9 @@ define([
                         })
                         _viewerMap.itemInfo.itemData.operationalLayers = updatedMapLayerJSON.operationalLayers
                         LayerInfos.getInstanceSync()._operLayers = updatedMapLayerJSON.operationalLayers
-                        lang.hitch(this,layersLoadedFunction());
+                        if (!_initDone){
+                            lang.hitch(this,layersLoadedFunction());    
+                        }
                     }
                 }
             },
@@ -1056,11 +1058,11 @@ define([
                     }
                 }), true)
                 aspect.around(LayerInfos.prototype, "_onTableChange", lang.hitch(this, function(originalFunction) {
-                    return lang.hitch(this, function(tableInfos, changedType) {
+                    return function(tableInfos, changedType) {
                         if (tableInfos.length > 0) {
                             return originalFunction.call(this, tableInfos, changedType);
                         }
-                    })
+                    }
                 }), true)
                 LayerInfos.getInstanceSync()._tables = _tablesToAdd;
                 window._viewerMap.addLayers(_layersToAdd);
