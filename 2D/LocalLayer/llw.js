@@ -928,7 +928,7 @@ define([
                                 var featureJson = {
                                     "fields": defFields,
                                     "geometryType": geomType,
-                                    "spatialReference": featureArray[0].geometry.spatialReference||_viewerMap.spatialReference,
+                                    "spatialReference": featureArray[0] ? featureArray[0].geometry.spatialReference : _viewerMap.spatialReference,
                                     "features": featureArray
                                 }
                                 var featureSet = new esri.tasks.FeatureSet(featureJson);

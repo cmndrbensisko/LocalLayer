@@ -20,6 +20,14 @@ The LocalLayer Widget for ArcGIS Web AppBuilder is intended to allow the direct 
 
 FeatureServices can be edited via the Edit Widget, including Related Tables and Attachments.  Editor Tracking and constraining edits to user-created features is also possible.
 
+If you have any questions or issues with this application not covered in this document, feel free to read the ongoing thread on Geonet to see if you're encountering a known or frequent issue.
+
+https://geonet.esri.com/thread/119548-locallayerwidget-and-accessifizrwidget
+
+Also check the living document maintained by Rebecca Strauch:
+
+https://geonet.esri.com/blogs/myAlaskaGIS/2015/02/04/tips-for-using-the-custom-locallayer-widget-with-wab-dev-edition
+
 ### Setting up the LocalLayer Widget
 
 To add this widget to your ArcGIS Web AppBuilder environment, copy the widget folder to your \client\stemapp\widgets directory, and add a reference to the widget in the standard Default App configuration located at \client\stemapp\predefined-apps\default\config.json, under the widgetOnScreen section.
