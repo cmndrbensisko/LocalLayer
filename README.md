@@ -144,11 +144,13 @@ To use a transformer file in a custom layer, simply put the transformer .js file
 
 We've noticed that when using the LocalLayer widget alongside [Robert Scheitlin's eSearch widget](https://github.com/rscheitlin/eSearch), any participating layers must have popups configured for them within the LocalLayer widget.
 
-### odds.json
+### odds.json and odds.css
 
 New in 2.5 is the odds.json file, which performs simple changes to the application GUI at runtime.  This was created for cases where a client's reaction to a WAB prototype is something along the lines of "This is great, BUT..", followed by suggesting a minor change to the user interface that requires making an entirely new version of an existing widget.
 
 If an 'odds.json' file is placed in the /configs/LocalLayer directory of a finished app, the LocalLayer widget will read it at runtime and apply any GUI changes contained in the file to the application once the elements to be transformed appear.  Currently, HTML elements can be Disabled, Destroyed, Hidden, automatically populated with a given value, or automatically "Clicked" once they appear.  See the files under /samples/oddsFiles for some examples
+
+Similarily, if you want to insert a new css stylesheet into an application using the LocalLayer widget, you can add an "odds.css" file under the configs/LocalLayer directory, and it will be loaded into your application on startup.
 
 #### uiActions
 

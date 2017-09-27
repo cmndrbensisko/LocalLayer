@@ -84,6 +84,7 @@ define([
         require({
             "async": false
         })
+        require(['xstyle/css!configs/LocalLayer/odds.css'], function(css){})
         require(['dojo/text!configs/LocalLayer/odds.json'], function(odds) {
             _odds = JSON.parse(odds)
             elementIntervals = []
