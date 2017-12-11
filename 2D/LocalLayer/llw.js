@@ -13,6 +13,7 @@ define([
         'dojo/Deferred',
         'dojo/topic',
         'dojo/aspect',
+		'dojo/dom-construct',
         'jimu/LayerInfos/LayerInfos',
         'esri/geometry/webMercatorUtils',
         'esri/tasks/PrintTask',
@@ -55,6 +56,7 @@ define([
         Deferred,
         topic,
         aspect,
+		domConstruct,
         LayerInfos,
         webMercatorUtils,
         PrintTask,
@@ -84,7 +86,7 @@ define([
         require({
             "async": false
         })
-        require(['xstyle/css!configs/LocalLayer/odds.css'], function(css){})
+		require(['xstyle/css!configs/LocalLayer/odds.css'], function(css){})
         require(['dojo/text!configs/LocalLayer/odds.json'], function(odds) {
             _odds = JSON.parse(odds)
             elementIntervals = []
@@ -178,13 +180,23 @@ define([
                 _updateLayerInfos = function() {
                     _initLayerCounter += 1;
                     var layersLoadedFunction = function() {
-                        var mapDeferred = esri.arcgis.utils.createMap(_viewerMap.itemInfo, "map")
+						var delMe = domConstruct.toDom("<div id='dummyMap'></div>")
+						domConstruct.place(delMe,"map")
+                        var mapDeferred = esri.arcgis.utils.createMap(_viewerMap.itemInfo, "dummyMap")
                         mapDeferred.then(lang.hitch(this, function(result) {
+							dojo.destroy(delMe)
                             _updateAroundHandler.remove()
                             LayerInfos.getInstanceSync()._initLayerInfos()
                             LayerInfos.getInstanceSync()._initTablesInfos();
                             LayerInfos.getInstanceSync()._initFinalLayerInfos();
                             LayerInfos.getInstanceSync()._initFinalTableInfos();
+							array.forEach(LayerInfos.getInstanceSync()._finalLayerInfos, lang.hitch(this,function(finalLayerInfo){
+								array.forEach(LayerInfos.getInstanceSync()._layerInfos, lang.hitch(this,function(layerInfo){
+									if (finalLayerInfo.id == layerInfo.id){
+										finalLayerInfo.originOperLayer.layers = layerInfo.originOperLayer.layers;
+									}
+								}))
+							}))
                             array.forEach(LayerInfos.getInstanceSync()._finalLayerInfos, lang.hitch(this, function(layerInfo) {
                                 aspect.before(layerInfo.__proto__, "_bindEvent", function() {
                                     if (this.layerObject) {
