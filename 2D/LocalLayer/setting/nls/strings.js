@@ -54,6 +54,7 @@ define({
     geojsonlayer: "geoJSON",
     imagelayer: "Image",
     wmslayer: "WMS",
+    customlayer: "Custom",
     webtiledbasemap: "WebTile Basemap",
     webtiledlayer: "WebTile Layer",
     layerUrl: "Service URL",

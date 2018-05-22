@@ -3,9 +3,23 @@
   <table class="input-table" cellspacing="0">
     <tbody>
       <tr>
-        <td style="width:115px;text-align:left;">${nls.layerUrl}</td>
-        <td style="width:auto;">
-          <input type="text" widgetid='jsonURLInput' data-dojo-type="jimu/dijit/jsonURLInput" data-dojo-attach-point="layerUrl" data-dojo-props='style:{width:"100%"}' required="true"/>
+        <td colspan="2">
+          <table style="width:100%;" cellspacing="0">
+            <tr>
+              <td style="width:100%;">
+                <table style="width:100%;" cellspacing="0">
+                  <tbody>
+                    <tr>
+                      <td style="text-align:left;width:115px;">${nls.layerUrl}</td>
+                      <td style="width:85%;">
+                        <input type="text" widgetid='jsonURLInput' data-dojo-type="jimu/dijit/jsonURLInput" data-dojo-attach-point="layerUrl" data-dojo-props='style:{width:"100%"}' required="true"/>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          </table>
         </td>
       </tr>
       <tr>
@@ -72,7 +86,7 @@
                   <tbody>
                     <tr>
                       <td style="padding-right:10px;">
-                        <div data-dojo-attach-point="layerAlpha" data-dojo-type="jimu/dijit/_Transparency" data-dojo-props='alpha:0.6' style="font-size:13px;"></div>
+                        <div data-dojo-attach-point="layerAlpha" data-dojo-type="jimu/dijit/_Transparency" data-dojo-props='alpha:1' style="font-size:13px;"></div>
                       </td>
                     </tr>
                   </tbody>

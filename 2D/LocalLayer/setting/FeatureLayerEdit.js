@@ -89,7 +89,7 @@ define(
           this.isVisible.setValue(true);
         }
 
-        this.layerAlpha.setAlpha(parseFloat(config.opacity||0.6));
+        this.layerAlpha.setAlpha(parseFloat(config.opacity||1.0));
         if(config.mode){
           this.flMode.set('value', config.mode);
         }

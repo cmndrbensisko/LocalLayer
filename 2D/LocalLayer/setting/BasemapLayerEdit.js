@@ -62,7 +62,7 @@ define(
         if(config.url){
           this.layerUrl.set('value', config.url);
         }
-        this.layerAlpha.setAlpha(parseFloat(config.opacity||0.6));
+        this.layerAlpha.setAlpha(parseFloat(config.opacity||1.0));
         if(config.displayLevels && config.displayLevels.length){
           this.displayLevels.set('value', config.displayLevels.join());
         }

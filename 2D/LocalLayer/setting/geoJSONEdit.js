@@ -102,7 +102,7 @@ define(
         }else{
           this.isVisible.setValue(true);
         }
-        this.layerAlpha.setAlpha(parseFloat(config.opacity||0.6));
+        this.layerAlpha.setAlpha(parseFloat(config.opacity||1.0));
         if(config.mode){
           this.flMode.set('value', config.mode);
         }
@@ -190,13 +190,14 @@ define(
           this.featureLayerDetails = null;
         }
 
-//        this._checkProceed(errormessage);
+        this._checkProceed(errormessage);
 //        console.info(evt.data.layers);
         return result;
       },
 
       _checkProceed: function(errormessage) {
         var canProceed = true;
+        this.layerUrl.proceedValue = true
         html.setAttr(this.errorMessage, 'innerHTML', '');
         if (this.layerTitle.proceedValue) {
           canProceed = canProceed && this.layerUrl.proceedValue;

@@ -142,6 +142,7 @@ define([
       getConfig: function() {
         this.config.layers.layer = this._getAllLayers();
         this.config.review = this.reviewCbx.getValue()
+        this.config.replaceLayers = this.replaceCbx.getValue()
         this._removeAllLayersExceptBasemap();
         console.info(this.config);
         return this.config;
@@ -202,8 +203,8 @@ define([
           return this.nls.imagelayer;
         }else if(type === 'WMS'){
           return this.nls.wmslayer;
-        }else if(type === 'Custom'){
-          return this.nls.wmslayer;
+        }else if(type === 'CUSTOM'){
+          return this.nls.customlayer;
         }
       },
 
@@ -238,6 +239,8 @@ define([
             this._openImageEdit(this.nls.editimage + ': ' + editLayer.name , tr);
           }else if(editLayer.type.toUpperCase() === 'WMS'){
             this._openWMSEdit(this.nls.editwms + ': ' + editLayer.name , tr);
+          }else if(editLayer.type.toUpperCase() === 'CUSTOM'){
+            this._openCustomEdit(this.nls.editcustomlayer + ': ' + editLayer.name , tr);
           }
         })));
         this.own(on(this.LayersTable,'row-delete',lang.hitch(this,function(tr){
@@ -330,7 +333,7 @@ define([
           this.popupState = 'ADD';
           var tr = this._createLayer(args);
           if (tr) {
-            this._openCustomEdit(this.nls.addwmslayer, tr);
+            this._openCustomEdit(this.nls.addcustomlayer, tr);
           }
         })));
       },

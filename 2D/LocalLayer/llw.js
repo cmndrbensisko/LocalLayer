@@ -13,6 +13,7 @@ define([
         'dojo/Deferred',
         'dojo/topic',
         'dojo/aspect',
+		'dojo/dom-construct',
         'jimu/LayerInfos/LayerInfos',
         'esri/geometry/webMercatorUtils',
         'esri/tasks/PrintTask',
@@ -55,6 +56,7 @@ define([
         Deferred,
         topic,
         aspect,
+		domConstruct,
         LayerInfos,
         webMercatorUtils,
         PrintTask,
@@ -84,7 +86,7 @@ define([
         require({
             "async": false
         })
-        require(['xstyle/css!configs/LocalLayer/odds.css'], function(css){})
+		require(['xstyle/css!configs/LocalLayer/odds.css'], function(css){})
         require(['dojo/text!configs/LocalLayer/odds.json'], function(odds) {
             _odds = JSON.parse(odds)
             elementIntervals = []
@@ -125,6 +127,14 @@ define([
                                         dojo.setStyle(element, "display", "none");  
                                     }
                                 }
+                                if (elementToAlter.type == "replace") {
+                                    if (elementToAlter.value){
+                                        dojo.query(element).text().replace(elementToAlter.value.split(":")[0],elementToAlter.value.split(":")[1])
+                                        if (element.href){
+                                            element.setAttribute('href',element.href.replace(elementToAlter.value.split(":")[0],elementToAlter.value.split(":")[1]))
+                                        }
+                                    }
+                                }
                                 if (elementToAlter.type == "destroy") {
                                     dojo.destroy(element);
                                 }
@@ -133,6 +143,9 @@ define([
                                         bubbles: true,
                                         cancelable: true
                                     })
+                                    if (element.type == "checkbox"){
+                                        element.checked = true;
+                                    }
                                 }
                                 if (elementToAlter.type == "autoPopulate") {
                                     if (elementToAlter.type == "autoPopulate") {
@@ -178,13 +191,36 @@ define([
                 _updateLayerInfos = function() {
                     _initLayerCounter += 1;
                     var layersLoadedFunction = function() {
-                        var mapDeferred = esri.arcgis.utils.createMap(_viewerMap.itemInfo, "map")
+						var delMe = domConstruct.toDom("<div id='dummyMap'></div>")
+						domConstruct.place(delMe,"map")
+                        array.forEach(_viewerMap.itemInfo.itemData.operationalLayers, function(_layer){
+                            if (_layer.type == "WebTiledLayer" && _layer.urlTemplate){
+                                _layer.templateUrl = _layer.urlTemplate
+                            }
+                        })
+                        var mapDeferred = esri.arcgis.utils.createMap(_viewerMap.itemInfo, "dummyMap")
                         mapDeferred.then(lang.hitch(this, function(result) {
-                            _updateAroundHandler.remove()
+							dojo.destroy(delMe)
+                            if (!typeof _updateAroundHandler === "undefined"){
+                                _updateAroundHandler.remove()
+                            }
                             LayerInfos.getInstanceSync()._initLayerInfos()
                             LayerInfos.getInstanceSync()._initTablesInfos();
                             LayerInfos.getInstanceSync()._initFinalLayerInfos();
-                            LayerInfos.getInstanceSync()._initFinalTableInfos();
+                            if (!_viewerMap.config.replaceLayers){
+                                //gotta do it twice, dont know why
+                                LayerInfos.getInstanceSync()._initFinalLayerInfos();
+                            }
+                            if (LayerInfos.getInstanceSync()._initFinalTableInfos){
+                                LayerInfos.getInstanceSync()._initFinalTableInfos();
+                            }
+							array.forEach(LayerInfos.getInstanceSync()._finalLayerInfos, lang.hitch(this,function(finalLayerInfo){
+								array.forEach(LayerInfos.getInstanceSync()._layerInfos, lang.hitch(this,function(layerInfo){
+									if (finalLayerInfo.id == layerInfo.id){
+										finalLayerInfo.originOperLayer.layers = layerInfo.originOperLayer.layers;
+									}
+								}))
+							}))
                             array.forEach(LayerInfos.getInstanceSync()._finalLayerInfos, lang.hitch(this, function(layerInfo) {
                                 aspect.before(layerInfo.__proto__, "_bindEvent", function() {
                                     if (this.layerObject) {
@@ -213,13 +249,31 @@ define([
                             MapUrlParamsHandler.postProcessUrlParams(MapManager.getInstance().urlParams, _viewerMap);
                             if (!_initDone) {
                                 topic.publish("localLayersLoaded");
-                                _updateAfterHandler.remove()
+                                if (!typeof _updateAfterHandler === "undefined"){
+                                    _updateAfterHandler.remove()
+                                }
+                            }
+                            _updateAroundHandler.remove()
+                            if (!_viewerMap._labels){
+                                _viewerMap,require(["esri/layers/LabelLayer"], function(LabelLayer) {
+                                    _viewerMap._labels = new LabelLayer({
+                                        id: "_internal_LabelLayer"
+                                    })
+                                    _viewerMap._labels._setMap(_viewerMap, _viewerMap._gc._surface)
+                                    _viewerMap._processLabelLayers()
+                                    _viewerMap.on("layers-reordered", _viewerMap._processLabelLayers)
+                                })
                             }
                             _initDone = true;
                         }))
                     }
                     if (_initLayerCounter >= _viewerMap.config.layers.layer.length) {
-                        var layers = dojo.map(_viewerMap.layerIds, _viewerMap.getLayer, _viewerMap)
+
+                        //var layers = dojo.map(_viewerMap.layerIds, _viewerMap.getLayer, _viewerMap)
+                        var layers = []
+                        for (var i in _viewerMap._layers){
+                            layers.push(_viewerMap._layers[i]
+                        )}
                         var origVisibility = [];
                         layers.forEach(function(layer, i) {
                             origVisibility[i] = dojo.clone(layer.visible);
@@ -229,6 +283,22 @@ define([
                         origVisibility.forEach(function(vis, i) {
                             layers[i].visible = vis
                         })
+                        if (!_viewerMap.config.replaceLayers){
+                            array.forEach(LayerInfos.getInstanceSync()._layerInfos, function(premadeLayer) {
+                                array.forEach(updatedMapLayerJSON.operationalLayers, function(opLayer) {
+                                    if (premadeLayer.layerObject && opLayer.id.indexOf(premadeLayer.id) > -1){
+                                        if (premadeLayer.layerObject._fLayers){
+                                            if (premadeLayer.layerObject._fLayers[0].fields){
+                                                opLayer.featureCollection.layers[0].layerDefinition.fields = premadeLayer.layerObject._fLayers[0].fields
+                                                _viewerMap._layers[opLayer.id].graphics.forEach(function(graphic,index){
+                                                    opLayer.featureCollection.layers[0].featureSet.features[index].attributes = graphic.attributes
+                                                })
+                                            }
+                                        }
+                                    }
+                                })
+                            })
+                        }
                         array.forEach(_viewerMap.config.layers.layer, function(configLayer) {
                             array.forEach(updatedMapLayerJSON.operationalLayers, function(opLayer) {
                                 if (configLayer.name == opLayer.id) {
@@ -268,6 +338,7 @@ define([
                         }
                     }
                 }
+
             },
             onClose: function() {
                 if (query('.jimu-popup.widget-setting-popup', window.parent.document).length === 0) {
@@ -278,21 +349,21 @@ define([
                     });
                 }
             },
-            _removeAllLayersExceptBasemap: function() {
-                for (var l = this.map.layerIds.length - 1; l > 1; l--) {
-                    var lyr = this.map.getLayer(this.map.layerIds[l]);
-                    if (lyr) {
-                        this.map.removeLayer(lyr);
-                    }
-                }
-                var f = this.map.graphicsLayerIds.length;
-                while (f--) {
-                    var fl = this.map.getLayer(this.map.graphicsLayerIds[f]);
-                    if (fl.declaredClass === 'esri.layers.FeatureLayer') {
-                        this.map.removeLayer(fl);
-                    }
-                }
-            },
+          _removeAllLayersExceptBasemap: function(){
+            for(var l = _viewerMap.layerIds.length - 1; l>1; l--){
+              var lyr = _viewerMap.getLayer(_viewerMap.layerIds[l]);
+              if(lyr){
+                _viewerMap.removeLayer(lyr);
+              }
+            }
+            var f = _viewerMap.graphicsLayerIds.length;
+            while (f--){
+              var fl = _viewerMap.getLayer(_viewerMap.graphicsLayerIds[f]);
+                if(fl.declaredClass === 'esri.layers.FeatureLayer'){
+                _viewerMap.removeLayer(fl);
+              }
+            }
+          },
             startup: function() {
                 if (this.config.replaceLayers) {
                     this._removeAllLayersExceptBasemap();
@@ -603,6 +674,7 @@ define([
                         _basemapGallery.add(_newBasemap);
                         _basemapGallery.select('defaultBasemap');
                         _basemapGallery.destroy();
+                        _updateLayerInfos();
                     } else if (layer.type.toUpperCase() === 'FEATURE') {
                         var _popupTemplate;
                         if (layer.popup) {
@@ -663,6 +735,9 @@ define([
                                 var labelClass = new LabelClass(labelClassParams)
                                 if (layer.hasOwnProperty('customLabelStyle') && layer.customLabelStyle != "") {
                                     labelClass.symbol = new TextSymbol(jsonUtils.fromJson(JSON.parse(layer.customLabelStyle)))
+                                    if (JSON.parse(layer.customLabelStyle).hasOwnProperty('labelPlacement')){
+                                        labelClass.labelPlacement =JSON.parse(layer.customLabelStyle).labelPlacement
+                                    }
                                 } else {
                                     labelClass.symbol = new TextSymbol();
                                 }
@@ -784,6 +859,7 @@ define([
                         _basemapGallery.add(_newBasemap);
                         _basemapGallery.select('defaultBasemap');
                         _basemapGallery.destroy();
+                        _updateLayerInfos();
                     } else if (layer.type.toUpperCase() === 'WMS') {
                         lLayer = new WMSLayer(layer.url)
                         if (layer.name) {
@@ -880,7 +956,7 @@ define([
                                     var renderer = new esri.renderer.SimpleRenderer(sym)
                                 }
                                 var oidField = 0
-                                if (layer.subArray) {
+                                if (layer.subArray && !layer.isValidGeoJson) {
                                     restData = lang.getObject(layer.subArray, false, restData)
                                 }
                                 var geomType = layer.geometryType;
@@ -1036,6 +1112,10 @@ define([
                                     }
                                 })
                                 this._viewerMap.addLayer(lLayer);
+                                _geoRSSReturned += 1;
+                                topic.publish("georssloaded")
+                            }, function(err){
+                                _updateLayerInfos();
                                 _geoRSSReturned += 1;
                                 topic.publish("georssloaded")
                             });

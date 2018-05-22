@@ -29,12 +29,17 @@ define([
 		  require({
 			"async": false
 		  })
-		  require(["widgets/LocalLayer/transformers/" + moduleName], function(customLayerModule){
-			  var customLayer = customLayerModule()
-			  customLayer.startup(layer, config).then(function(customLayer){
-				  deferred.resolve(customLayer)
-			  })
-		  })
+		  try{
+			  require(["widgets/LocalLayer/transformers/" + moduleName], function(customLayerModule){
+				  var customLayer = customLayerModule()
+				  customLayer.startup(layer, config).then(function(customLayer){
+					  deferred.resolve(customLayer)
+				  })
+			  })		  	
+		  }
+		  catch (err){
+		  	deferred.reject(err)
+		  }
 		  require({
 			"async": true
 		  })

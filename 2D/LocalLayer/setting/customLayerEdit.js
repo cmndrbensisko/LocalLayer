@@ -51,7 +51,7 @@ define(
     Memory,
     template) {
     return declare([BaseWidgetSetting, _WidgetsInTemplateMixin], {
-      baseClass: 'feature-layer-edit',
+      baseClass: 'custom-layer-edit',
       templateString: template,
       config:null,
       tr:null,
@@ -67,11 +67,7 @@ define(
 
       startup: function() {
         this.inherited(arguments);
-        if(!this.config.url){
-          this.popup.disableButton(0);
-        }else{
-          html.removeClass(this.addPopupBtn, 'disabled');
-        }
+        html.removeClass(this.addPopupBtn, 'disabled');
       },
 
       _setConfig: function(config) {
@@ -80,15 +76,7 @@ define(
           return;
         }
 //        console.info(config);
-        this.own(on(this.customTransformerName, 'Change', lang.hitch(this, '_onCustomTransformerName')));
-        this.own(on(this.layerUrl, 'Change', lang.hitch(this, '_onServiceUrlChange')));
         this.own(on(this.featureTypeSelect, 'Change', lang.hitch(this, '_onFeatureTypeChange')));
-        this.layerUrl.proceedValue = false;
-        this.layerUrl.setProcessFunction(lang.hitch(this, '_onServiceFetch', this.layerUrl),
-                                    lang.hitch(this, '_onServiceFetchError'));
-        if(config.url){
-          this.layerUrl.set('value', config.url);
-        }
         if(config.geometryType){
           this.featureTypeSelect.set("value", config.geometryType)
           this.geometryType = config.geometryType
@@ -109,14 +97,7 @@ define(
         if(config.customTransformerJson){
           this.customTransformerJson.setValue(decodeURIComponent(config.customTransformerJson));
         }
-
-        this.layerAlpha.setAlpha(parseFloat(config.opacity||0.6));
-        if(config.mode){
-          this.flMode.set('value', config.mode);
-        }
-        if(config.hasOwnProperty('autorefresh')){
-          this.autoRefresh.set('value', config.autorefresh);
-        }
+        this.layerAlpha.setAlpha(parseFloat(config.opacity||1.0));
         if(config.hasOwnProperty('maxScale')){
           this.maxScale.set('value', config.maxScale);
         }
@@ -186,13 +167,8 @@ define(
       },
 
       getConfig: function() {
-        var subArrayValue
-        if (this.featureArrayFieldSelect){
-          subArrayValue = this.featureArrayFieldSelect.get('value');
-        }
         var featurelayer = {
           type: 'custom',
-          url: this.layerUrl.get('value'),
           name: this.layerTitle.get('value'),
           opacity: this.layerAlpha.getAlpha(),
           visible: this.isVisible.getValue(),
@@ -200,12 +176,9 @@ define(
           customTransformerJson: encodeURIComponent(this.customTransformerJson.getValue()),
           showLabels: this.showLabelsCbx.getValue(),
           popup: this.config.popup,
-          autorefresh: this.autoRefresh.get('value'),
-          mode: this.flMode.get('value'),
           symbol: this.config.symbol,
           minScale: this.minScale.get('value'),
           maxScale: this.maxScale.get('value'),
-          subArray: subArrayValue,
           geometryType: this.geometryType
         };
         return [featurelayer, this.tr];

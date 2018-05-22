@@ -3,12 +3,6 @@
   <table class="input-table" cellspacing="0">
     <tbody>
       <tr>
-        <td style="width:115px;text-align:left;">${nls.layerUrl}</td>
-        <td style="width:auto;">
-          <input type="text" widgetid='jsonURLInput' data-dojo-type="jimu/dijit/jsonURLInput" data-dojo-attach-point="layerUrl" data-dojo-props='style:{width:"100%"}' required="true"/>
-        </td>
-      </tr>
-      <tr>
         <td colspan="2">
           <table style="width:100%;" cellspacing="0">
             <tr>
@@ -77,16 +71,8 @@
           </table>
         </td>
       </tr>
-      <tr id="featureArrayFieldOuter" style="display:none">
-        <td style="width:115px;text-align:left;vertical-align:middle;">${nls.featureArrayField}</td>
-        </td>
-        <td style="width:115px;text-align:left;vertical-align:middle;">
-          <div data-dojo-attach-point="featureArrayField" id="featureArrayField"></div>
-        </td>
-      </tr>
       <tr id="featureTypeFieldOuter">
         <td style="width:115px;text-align:left;vertical-align:middle;">${nls.featureType}</td>
-        </td>
         <td style="width:115px;text-align:left;vertical-align:middle;">
           <select data-dojo-attach-point="featureTypeSelect" data-dojo-type="dijit/form/Select">
             <option value="esriGeometryPoint" selected="selected">Point</option>
@@ -118,7 +104,7 @@
                   <tbody>
                     <tr>
                       <td style="padding-right:10px;">
-                        <div data-dojo-attach-point="layerAlpha" data-dojo-type="jimu/dijit/_Transparency" data-dojo-props='alpha:0.6' style="font-size:13px;"></div>
+                        <div data-dojo-attach-point="layerAlpha" data-dojo-type="jimu/dijit/_Transparency" data-dojo-props='alpha:1.0' style="font-size:13px;"></div>
                       </td>
                     </tr>
                   </tbody>
@@ -181,50 +167,17 @@
                         <div data-dojo-type="jimu/dijit/CheckBox" data-dojo-attach-point="showLabelsCbx" />
                       </td>
                     </tr>
-                  </tbody>
-                </table>
-              </td>
-          </table>
-        </td>
-      </tr>
-      <tr>
-        <td colspan="2">
-          <table style="width:100%;" cellspacing="0">
-            <tr>
-              <td style="width:50%;">
-                <table style="width:100%;" cellspacing="0">
-                  <tbody>
                     <tr>
-                      <td style="width:115px;text-align:left;">
-                        <span>${nls.featurelayermode}</span>
+                      <td style="width:220px;text-align:left;">
+                        <span>${nls.hideinlegend}</span>
                       </td>
                       <td style="width:auto;">
-                        <select data-dojo-attach-point="flMode" data-dojo-type="dijit/form/Select">
-                          <option value="ondemand" selected="selected">${nls.modeondemand}</option>
-                          <option value="snapshot">${nls.modesnapshot}</option>
-                          <option value="selection">${nls.modeselection}</option>
-                        </select>
+                        <div data-dojo-type="jimu/dijit/CheckBox" data-dojo-attach-point="hideInLegendCbx" />
                       </td>
                     </tr>
                   </tbody>
                 </table>
               </td>
-              <td style="width:50%;">
-                <table style="width:100%;" cellspacing="0">
-                  <tbody>
-                    <tr>
-                      <td style="width:165px;text-align:left;">
-                        <span>${nls.autorefresh}</span>
-                      </td>
-                      <td style="width:auto;">
-                        <input type="text" data-dojo-attach-point="autoRefresh" data-dojo-type="dijit/form/NumberTextBox"
-              data-dojo-props='style:{width:"150px"},required:true,value:0,constraints:{min:0,places:2,max:2880}' />
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </td>
-            </tr>
           </table>
         </td>
       </tr>
@@ -240,7 +193,7 @@
                         <td style="width:115px;text-align:left;vertical-align:middle;">${nls.popup}</td>
                         <td style="width:22px;vertical-align:middle;">
                           <div data-dojo-attach-event="onclick: onAddPopup" title="${nls.configurepopup}">
-                            <span class="add-popup-icon disabled" data-dojo-attach-point="addPopupBtn"></span>
+                            <span class="add-popup-icon enabled" data-dojo-attach-point="addPopupBtn"></span>
                           </div>
                         </td>
                         <td style="width:auto;vertical-align:middle;">
@@ -257,7 +210,6 @@
                     <tbody>
                       <tr>
                         <td style="width:115px;text-align:left;vertical-align:middle;">${nls.symbolpicker}</td>
-                        </td>
                         <td style="width:115px;text-align:left;vertical-align:middle;">
                           <div data-dojo-attach-event="onclick: onEditSymbology" title="${nls.symbolpicker}">
                             <span class="add-popup-icon enabled" data-dojo-attach-point="editSymbolBtn"></span>
